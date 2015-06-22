@@ -1,0 +1,8 @@
+{
+    "name": "dartsapp",
+    "description": "darts app",
+    "dependencies": {
+        "express": "4.12.4",
+        "sqlite3": "3.0.8"
+    }
+}
