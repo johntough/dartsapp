@@ -1,0 +1,65 @@
+<div ng-controller="PlayerController as playerCtrl">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Group</th>
+                <th ng-show="playerCtrl.showPrivilegedData()">Phone Number</th>
+                <th ng-show="playerCtrl.showPrivilegedData()">Email Address</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="player in playerCtrl.getPlayers()">
+                <td>{{player.forename + ' ' + player.surname}}</td>
+                <td>{{player.group}}</td>
+                <td ng-show="playerCtrl.showPrivilegedData()">{{player.emailAddress}}</td>
+                <td ng-show="playerCtrl.showPrivilegedData()">{{player.phoneNumber}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <form id="newPlayerForm" class="form-horizontal" ng-show="playerCtrl.showPrivilegedData()" ng-submit="addPlayer()">
+        <h2 class="form-signin-heading">Enter details to add player</h2>
+
+        <div class="form-group">
+            <label for="inputForename" class="col-sm-3 control-label">Player Forename</label>
+            <div class="col-sm-6">
+            <input type="text" id="inputForename" ng-model="forename" class="form-control" placeholder="forename" required autofocus>
+        </div>
+        </div>
+
+        <div class="form-group">
+            <label for="inputSurname" class="col-sm-3 control-label">Player Surname</label>
+            <div class="col-sm-6">
+            <input type="text" id="inputSurname" ng-model="surname" class="form-control" placeholder="surname" required autofocus>
+        </div>
+        </div>
+
+        <div class="form-group">
+            <label for="inputGroup" class="col-sm-3 control-label">Group</label>
+            <div class="col-sm-6">
+            <select id="inputGroup" form="newPlayerForm" ng-model="playergroup" class="form-control" ng-options="group.name for group in playerCtrl.getGroups()">
+            </select>
+        </div>
+        </div>
+
+        <div class="form-group">
+            <label for="inputEmail" class="col-sm-3 control-label">Email</label>
+            <div class="col-sm-6">
+            <input type="email" id="inputEmail" ng-model="email" class="form-control" placeholder="email" autofocus>
+        </div>
+        </div>
+
+        <div class="form-group">
+            <label for="inputPhoneNumber" class="col-sm-3 control-label">Phone Number</label>
+            <div class="col-sm-6">
+            <input type="text" id="inputPhoneNumber" ng-model="phonenumber" class="form-control" placeholder="phone number" autofocus>
+        </div>
+        </div>
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Add Player</button>
+        <font ng-show="playerCtrl.isDuplicatePlayerAttempt()" size="3" color="red">Player already exists</font>
+        </br>
+        <font ng-show="playerCtrl.isGroupSelectedAttempt()" size="3" color="red">Please select a group</font>
+    </form>
+</div>

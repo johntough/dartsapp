@@ -1,0 +1,28 @@
+<div ng-controller="VenueController as venueCtrl">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="venue in venueCtrl.getVenues()">
+                <td>{{venue.name}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <form class="form-horizontal" ng-submit="addVenue()">
+    <h2 class="form-signin-heading">Enter details to add board</h2>
+
+    <div class="form-group">
+        <label for="inputName" class="col-sm-3 control-label">Board Name</label>
+        <div class="col-sm-6">
+        <input type="text" id="inputName" ng-model="venuename" class="form-control" placeholder="group name" required autofocus>
+    </div>
+    </div>
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Add Board</button>
+    <font ng-show="venueCtrl.isDuplicateVenueAttempt()" size="3" color="red">Board already exists</font>
+</form>
+</div>

@@ -1,0 +1,104 @@
+<div ng-controller="FixtureController as fixtureCtrl">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Week</th>
+                <th>Group</th>
+                <th>Board</th>
+                <th>Order of Play</th>
+                <th>Player 1</th>
+                <th>Player 2</th>
+                <th>Marker 1</th>
+                <th>Marker 2</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="fixture in fixtureCtrl.fixtures">
+                <td>{{fixture.weekNumber}}</td>
+                <td>{{fixture.group}}</td>
+                <td>{{fixture.venue}}</td>
+                <td>{{fixture.orderOfPlay}}</td>
+                <td>{{fixture.playerOne}}</td>
+                <td>{{fixture.playerTwo}}</td>
+                <td>{{fixture.markerOne}}</td>
+                <td>{{fixture.markerTwo}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <form id="newFixtureForm" class="form-horizontal" ng-show="fixtureCtrl.showPrivilegedData()" ng-submit="addFixture()">
+        <h2 class="form-signin-heading">Enter details to add fixture</h2>
+
+        <div class="form-group">
+            <label for="inputWeek" class="col-sm-3 control-label">Week</label>
+            <div class="col-sm-6">
+            <select id="inputWeek" form="newFixtureForm" ng-model="week" class="form-control" ng-options="week.name for week in fixtureCtrl.getWeeks()">
+            </select>
+        </div>
+        </div>
+
+        <div class="form-group">
+            <label for="inputGroup" class="col-sm-3 control-label">Group</label>
+            <div class="col-sm-6">
+            <select id="inputGroup" form="newFixtureForm" ng-model="group" class="form-control" ng-options="group.name for group in fixtureCtrl.getGroups()">
+            </select>
+        </div>
+        </div>
+
+        <div class="form-group">
+            <label for="inputOrderOfPlay" class="col-sm-3 control-label">Order of Play</label>
+            <div class="col-sm-6">
+            <input type="text" id="inputOrderOfPlay" ng-model="orderofplay" class="form-control" placeholder="order of play" required autofocus>
+        </div>
+        </div>
+
+        <div class="form-group">
+            <label for="inputVenue" class="col-sm-3 control-label">Board</label>
+            <div class="col-sm-6">
+            <select id="inputVenue" form="newFixtureForm" ng-model="venue" class="form-control" ng-options="venue.name for venue in fixtureCtrl.getVenues()">
+            </select>
+        </div>
+        </div>
+
+        <div class="form-group">
+            <label for="inputPlayer1" class="col-sm-3 control-label">Player 1</label>
+            <div class="col-sm-6">
+            <select id="inputPlayer1" form="newFixtureForm" ng-model="playerone" class="form-control" ng-options='(player.forename + " " + player.surname) for player in fixtureCtrl.getPlayers()'>
+            </select>
+        </div>
+        </div>
+
+        <div class="form-group">
+            <label for="inputPlayer2" class="col-sm-3 control-label">Player 2</label>
+            <div class="col-sm-6">
+            <select id="inputPlayer2" form="newFixtureForm" ng-model="playertwo" class="form-control" ng-options='(player.forename + " " + player.surname) for player in fixtureCtrl.getPlayers()'>
+            </select>
+        </div>
+        </div>
+
+        <div class="form-group">
+            <label for="inputMarker1" class="col-sm-3 control-label">Marker 1</label>
+            <div class="col-sm-6">
+            <select id="inputMarker1" form="newFixtureForm" ng-model="markerone" class="form-control" ng-options='(player.forename + " " + player.surname) for player in fixtureCtrl.getPlayers()'>
+            </select>
+        </div>
+        </div>
+
+        <div class="form-group">
+            <label for="inputMarker2" class="col-sm-3 control-label">Marker 2</label>
+            <div class="col-sm-6">
+            <select id="inputMarker2" form="newFixtureForm" ng-model="markertwo" class="form-control" ng-options='(player.forename + " " + player.surname) for player in fixtureCtrl.getPlayers()'>
+            </select>
+        </div>
+        </div>
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Add Fixture</button>
+        <font ng-show="fixtureCtrl.isIncompleteFormAttempt()" size="3" color="red">Ensure all required fields are completed</font>
+        </br>
+        <font ng-show="fixtureCtrl.isDuplicatePlayerAttempt()" size="3" color="red">Players can't play themselves</font>
+        </br>
+        <font ng-show="fixtureCtrl.isPlayerAlsoMarkerAttempt()" size="3" color="red">Players can't mark their own game</font>
+        </br>
+        <font ng-show="fixtureCtrl.isDuplicateFixtureAttempt()" size="3" color="red">Fixture already exists</font>
+    </form>
+</div>

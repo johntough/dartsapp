@@ -1,0 +1,28 @@
+<div ng-controller="GroupController as groupCtrl">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="group in groupCtrl.getGroups()">
+                <td>{{group.name}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <form class="form-horizontal" ng-submit="addGroup()">
+    <h2 class="form-signin-heading">Enter details to add group</h2>
+
+    <div class="form-group">
+        <label for="inputName" class="col-sm-3 control-label">Group Name</label>
+        <div class="col-sm-6">
+        <input type="text" id="inputName" ng-model="groupname" class="form-control" placeholder="group name" required autofocus>
+    </div>
+    </div>
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Add Group</button>
+    <font ng-show="groupCtrl.isDuplicateGroupAttempt()" size="3" color="red">Group already exists</font>
+</form>
+</div>

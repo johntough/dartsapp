@@ -1,0 +1,28 @@
+<div ng-controller="WeekController as weekCtrl">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="week in weekCtrl.getWeeks()">
+                <td>{{week.name}}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <form class="form-horizontal" ng-show="weekCtrl.showPrivilegedData()" ng-submit="addWeek()">
+    <h2 class="form-signin-heading">Enter details to add extra weeks</h2>
+
+    <div class="form-week">
+        <label for="inputName" class="col-sm-3 control-label">Week Name</label>
+        <div class="col-sm-6">
+        <input type="text" id="inputName" ng-model="weekname" class="form-control" placeholder="week name" required autofocus>
+    </div>
+    </div>
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Add Week</button>
+    <font ng-show="weekCtrl.isDuplicateWeekAttempt()" size="3" color="red">Week already exists</font>
+</form>
+</div>

@@ -1,0 +1,56 @@
+<!doctype html>
+<html ng-app="dartsApp">
+    <head>
+        <title>AngularJS</title>
+        <!-- Library files from CDN-->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <!-- Application files -->
+        <script src="app.js"></script>
+    </head>
+
+    <section ng-controller="NavigationController as navigationCtrl" ng-controller="LoginController as loginCtrl">
+          <ul class="nav nav-pills">
+            <li ng-class="{ active:navigationCtrl.isSet('home') }">
+              <a href ng-click="navigationCtrl.setTab('home')">Home</a>
+            </li>
+            <li ng-show="navigationCtrl.showPrivilegedData()" ng-class="{ active:navigationCtrl.isSet('weeks') }">
+              <a href ng-click="navigationCtrl.setTab('weeks')">Weeks</a>
+            </li>
+            <li ng-show="navigationCtrl.showPrivilegedData()" ng-class="{ active:navigationCtrl.isSet('groups') }">
+              <a href ng-click="navigationCtrl.setTab('groups')">Groups</a>
+            </li>
+            <li ng-show="navigationCtrl.showPrivilegedData()" ng-class="{ active:navigationCtrl.isSet('venues') }">
+              <a href ng-click="navigationCtrl.setTab('venues')">Boards</a>
+            </li>
+            <li ng-class="{ active:navigationCtrl.isSet('players') }">
+              <a href ng-click="navigationCtrl.setTab('players')">Players</a>
+            </li>
+            <li ng-class="{ active:navigationCtrl.isSet('fixtures') }">
+              <a href ng-click="navigationCtrl.setTab('fixtures')">Fixtures</a>
+            </li>
+            <li ng-class="{ active:navigationCtrl.isSet('results') }">
+              <a href ng-click="navigationCtrl.setTab('results')">Results</a>
+            </li>
+            <li ng-class="{ active:navigationCtrl.isSet('tables') }">
+              <a href ng-click="navigationCtrl.setTab('tables')">Tables</a>
+            </li>
+            <li ng-class="{ active:navigationCtrl.isSet('achievements') }">
+              <a href ng-click="navigationCtrl.setTab('achievements')">Achievements</a>
+            </li>
+            <li ng-class="{ active:navigationCtrl.isSet('login') }">
+              <a href ng-click="navigationCtrl.setTab('login')">Manage Login</a>
+            </li>
+          </ul>
+
+          <!--  Description Tab's Content  -->
+          </div>
+          <weeks-list ng-show="navigationCtrl.isSet('weeks')"></weeks-list>
+          <groups-list ng-show="navigationCtrl.isSet('groups')"></groups-list>
+          <venues-list ng-show="navigationCtrl.isSet('venues')"></venues-list>
+          <players-list ng-show="navigationCtrl.isSet('players')"></players-list>
+          <fixtures-list ng-show="navigationCtrl.isSet('fixtures')"></fixtures-list>
+          <login-form ng-show="navigationCtrl.isSet('login')"></login-form>
+    </section>
+</html>

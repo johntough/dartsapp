@@ -1,0 +1,30 @@
+<div ng-controller="LoginController as loginCtrl">
+
+<form class="form-horizontal" ng-submit="login()" ng-hide="loginCtrl.isAuthorised()">
+    <h2 class="form-signin-heading">Please log in</h2>
+
+    <div class="form-group">
+        <label for="inputUsername" class="col-sm-3 control-label">Username</label>
+        <div class="col-sm-6">
+        <input type="text" id="inputUsername" ng-model="username" class="form-control" placeholder="Username" required autofocus>
+    </div>
+    </div>
+
+    <div class="form-group">
+        <label for="inputPassword" class="col-sm-3 control-label">Password</label>
+        <div class="col-sm-6">
+        <input type="password" id="inputPassword" ng-model="password" class="form-control" placeholder="Password" required>
+    </div>
+    </div>
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Log in</button>
+    <font ng-show="loginCtrl.isInvalidAttempt()" size="3" color="red">Invalid username/password combination</font>
+</form>
+
+<div ng-show="loginCtrl.isAuthorised()">
+    <form class="form-signin" ng-submit="logout()">
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Log out</button>
+    </form>
+</div>
+
+</div>
