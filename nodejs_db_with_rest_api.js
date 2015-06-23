@@ -97,4 +97,4 @@ require('./week')(restapi, db);
 
 restapi.use(express.static(__dirname + '/app'));
 
-restapi.listen(8080);
+restapi.listen(3000);

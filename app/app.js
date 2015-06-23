@@ -217,7 +217,7 @@
     }
   }]);
   
-  app.controller('GroupController', ['$scope', '$http', 'groupService', function($scope, $http, groupService) {
+  app.controller('GroupController', ['$scope', '$http', 'loginService', 'groupService', function($scope, $http, loginService, groupService) {
     var groupCtrl = this
 
     var isDuplicateGroupAttempt = false;
@@ -228,6 +228,18 @@
 
     groupCtrl.isDuplicateGroupAttempt = function() {
         return isDuplicateGroupAttempt;
+    },
+
+    groupCtrl.showPrivilegedData = function() {
+        return loginService.isAuthorised();
+    },
+
+    groupCtrl.editGroup  = function() {
+        console.log('Edit');
+    },
+
+    groupCtrl.deleteGroup  = function() {
+        console.log('Delete');
     },
 
     $http.get('http://localhost:8080/groups').success(function(data) {

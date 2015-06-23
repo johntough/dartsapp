@@ -3,11 +3,16 @@
         <thead>
             <tr>
                 <th>Name</th>
+                <th ng-show="groupCtrl.showPrivilegedData()">Edit</th>
             </tr>
         </thead>
         <tbody>
             <tr ng-repeat="group in groupCtrl.getGroups()">
                 <td>{{group.name}}</td>
+                <td>
+                    <img src="resources/images/edit.png" height="32" width="32" ng-click="groupCtrl.editGroup()"/>
+                    <img src="resources/images/delete.png" height="32" width="32" ng-click="groupCtrl.deleteGroup()"/>
+                </td>
             </tr>
         </tbody>
     </table>
