@@ -24,16 +24,16 @@
     <script type="text/ng-template" id="week-display">
         <td>{{week.name}}</td>
         <td>
-            <img src="resources/images/edit.png" data-toggle="tooltip" title="Edit Week" height="32" width="32" ng-click="weekCtrl.edit(week)"/>
-            <img src="resources/images/delete.png" data-toggle="tooltip" title="Delete Week" height="32" width="32" ng-click="weekCtrl.deleteRecord(week.id)"/>
+            <img src="resources/images/edit.png" data-toggle="tooltip" data-placement="bottom" title="Edit Week" height="32" width="32" ng-click="weekCtrl.edit(week)"/>
+            <img src="resources/images/delete.png" data-toggle="tooltip" data-placement="bottom" title="Delete Week" height="32" width="32" ng-click="weekCtrl.deleteRecord(week.id)"/>
         </td>
     </script>
 
     <script type="text/ng-template" id="week-edit">
         <td><input type="text" ng-model="selected.name" /></td>
         <td>
-            <img src="resources/images/save.png"  data-toggle="tooltip" title="Save Changes" height="32" width="32" ng-click="weekCtrl.saveChanges(selected.id, selected.name)"/>
-            <img src="resources/images/cancel.png" data-toggle="tooltip" title="Cancel Changes" height="32" width="32" ng-click="weekCtrl.cancelChanges()"/>
+            <img src="resources/images/save.png"  data-toggle="tooltip" data-placement="bottom" title="Save Changes" height="32" width="32" ng-click="weekCtrl.saveChanges(selected.id, selected.name)"/>
+            <img src="resources/images/cancel.png" data-toggle="tooltip"data-placement="bottom" title="Cancel Changes" height="32" width="32" ng-click="weekCtrl.cancelChanges()"/>
         </td>
     </script>
 

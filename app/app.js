@@ -261,6 +261,9 @@
   
   app.controller('GroupController', ['$scope', '$http', 'loginService', 'groupService', 'dialogs', function($scope, $http, loginService, groupService, dialogs) {
     var groupCtrl = this
+    $scope.$on('$viewContentLoaded', function(event){
+        console.log('content loaded!')
+    });
 
     var isDuplicateGroupAttempt = false;
 

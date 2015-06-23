@@ -5,8 +5,10 @@
         <!-- Library files from CDN-->
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.16/angular-sanitize.js"></script>
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
         <!-- 3rd party Library for modal dialogs -->
         <script src="http://rawgit.com/m-e-conroy/angular-dialog-service/master/example/js/ui-bootstrap-tpls-0.11.2.min.js"></script>
         <script src="http://rawgit.com/m-e-conroy/angular-dialog-service/master/example/js/dialogs.js"></script>
@@ -59,4 +61,13 @@
           <fixtures-list ng-show="navigationCtrl.isSet('fixtures')"></fixtures-list>
           <login-form ng-show="navigationCtrl.isSet('login')"></login-form>
     </section>
+
+    <!--  initialising bootstrap tooltips  -->
+    <script type="text/javascript">
+        $(function () {
+            $('body').tooltip({
+                selector: '[data-toggle="tooltip"]'
+            });
+        });
+    </script>
 </html>
