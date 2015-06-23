@@ -33,7 +33,34 @@ module.exports = function(restapi, db) {
         });
     });
  
-    console.log('venue.js included');
-    console.log('GET endpoint: http://localhost:3000/venues');
-    console.log('POST endpoint: http://localhost:3000/venue/:name');
+    restapi.put('/venue/:id/:name', function(request, response) {
+        var venue_id = request.params.id;
+        var updated_venue_name = request.params.name;
+
+        db.run("UPDATE venue_tbl SET name = (?) WHERE id = (?)", updated_venue_name, venue_id, function(err, row) {
+            if (err) {
+                console.log(err);
+                response.status(500);
+            }
+            else {
+                response.status(204);
+            }
+            response.end();
+        });
+    });
+
+   restapi.delete('/venue/:id', function(request, response) {
+        var venue_id = request.params.id;
+
+        db.run("DELETE FROM venue_tbl WHERE id = (?)", venue_id, function(err, row) {
+            if (err) {
+                console.log(err);
+                response.status(500);
+            }
+            else {
+                response.status(204);
+            }
+            response.end();
+        });
+    });
 }

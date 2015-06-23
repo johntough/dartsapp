@@ -6,8 +6,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="week in weekCtrl.getWeeks()">
-                <td>{{week.name}}</td>
+            <tr ng-repeat="week in weekCtrl.getWeeks()" ng-include="weekCtrl.getTemplate(week)">
             </tr>
         </tbody>
     </table>
@@ -22,7 +21,24 @@
     </div>
     </div>
 
+    <script type="text/ng-template" id="week-display">
+        <td>{{week.name}}</td>
+        <td>
+            <img src="resources/images/edit.png" data-toggle="tooltip" title="Edit Week" height="32" width="32" ng-click="weekCtrl.edit(week)"/>
+            <img src="resources/images/delete.png" data-toggle="tooltip" title="Delete Week" height="32" width="32" ng-click="weekCtrl.deleteRecord(week.id)"/>
+        </td>
+    </script>
+
+    <script type="text/ng-template" id="week-edit">
+        <td><input type="text" ng-model="selected.name" /></td>
+        <td>
+            <img src="resources/images/save.png"  data-toggle="tooltip" title="Save Changes" height="32" width="32" ng-click="weekCtrl.saveChanges(selected.id, selected.name)"/>
+            <img src="resources/images/cancel.png" data-toggle="tooltip" title="Cancel Changes" height="32" width="32" ng-click="weekCtrl.cancelChanges()"/>
+        </td>
+    </script>
+
     <button class="btn btn-lg btn-primary btn-block" type="submit">Add Week</button>
     <font ng-show="weekCtrl.isDuplicateWeekAttempt()" size="3" color="red">Week already exists</font>
+
 </form>
 </div>

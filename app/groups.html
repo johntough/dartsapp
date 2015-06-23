@@ -7,15 +7,26 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="group in groupCtrl.getGroups()">
-                <td>{{group.name}}</td>
-                <td>
-                    <img src="resources/images/edit.png" height="32" width="32" ng-click="groupCtrl.editGroup()"/>
-                    <img src="resources/images/delete.png" height="32" width="32" ng-click="groupCtrl.deleteGroup()"/>
-                </td>
+            <tr ng-repeat="group in groupCtrl.getGroups()" ng-include="groupCtrl.getTemplate(group)">
             </tr>
         </tbody>
     </table>
+
+    <script type="text/ng-template" id="group-display">
+        <td>{{group.name}}</td>
+        <td>
+            <img src="resources/images/edit.png" data-toggle="tooltip" title="Edit Group" height="32" width="32" ng-click="groupCtrl.edit(group)"/>
+            <img src="resources/images/delete.png" data-toggle="tooltip" title="Delete Group" height="32" width="32" ng-click="groupCtrl.deleteRecord(group.id)"/>
+        </td>
+    </script>
+
+    <script type="text/ng-template" id="group-edit">
+        <td><input type="text" ng-model="selected.name" /></td>
+        <td>
+            <img src="resources/images/save.png"  data-toggle="tooltip" title="Save Changes" height="32" width="32" ng-click="groupCtrl.saveChanges(selected.id, selected.name)"/>
+            <img src="resources/images/cancel.png" data-toggle="tooltip" title="Cancel Changes" height="32" width="32" ng-click="groupCtrl.cancelChanges()"/>
+        </td>
+    </script>
 
     <form class="form-horizontal" ng-submit="addGroup()">
     <h2 class="form-signin-heading">Enter details to add group</h2>

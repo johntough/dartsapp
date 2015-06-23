@@ -171,7 +171,7 @@
     }
   }]);
 
-  app.controller('WeekController', ['$scope', '$http', 'loginService', 'weekService', function($scope, $http, loginService, weekService) {
+  app.controller('WeekController', ['$scope', '$http', 'loginService', 'weekService', 'dialogs', function($scope, $http, loginService, weekService, dialogs) {
     var weekCtrl = this;
     var isDuplicateWeekAttempt = false;
 
@@ -190,6 +190,48 @@
     $http.get('http://localhost:3000/weeks').success(function(data) {
         weekService.setWeeks(data.weeks);
     });
+
+        // gets the template to ng-include for a table row / item
+    weekCtrl.getTemplate = function (week) {
+        if ($scope.selected && week.id === $scope.selected.id) { 
+            return 'week-edit';
+        } else {
+            return 'week-display';
+        }
+    };
+
+    weekCtrl.deleteRecord  = function(id) {
+
+        var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the week?');
+        dialog.result.then(function(btn) {
+            $http.delete('http://localhost:3000/week/' + id).success(function(data) {
+                // refresh controllers internal state for weeks
+                $http.get('http://localhost:3000/weeks').success(function(data) {
+                    weekService.setWeeks(data.weeks);
+                });
+            });
+        }, function(btn){
+            // do nothing - user chose not to delete the week
+        });
+    },
+
+    weekCtrl.saveChanges = function (id, name) {
+        $http.put('http://localhost:3000/week/' + id + '/' + name).success(function(data) {
+            // refresh controllers internal state for weeks
+            $http.get('http://localhost:3000/weeks').success(function(data) {
+                weekService.setWeeks(data.weeks);
+            });
+        });
+        weekCtrl.cancelChanges();
+    };
+
+    weekCtrl.edit = function (week) {
+        $scope.selected = angular.copy(week);
+    };
+
+    weekCtrl.cancelChanges = function () {
+        $scope.selected = {};
+    };
     
     $scope.addWeek = function() {
         isDuplicateWeekAttempt = false;
@@ -234,20 +276,47 @@
         return loginService.isAuthorised();
     },
 
-    groupCtrl.editGroup  = function() {
-        console.log('Edit');
-    },
+    // gets the template to ng-include for a table row / item
+    groupCtrl.getTemplate = function (group) {
+        if ($scope.selected && group.id === $scope.selected.id) { 
+            return 'group-edit';
+        } else {
+            return 'group-display';
+        }
+    };
 
-    groupCtrl.deleteGroup  = function() {
+    groupCtrl.deleteRecord  = function(id) {
 
         var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the group?');
         dialog.result.then(function(btn) {
-            console.log('Group Deleted');
-            // TODO: add call to server delete API
+            $http.delete('http://localhost:3000/group/' + id).success(function(data) {
+                // refresh controllers internal state for groups
+                $http.get('http://localhost:3000/groups').success(function(data) {
+                    groupService.setGroups(data.groups);
+                });
+            });
         }, function(btn){
             // do nothing - user chose not to delete the group
         });
     },
+
+    groupCtrl.saveChanges = function (id, name) {
+        $http.put('http://localhost:3000/group/' + id + '/' + name).success(function(data) {
+            // refresh controllers internal state for groups
+            $http.get('http://localhost:3000/groups').success(function(data) {
+                groupService.setGroups(data.groups);
+            });
+        });
+        groupCtrl.cancelChanges();
+    };
+
+    groupCtrl.edit = function (group) {
+        $scope.selected = angular.copy(group);
+    };
+
+    groupCtrl.cancelChanges = function () {
+        $scope.selected = {};
+    };
 
     $http.get('http://localhost:3000/groups').success(function(data) {
         groupService.setGroups(data.groups);
@@ -279,7 +348,7 @@
     }
   }]);
   
-  app.controller('VenueController', ['$scope', '$http', 'venueService', function($scope, $http, venueService) {
+  app.controller('VenueController', ['$scope', '$http', 'venueService', 'loginService', 'dialogs', function($scope, $http, venueService, loginService, dialogs) {
     var venueCtrl = this;
     var isDuplicateVenueAttempt = false;
     
@@ -287,9 +356,55 @@
         return isDuplicateVenueAttempt;
     },
 
+    venueCtrl.showPrivilegedData = function() {
+        return loginService.isAuthorised();
+    },
+
     venueCtrl.getVenues = function() {
         return venueService.getVenues();
     },
+
+    // gets the template to ng-include for a table row / item
+    venueCtrl.getTemplate = function (venue) {
+        if ($scope.selected && venue.id === $scope.selected.id) { 
+            return 'venue-edit';
+        } else {
+            return 'venue-display';
+        }
+    };
+
+    venueCtrl.deleteRecord  = function(id) {
+
+        var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the board?');
+        dialog.result.then(function(btn) {
+            $http.delete('http://localhost:3000/venue/' + id).success(function(data) {
+                // refresh controllers internal state for venues
+                $http.get('http://localhost:3000/venues').success(function(data) {
+                    venueService.setVenues(data.venues);
+                });
+            });
+        }, function(btn){
+            // do nothing - user chose not to delete the group
+        });
+    },
+
+    venueCtrl.saveChanges = function (id, name) {
+        $http.put('http://localhost:3000/venue/' + id + '/' + name).success(function(data) {
+            // refresh controllers internal state for venues
+            $http.get('http://localhost:3000/venues').success(function(data) {
+                venueService.setVenues(data.venues);
+            });
+        });
+        venueCtrl.cancelChanges();
+    };
+
+    venueCtrl.edit = function (group) {
+        $scope.selected = angular.copy(group);
+    };
+
+    venueCtrl.cancelChanges = function () {
+        $scope.selected = {};
+    };
 
     $http.get('http://localhost:3000/venues').success(function(data) {
         venueService.setVenues(data.venues);

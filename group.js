@@ -14,6 +14,7 @@ module.exports = function(restapi, db) {
         function complete(err, found) {
             json_obj_response.count = json_obj_response.groups.length;
             response.json(json_obj_response);
+            response.status(200);
         });
     });
 
@@ -31,8 +32,35 @@ module.exports = function(restapi, db) {
             response.end();
         });
     });
- 
-    console.log('group.js included');
-    console.log('GET endpoint: http://localhost:3000/groups');
-    console.log('POST endpoint: http://localhost:3000/group/:name');
+
+    restapi.put('/group/:id/:name', function(request, response) {
+        var group_id = request.params.id;
+        var updated_group_name = request.params.name;
+
+        db.run("UPDATE group_tbl SET name = (?) WHERE id = (?)", updated_group_name, group_id, function(err, row) {
+            if (err) {
+                console.log(err);
+                response.status(500);
+            }
+            else {
+                response.status(204);
+            }
+            response.end();
+        });
+    });
+
+   restapi.delete('/group/:id', function(request, response) {
+        var group_id = request.params.id;
+
+        db.run("DELETE FROM group_tbl WHERE id = (?)", group_id, function(err, row) {
+            if (err) {
+                console.log(err);
+                response.status(500);
+            }
+            else {
+                response.status(204);
+            }
+            response.end();
+        });
+    });
 }

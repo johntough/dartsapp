@@ -31,6 +31,35 @@ module.exports = function(restapi, db) {
             response.end();
         });
     });
- 
-    console.log('week.js included');
+
+    restapi.put('/week/:id/:name', function(request, response) {
+        var week_id = request.params.id;
+        var updated_week_name = request.params.name;
+
+        db.run("UPDATE week_tbl SET name = (?) WHERE id = (?)", updated_week_name, week_id, function(err, row) {
+            if (err) {
+                console.log(err);
+                response.status(500);
+            }
+            else {
+                response.status(204);
+            }
+            response.end();
+        });
+    });
+
+   restapi.delete('/week/:id', function(request, response) {
+        var week_id = request.params.id;
+
+        db.run("DELETE FROM week_tbl WHERE id = (?)", week_id, function(err, row) {
+            if (err) {
+                console.log(err);
+                response.status(500);
+            }
+            else {
+                response.status(204);
+            }
+            response.end();
+        });
+    });
 }
