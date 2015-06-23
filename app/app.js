@@ -1,5 +1,5 @@
 (function() {
-  var app = angular.module('dartsApp', []);
+  var app = angular.module('dartsApp', ['ui.bootstrap', 'dialogs.main']);
 
   app.service('loginService', function() {
       var loginservice = this;
@@ -124,7 +124,7 @@
         return isGroupSelectedAttempt;
     },
 
-    $http.get('http://localhost:8080/players').success(function(data) {
+    $http.get('http://localhost:3000/players').success(function(data) {
         playerService.setPlayers(data.players);
     });
 
@@ -154,9 +154,9 @@
         
         if (!isDuplicateplayerAttempt) {
             if (group && group.id) {
-                $http.post('http://localhost:8080/player/' + forename + '/' + surname + '/' + phone + '/' + email + '/' + group.id).success(function(data) {
+                $http.post('http://localhost:3000/player/' + forename + '/' + surname + '/' + phone + '/' + email + '/' + group.id).success(function(data) {
                     // refresh controllers internal state for players
-                    $http.get('http://localhost:8080/players').success(function(data) {
+                    $http.get('http://localhost:3000/players').success(function(data) {
                         playerService.setPlayers(data.players);
                         $scope.forename = '';
                         $scope.surname = '';
@@ -187,7 +187,7 @@
         return weekService.getWeeks();
     },
 
-    $http.get('http://localhost:8080/weeks').success(function(data) {
+    $http.get('http://localhost:3000/weeks').success(function(data) {
         weekService.setWeeks(data.weeks);
     });
     
@@ -205,11 +205,11 @@
         }
         
         if (!isDuplicateWeekAttempt) {
-            $http.post('http://localhost:8080/week/' + $scope.weekname).success(function(data) {
+            $http.post('http://localhost:3000/week/' + $scope.weekname).success(function(data) {
                 $scope.weekname = '';
                 isDuplicateWeekAttempt = false;
                 // refresh controllers internal state for weeks
-                $http.get('http://localhost:8080/weeks').success(function(data) {
+                $http.get('http://localhost:3000/weeks').success(function(data) {
                     weekService.setWeeks(data.weeks);
                 });
             });
@@ -217,7 +217,7 @@
     }
   }]);
   
-  app.controller('GroupController', ['$scope', '$http', 'loginService', 'groupService', function($scope, $http, loginService, groupService) {
+  app.controller('GroupController', ['$scope', '$http', 'loginService', 'groupService', 'dialogs', function($scope, $http, loginService, groupService, dialogs) {
     var groupCtrl = this
 
     var isDuplicateGroupAttempt = false;
@@ -239,10 +239,17 @@
     },
 
     groupCtrl.deleteGroup  = function() {
-        console.log('Delete');
+
+        var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the group?');
+        dialog.result.then(function(btn) {
+            console.log('Group Deleted');
+            // TODO: add call to server delete API
+        }, function(btn){
+            // do nothing - user chose not to delete the group
+        });
     },
 
-    $http.get('http://localhost:8080/groups').success(function(data) {
+    $http.get('http://localhost:3000/groups').success(function(data) {
         groupService.setGroups(data.groups);
     });
     
@@ -260,11 +267,11 @@
         }
         
         if (!isDuplicateGroupAttempt) {
-            $http.post('http://localhost:8080/group/' + $scope.groupname).success(function(data) {
+            $http.post('http://localhost:3000/group/' + $scope.groupname).success(function(data) {
                 $scope.groupname = '';
                 isDuplicateGroupAttempt = false;
                 // refresh controllers internal state for groups
-                $http.get('http://localhost:8080/groups').success(function(data) {
+                $http.get('http://localhost:3000/groups').success(function(data) {
                     groupService.setGroups(data.groups);
                 });
             });
@@ -284,7 +291,7 @@
         return venueService.getVenues();
     },
 
-    $http.get('http://localhost:8080/venues').success(function(data) {
+    $http.get('http://localhost:3000/venues').success(function(data) {
         venueService.setVenues(data.venues);
     });
     
@@ -302,11 +309,11 @@
         }
         
         if (!isDuplicateVenueAttempt) {
-            $http.post('http://localhost:8080/venue/' + $scope.venuename).success(function(data) {
+            $http.post('http://localhost:3000/venue/' + $scope.venuename).success(function(data) {
                 $scope.venuename = '';
                 isDuplicateVenueAttempt = false;
                 // refresh controllers internal state for venues
-                $http.get('http://localhost:8080/venues').success(function(data) {
+                $http.get('http://localhost:3000/venues').success(function(data) {
                     venueService.setVenues(data.venues);
                 });
             });
@@ -359,7 +366,7 @@
         return isDuplicateFixtureAttempt;
     },
 
-    $http.get('http://localhost:8080/fixtures').success(function(data) {
+    $http.get('http://localhost:3000/fixtures').success(function(data) {
         fixtureCtrl.fixtures = data.fixtures;
     });
 
@@ -411,9 +418,9 @@
             }
 
             if (!isDuplicateFixtureAttempt) {
-                $http.post('http://localhost:8080/fixture/' + week.id + '/' + orderOfPlay + '/' + venue.id + '/' + group.id + '/' + player1.id + '/' + player2.id + '/' + marker1.id + '/' + marker2.id).success(function(data) {
+                $http.post('http://localhost:3000/fixture/' + week.id + '/' + orderOfPlay + '/' + venue.id + '/' + group.id + '/' + player1.id + '/' + player2.id + '/' + marker1.id + '/' + marker2.id).success(function(data) {
                     // refresh controllers internal state for fixtures
-                    $http.get('http://localhost:8080/fixtures').success(function(data) {
+                    $http.get('http://localhost:3000/fixtures').success(function(data) {
                         fixtureCtrl.fixtures = data.fixtures;
                         $scope.week = '';
                         $scope.group = '';
