@@ -1,0 +1,14 @@
+{
+    "name": "dartsapp",
+    "description": "darts app",
+    "author": "John Tough",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/johntough/dartsapp.git"
+    },
+    "dependencies": {
+        "express": "4.12.4",
+        "sqlite3": "3.0.8"
+    }
+}
