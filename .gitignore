@@ -41,3 +41,12 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# =========================
+# Node Modules
+# =========================
+node_modules/*
+# =========================
+# Database
+# =========================
+data/db01
