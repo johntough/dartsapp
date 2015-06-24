@@ -101,8 +101,8 @@
     }
   }]);
   
-  app.controller('PlayerController', ['$scope', '$http', 'loginService', 'groupService', 'playerService', 
-  function($scope, $http, loginService, groupService, playerService) {
+  app.controller('PlayerController', ['$scope', '$http', 'loginService', 'groupService', 'playerService', 'dialogs', 
+  function($scope, $http, loginService, groupService, playerService, dialogs) {
     var playerCtrl = this;
 
     var isGroupSelectedAttempt = false;
@@ -127,6 +127,49 @@
     playerCtrl.isGroupSelectedAttempt = function() {
         return isGroupSelectedAttempt;
     },
+
+    // gets the template to ng-include for a table row / item
+    playerCtrl.getTemplate = function (player) {
+        if ($scope.selected && player.id === $scope.selected.id) { 
+            return 'player-edit';
+        } else {
+            return 'player-display';
+        }
+    };
+
+    playerCtrl.deleteRecord  = function(id) {
+
+        var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the player?');
+        dialog.result.then(function(btn) {
+            $http.delete(baseUrl + '/player/' + id).success(function(data) {
+                // refresh controllers internal state for players
+                $http.get(baseUrl + '/players').success(function(data) {
+                    playerService.setPlayers(data.players);
+                });
+            });
+        }, function(btn){
+            // do nothing - user chose not to delete the player
+        });
+    },
+
+    playerCtrl.saveChanges = function (id, forename, surname, email, phone) {
+
+        $http.put(baseUrl + '/player/' + id + '/' + forename + '/' + surname + '/' + email + '/' + phone).success(function(data) {
+            // refresh controllers internal state for players
+            $http.get(baseUrl + '/players').success(function(data) {
+                playerService.setPlayers(data.players);
+            });
+        });
+        playerCtrl.cancelChanges();
+    };
+
+    playerCtrl.edit = function (player) {
+        $scope.selected = angular.copy(player);
+    };
+
+    playerCtrl.cancelChanges = function () {
+        $scope.selected = {};
+    };
 
     $http.get(baseUrl + '/players').success(function(data) {
         playerService.setPlayers(data.players);

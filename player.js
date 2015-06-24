@@ -48,7 +48,38 @@ module.exports = function(restapi, db) {
         });
     });
  
-    console.log('player.js included');
-    console.log('GET endpoint: http://localhost:3000/players');
-    console.log('POST endpoint: http://localhost:3000/player/:forename/:surname/:phone/:email/:group');
+    restapi.put('/player/:id/:forename/:surname/:email/:phone', function(request, response) {
+        var player_id = request.params.id;
+        var updated_player_forname = request.params.forename;
+        var updated_player_surname = request.params.surname;
+        var updated_player_email = request.params.email;
+        var updated_player_phone = request.params.phone;
+
+        db.run("UPDATE player_tbl SET forename = (?), surname = (?), email_address = (?), phone_number = (?) WHERE id = (?)",
+        updated_player_forname, updated_player_surname, updated_player_email, updated_player_phone, player_id, function(err, row) {
+            if (err) {
+                console.log(err);
+                response.status(500);
+            }
+            else {
+                response.status(204);
+            }
+            response.end();
+        });
+    });
+
+   restapi.delete('/player/:id', function(request, response) {
+        var player_id = request.params.id;
+
+        db.run("DELETE FROM player_tbl WHERE id = (?)", player_id, function(err, row) {
+            if (err) {
+                console.log(err);
+                response.status(500);
+            }
+            else {
+                response.status(204);
+            }
+            response.end();
+        });
+    });
 }

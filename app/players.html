@@ -4,19 +4,38 @@
             <tr>
                 <th>Name</th>
                 <th>Group</th>
-                <th ng-show="playerCtrl.showPrivilegedData()">Phone Number</th>
                 <th ng-show="playerCtrl.showPrivilegedData()">Email Address</th>
+                <th ng-show="playerCtrl.showPrivilegedData()">Phone Number</th>
+                <th ng-show="playerCtrl.showPrivilegedData()">Edit</th>
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="player in playerCtrl.getPlayers()">
-                <td>{{player.forename + ' ' + player.surname}}</td>
-                <td>{{player.group}}</td>
-                <td ng-show="playerCtrl.showPrivilegedData()">{{player.emailAddress}}</td>
-                <td ng-show="playerCtrl.showPrivilegedData()">{{player.phoneNumber}}</td>
+            <tr ng-repeat="player in playerCtrl.getPlayers()" ng-include="playerCtrl.getTemplate(player)">
             </tr>
         </tbody>
     </table>
+
+    <script type="text/ng-template" id="player-display">
+        <td>{{player.forename + ' ' + player.surname}}</td>
+        <td>{{player.group}}</td>
+        <td ng-show="playerCtrl.showPrivilegedData()">{{player.emailAddress}}</td>
+        <td ng-show="playerCtrl.showPrivilegedData()">{{player.phoneNumber}}</td>
+        <td ng-show="playerCtrl.showPrivilegedData()">
+            <img src="resources/images/edit.png" data-toggle="tooltip" data-placement="bottom" title="Edit Player Details" height="32" width="32" ng-click="playerCtrl.edit(player)"/>
+            <img src="resources/images/delete.png" data-toggle="tooltip" data-placement="bottom" title="Delete Player" height="32" width="32" ng-click="playerCtrl.deleteRecord(player.id)"/>
+        </td>
+    </script>
+
+    <script type="text/ng-template" id="player-edit">
+        <td><input type="text" ng-model="selected.forename" /><input type="text" ng-model="selected.surname" /></td>
+        <td>{{selected.group}}</td>
+        <td><input type="text" ng-model="selected.emailAddress" /></td>
+        <td><input type="text" ng-model="selected.phoneNumber" /></td>
+        <td>
+            <img src="resources/images/save.png"  data-toggle="tooltip" title="Save Changes" height="32" width="32" ng-click="playerCtrl.saveChanges(selected.id, selected.forename, selected.surname, selected.emailAddress, selected.phoneNumber)"/>
+            <img src="resources/images/cancel.png" data-toggle="tooltip" title="Cancel Changes" height="32" width="32" ng-click="playerCtrl.cancelChanges()"/>
+        </td>
+    </script>
 
     <form id="newPlayerForm" class="form-horizontal" ng-show="playerCtrl.showPrivilegedData()" ng-submit="addPlayer()">
         <h2 class="form-signin-heading">Enter details to add player</h2>
