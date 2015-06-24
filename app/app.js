@@ -1,6 +1,10 @@
 (function() {
   var app = angular.module('dartsApp', ['ui.bootstrap', 'dialogs.main']);
 
+  var baseUrl = !(document.location.port) ?
+      'http://' + document.location.hostname :
+      'http://' + document.location.hostname + ':' + document.location.port;
+
   app.service('loginService', function() {
       var loginservice = this;
       var isAuthorised = false;
@@ -124,7 +128,7 @@
         return isGroupSelectedAttempt;
     },
 
-    $http.get('http://localhost:3000/players').success(function(data) {
+    $http.get(baseUrl + '/players').success(function(data) {
         playerService.setPlayers(data.players);
     });
 
@@ -154,9 +158,9 @@
         
         if (!isDuplicateplayerAttempt) {
             if (group && group.id) {
-                $http.post('http://localhost:3000/player/' + forename + '/' + surname + '/' + phone + '/' + email + '/' + group.id).success(function(data) {
+                $http.post(baseUrl + '/player/' + forename + '/' + surname + '/' + phone + '/' + email + '/' + group.id).success(function(data) {
                     // refresh controllers internal state for players
-                    $http.get('http://localhost:3000/players').success(function(data) {
+                    $http.get(baseUrl + '/players').success(function(data) {
                         playerService.setPlayers(data.players);
                         $scope.forename = '';
                         $scope.surname = '';
@@ -187,7 +191,7 @@
         return weekService.getWeeks();
     },
 
-    $http.get('http://localhost:3000/weeks').success(function(data) {
+    $http.get(baseUrl + '/weeks').success(function(data) {
         weekService.setWeeks(data.weeks);
     });
 
@@ -204,9 +208,9 @@
 
         var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the week?');
         dialog.result.then(function(btn) {
-            $http.delete('http://localhost:3000/week/' + id).success(function(data) {
+            $http.delete(baseUrl + '/week/' + id).success(function(data) {
                 // refresh controllers internal state for weeks
-                $http.get('http://localhost:3000/weeks').success(function(data) {
+                $http.get(baseUrl + '/weeks').success(function(data) {
                     weekService.setWeeks(data.weeks);
                 });
             });
@@ -216,9 +220,9 @@
     },
 
     weekCtrl.saveChanges = function (id, name) {
-        $http.put('http://localhost:3000/week/' + id + '/' + name).success(function(data) {
+        $http.put(baseUrl + '/week/' + id + '/' + name).success(function(data) {
             // refresh controllers internal state for weeks
-            $http.get('http://localhost:3000/weeks').success(function(data) {
+            $http.get(baseUrl + '/weeks').success(function(data) {
                 weekService.setWeeks(data.weeks);
             });
         });
@@ -247,11 +251,11 @@
         }
         
         if (!isDuplicateWeekAttempt) {
-            $http.post('http://localhost:3000/week/' + $scope.weekname).success(function(data) {
+            $http.post(baseUrl + '/week/' + $scope.weekname).success(function(data) {
                 $scope.weekname = '';
                 isDuplicateWeekAttempt = false;
                 // refresh controllers internal state for weeks
-                $http.get('http://localhost:3000/weeks').success(function(data) {
+                $http.get(baseUrl + '/weeks').success(function(data) {
                     weekService.setWeeks(data.weeks);
                 });
             });
@@ -292,9 +296,9 @@
 
         var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the group?');
         dialog.result.then(function(btn) {
-            $http.delete('http://localhost:3000/group/' + id).success(function(data) {
+            $http.delete(baseUrl + '/group/' + id).success(function(data) {
                 // refresh controllers internal state for groups
-                $http.get('http://localhost:3000/groups').success(function(data) {
+                $http.get(baseUrl + '/groups').success(function(data) {
                     groupService.setGroups(data.groups);
                 });
             });
@@ -304,9 +308,9 @@
     },
 
     groupCtrl.saveChanges = function (id, name) {
-        $http.put('http://localhost:3000/group/' + id + '/' + name).success(function(data) {
+        $http.put(baseUrl + '/group/' + id + '/' + name).success(function(data) {
             // refresh controllers internal state for groups
-            $http.get('http://localhost:3000/groups').success(function(data) {
+            $http.get(baseUrl + '/groups').success(function(data) {
                 groupService.setGroups(data.groups);
             });
         });
@@ -321,7 +325,7 @@
         $scope.selected = {};
     };
 
-    $http.get('http://localhost:3000/groups').success(function(data) {
+    $http.get(baseUrl + '/groups').success(function(data) {
         groupService.setGroups(data.groups);
     });
     
@@ -339,11 +343,11 @@
         }
         
         if (!isDuplicateGroupAttempt) {
-            $http.post('http://localhost:3000/group/' + $scope.groupname).success(function(data) {
+            $http.post(baseUrl + '/group/' + $scope.groupname).success(function(data) {
                 $scope.groupname = '';
                 isDuplicateGroupAttempt = false;
                 // refresh controllers internal state for groups
-                $http.get('http://localhost:3000/groups').success(function(data) {
+                $http.get(baseUrl + '/groups').success(function(data) {
                     groupService.setGroups(data.groups);
                 });
             });
@@ -380,9 +384,9 @@
 
         var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the board?');
         dialog.result.then(function(btn) {
-            $http.delete('http://localhost:3000/venue/' + id).success(function(data) {
+            $http.delete(baseUrl + '/venue/' + id).success(function(data) {
                 // refresh controllers internal state for venues
-                $http.get('http://localhost:3000/venues').success(function(data) {
+                $http.get(baseUrl + '/venues').success(function(data) {
                     venueService.setVenues(data.venues);
                 });
             });
@@ -392,9 +396,9 @@
     },
 
     venueCtrl.saveChanges = function (id, name) {
-        $http.put('http://localhost:3000/venue/' + id + '/' + name).success(function(data) {
+        $http.put(baseUrl + '/venue/' + id + '/' + name).success(function(data) {
             // refresh controllers internal state for venues
-            $http.get('http://localhost:3000/venues').success(function(data) {
+            $http.get(baseUrl + '/venues').success(function(data) {
                 venueService.setVenues(data.venues);
             });
         });
@@ -409,7 +413,7 @@
         $scope.selected = {};
     };
 
-    $http.get('http://localhost:3000/venues').success(function(data) {
+    $http.get(baseUrl + '/venues').success(function(data) {
         venueService.setVenues(data.venues);
     });
     
@@ -427,11 +431,11 @@
         }
         
         if (!isDuplicateVenueAttempt) {
-            $http.post('http://localhost:3000/venue/' + $scope.venuename).success(function(data) {
+            $http.post(baseUrl + '/venue/' + $scope.venuename).success(function(data) {
                 $scope.venuename = '';
                 isDuplicateVenueAttempt = false;
                 // refresh controllers internal state for venues
-                $http.get('http://localhost:3000/venues').success(function(data) {
+                $http.get(baseUrl + '/venues').success(function(data) {
                     venueService.setVenues(data.venues);
                 });
             });
@@ -484,7 +488,7 @@
         return isDuplicateFixtureAttempt;
     },
 
-    $http.get('http://localhost:3000/fixtures').success(function(data) {
+    $http.get(baseUrl + '/fixtures').success(function(data) {
         fixtureCtrl.fixtures = data.fixtures;
     });
 
@@ -536,9 +540,9 @@
             }
 
             if (!isDuplicateFixtureAttempt) {
-                $http.post('http://localhost:3000/fixture/' + week.id + '/' + orderOfPlay + '/' + venue.id + '/' + group.id + '/' + player1.id + '/' + player2.id + '/' + marker1.id + '/' + marker2.id).success(function(data) {
+                $http.post(baseUrl + '/fixture/' + week.id + '/' + orderOfPlay + '/' + venue.id + '/' + group.id + '/' + player1.id + '/' + player2.id + '/' + marker1.id + '/' + marker2.id).success(function(data) {
                     // refresh controllers internal state for fixtures
-                    $http.get('http://localhost:3000/fixtures').success(function(data) {
+                    $http.get(baseUrl + '/fixtures').success(function(data) {
                         fixtureCtrl.fixtures = data.fixtures;
                         $scope.week = '';
                         $scope.group = '';
