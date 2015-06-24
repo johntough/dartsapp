@@ -10,5 +10,9 @@
     "dependencies": {
         "express": "4.12.4",
         "sqlite3": "3.0.8"
-    }
+    },
+    "scripts": {
+        "start": "node nodejs_db_with_rest_api.js"
+    },
+    "main": "nodejs_db_with_rest_api.js"
 }
