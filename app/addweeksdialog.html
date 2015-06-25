@@ -1,0 +1,17 @@
+<div class="modal-header">
+    <h4 class="modal-title">
+    <span class="glyphicon glyphicon-plus">
+    </span> Add Week</h4>
+</div>
+<div class="modal-body">
+    <ng-form name="addWeekDialog" novalidate role="form">
+    <div class="form-group input-group-lg">
+        <label class="control-label" for="course">Week Name:</label>
+        <input type="text" class="form-control" name="weekname" id="weekname" ng-model="week.name" ng-keyup="hitEnter($event)" placeholder="week name" required>
+    </div>
+    </ng-form>
+ </div>
+ <div class="modal-footer">
+     <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+     <button type="button" class="btn btn-primary" ng-click="save()" ng-disabled="(addWeekDialog.$dirty && addWeekDialog.$invalid) || addWeekDialog.$pristine">Save</button>
+ </div>

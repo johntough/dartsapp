@@ -28,16 +28,6 @@
         </td>
     </script>
 
-    <form class="form-horizontal" ng-submit="addWeek()">
-    <h2 class="form-signin-heading">Enter details to add extra weeks</h2>
-
-    <div class="form-group">
-        <label for="inputName" class="col-sm-3 control-label">Week Name</label>
-        <div class="col-sm-6">
-        <input type="text" id="inputName" ng-model="weekname" class="form-control" placeholder="week name" required autofocus>
-    </div>
-    </div>
-
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Add Week</button>
+    <button class="btn btn-lg btn-primary btn-block" ng-click="weekCtrl.showAddForm()">Add Week</button>
 </form>
 </div>
