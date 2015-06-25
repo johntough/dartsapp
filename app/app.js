@@ -5,7 +5,7 @@
       'http://' + document.location.hostname :
       'http://' + document.location.hostname + ':' + document.location.port;
 
-  app.service('loginService', function() {
+  app.service('loginService', ['dialogs', function(dialogs) {
       var loginservice = this;
       var isAuthorised = false;
       var invalidAttempt = false;
@@ -24,13 +24,14 @@
               invalidAttempt = false;
           } else {
               invalidAttempt = true;
+              dialogs.error('Error', 'Login attempt unsuccessful.');
           }
       };
 
       loginservice.logout = function() {        
           isAuthorised = false;
       };
-  });
+  }]);
 
   app.service('groupService', function() {
       var groupservice = this;
@@ -105,7 +106,6 @@
   function($scope, $http, loginService, groupService, playerService, dialogs) {
     var playerCtrl = this;
 
-    var isGroupSelectedAttempt = false;
     var isDuplicateplayerAttempt = false;
 
     playerCtrl.getPlayers = function() {
@@ -118,14 +118,6 @@
 
     playerCtrl.getGroups = function() {
         return groupService.getGroups();
-    },
-
-    playerCtrl.isDuplicatePlayerAttempt = function() {
-        return isDuplicateplayerAttempt;
-    },
-
-    playerCtrl.isGroupSelectedAttempt = function() {
-        return isGroupSelectedAttempt;
     },
 
     // gets the template to ng-include for a table row / item
@@ -176,7 +168,6 @@
     });
 
     $scope.addPlayer = function() {
-        isGroupSelectedAttempt = false;
         isDuplicateplayerAttempt = false;
         var forename = $scope.forename;
         var surname = $scope.surname;
@@ -195,6 +186,7 @@
                     $scope.surname = '';
                     $scope.email = '';
                     $scope.phonenumber = '';
+                    dialogs.error('Oops...', 'It looks like you tried to enter a player that already exists in the system.');
                 }
             }
         }
@@ -212,7 +204,7 @@
                     });
                 });
             } else {
-                isGroupSelectedAttempt = true;
+                dialogs.notify('Doh!','Remember to select a group.');
             }
         }
     }
@@ -224,10 +216,6 @@
 
     weekCtrl.showPrivilegedData = function() {
         return loginService.isAuthorised();
-    },
-
-    weekCtrl.isDuplicateWeekAttempt = function() {
-        return isDuplicateWeekAttempt;
     },
 
     weekCtrl.getWeeks = function() {
@@ -289,6 +277,7 @@
                 if (weekService.getWeeks()[week].name === $scope.weekname) {
                     isDuplicateWeekAttempt = true;
                     $scope.weekname = '';
+                    dialogs.error('Oops...', 'It looks like you tried to enter a week that already exists in the system.');
                 }
             }
         }
@@ -308,18 +297,11 @@
   
   app.controller('GroupController', ['$scope', '$http', 'loginService', 'groupService', 'dialogs', function($scope, $http, loginService, groupService, dialogs) {
     var groupCtrl = this
-    $scope.$on('$viewContentLoaded', function(event){
-        console.log('content loaded!')
-    });
 
     var isDuplicateGroupAttempt = false;
 
     groupCtrl.getGroups = function() {
         return groupService.groups;
-    },
-
-    groupCtrl.isDuplicateGroupAttempt = function() {
-        return isDuplicateGroupAttempt;
     },
 
     groupCtrl.showPrivilegedData = function() {
@@ -381,6 +363,7 @@
                 if (groupService.getGroups()[group].name === $scope.groupname) {
                     isDuplicateGroupAttempt = true;
                     $scope.groupname = '';
+                    dialogs.error('Oops...', 'It looks like you tried to enter a group that already exists in the system.');
                 }
             }
         }
@@ -401,10 +384,6 @@
   app.controller('VenueController', ['$scope', '$http', 'venueService', 'loginService', 'dialogs', function($scope, $http, venueService, loginService, dialogs) {
     var venueCtrl = this;
     var isDuplicateVenueAttempt = false;
-    
-    venueCtrl.isDuplicateVenueAttempt = function() {
-        return isDuplicateVenueAttempt;
-    },
 
     venueCtrl.showPrivilegedData = function() {
         return loginService.isAuthorised();
@@ -469,6 +448,7 @@
                 if (venueService.getVenues()[venue].name === $scope.venuename) {
                     isDuplicateVenueAttempt = true;
                     $scope.venuename = '';
+                    dialogs.error('Oops...', 'It looks like you tried to enter a board that already exists in the system.');
                 }
             }
         }
@@ -486,8 +466,8 @@
     }
   }]);
   
-  app.controller('FixtureController', ['$scope', '$http', 'loginService', 'weekService', 'groupService', 'venueService', 'playerService', 
-  function($scope, $http, loginService, weekService, groupService, venueService, playerService) {
+  app.controller('FixtureController', ['$scope', '$http', 'loginService', 'weekService', 'groupService', 'venueService', 'playerService', 'dialogs',
+  function($scope, $http, loginService, weekService, groupService, venueService, playerService, dialogs) {
     var fixtureCtrl = this;
     fixtureCtrl.fixtures = [];
     var isIncompleteFormAttempt = false;
@@ -515,22 +495,6 @@
         return playerService.getPlayers();
     },
 
-    fixtureCtrl.isIncompleteFormAttempt = function() {
-        return isIncompleteFormAttempt;
-    },
-
-    fixtureCtrl.isDuplicatePlayerAttempt = function() {
-        return isDuplicatePlayerAttempt;
-    },
-
-    fixtureCtrl.isPlayerAlsoMarkerAttempt = function() {
-        return isPlayerAlsoMarkerAttempt;
-    },
-
-    fixtureCtrl.isDuplicateFixtureAttempt = function() {
-        return isDuplicateFixtureAttempt;
-    },
-
     $http.get(baseUrl + '/fixtures').success(function(data) {
         fixtureCtrl.fixtures = data.fixtures;
     });
@@ -551,16 +515,19 @@
 
         if (!(week && group && venue && player1 && player2 && marker1 && marker2)) {
             isIncompleteFormAttempt = true;
+            dialogs.notify('Doh!','You need to ensure all fields are complete.');
         }
 
         if (player1 && player2 && player1 === player2) {
             isDuplicatePlayerAttempt = true;
+            dialogs.notify('Doh!','Players can\'t play themselves.');
         }
 
         if ((player1 && player2 && marker1 && marker2) && 
         (player1 === marker1 || player1 === marker2 || player2 === marker1 || player2 === marker2)
         ) {
             isPlayerAlsoMarkerAttempt = true;
+            dialogs.notify('Doh!','You don\'t expect a player to mark their own game do you?');
         }
 
         if (!isIncompleteFormAttempt && !isDuplicatePlayerAttempt && !isPlayerAlsoMarkerAttempt) {
@@ -578,6 +545,7 @@
                        && fixtureCtrl.fixtures[fixture].markerTwo.toLowerCase() === (marker2.forename + ' ' + marker2.surname).toLowerCase()
                     ) {
                         isDuplicateFixtureAttempt = true;
+                        dialogs.error('Oops...', 'It looks like you tried to enter a fixture that already exists in the system.');
                     }
                 }
             }
@@ -607,10 +575,6 @@
     
     loginCtrl.isAuthorised = function() {
         return loginService.isAuthorised();
-    },
-
-    loginCtrl.isInvalidAttempt = function() {
-        return loginService.isInvalidAttempt();
     },
 
     $scope.login = function() {
