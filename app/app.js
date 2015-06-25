@@ -72,18 +72,18 @@
       }
   });
 
-  app.service('playerService', function() {
+  app.service('playerService', ['$http', function($http) {
       var playerservice = this;
       playerservice.players = [];
 
       playerservice.getPlayers = function() {
           return playerservice.players;
-      },
+      },      
 
       playerservice.setPlayers = function(players) {
           playerservice.players = players;
       }
-  });
+  }]);
   
   app.controller('NavigationController', ['loginService', function(loginService) {
     var navigationCtrl = this;
@@ -470,6 +470,7 @@
   function($scope, $http, loginService, weekService, groupService, venueService, playerService, dialogs) {
     var fixtureCtrl = this;
     fixtureCtrl.fixtures = [];
+    $scope.players = [];
     var isIncompleteFormAttempt = false;
     var isDuplicatePlayerAttempt = false;
     var isPlayerAlsoMarkerAttempt = false;
@@ -491,8 +492,10 @@
         return venueService.getVenues();
     },
 
-    fixtureCtrl.getPlayers = function() {
-        return playerService.getPlayers();
+    fixtureCtrl.groupSelected = function(groupId) {
+        $http.get(baseUrl + '/players/group/' + groupId).success(function(data) {
+            $scope.players = data.players;
+        });
     },
 
     $http.get(baseUrl + '/fixtures').success(function(data) {

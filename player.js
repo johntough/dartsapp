@@ -27,6 +27,32 @@ module.exports = function(restapi, db) {
         });
     });
 
+    restapi.get('/players/group/:groupId', function(request, response) {
+        var group_id = request.params.groupId;
+        var json_obj_response = { players : [], count: 0};
+
+        db.each("SELECT player_tbl.id, player_tbl.forename, player_tbl.surname, player_tbl.phone_number, player_tbl.email_address, " +
+        "group_tbl.name AS group_name " +
+        "FROM player_tbl " +
+        "JOIN group_tbl ON group_tbl.id = player_tbl.group_id " +
+        "WHERE group_tbl.id = " + group_id,
+        function(err, row) {
+            var player = { id: '', forename: '', surname: '', phoneNumber: '', emailAddress: '', group: ''};
+
+            player.id = row.id;
+            player.forename = row.forename;
+            player.surname = row.surname;
+            player.phoneNumber = row.phone_number;
+            player.emailAddress = row.email_address;
+            player.group = row.group_name;
+
+            json_obj_response.players.push(player);
+        }, 
+        function complete(err, found) {
+            json_obj_response.count = json_obj_response.players.length;
+            response.json(json_obj_response);
+        });
+    });
     restapi.post('/player/:forename/:surname/:phone/:email/:group', function(request, response) {
         var new_forename = request.params.forename;
         var new_surname = request.params.surname;
