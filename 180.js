@@ -6,20 +6,16 @@ module.exports = function(restapi, db) {
 
         var json_obj_response = { player180s: [], count: 0};
 
-         db.each("SELECT player_180_tbl.id, player_180_tbl.no_of_180s, " +
-         "w.name AS week_name, " +
+         db.each("SELECT player_180_tbl.id, SUM(player_180_tbl.no_of_180s) AS total_no_of_180s, " +
          "p.forename AS p_forename, p.surname AS p_surname " +
          "FROM player_180_tbl " +
          "JOIN player_tbl AS p ON p.id = player_180_tbl.player_id " +
-         "JOIN result_tbl AS r ON r.id = player_180_tbl.result_id " +
-         "JOIN fixture_tbl AS f ON f.id = r.fixture_id " +
-         "JOIN week_tbl AS w ON w.id = f.week_id",
+         "GROUP BY player_180_tbl.player_id",
         function(err, row) {
-            var player180 = { id: '', noOf180s: 0, player: '', week: ''};
+            var player180 = { id: '', noOf180s: 0, player: ''};
 
             player180.id = row.id;
-            player180.week = row.week_name;
-            player180.noOf180s = row.no_of_180s;
+            player180.noOf180s = row.total_no_of_180s;
             player180.player = row.p_forename + ' ' + row.p_surname;
             json_obj_response.player180s.push(player180);
         }, 

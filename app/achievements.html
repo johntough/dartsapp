@@ -16,14 +16,12 @@
             <thead>
                 <tr>
                     <th>Player</th>
-                    <th>Week</th>
                     <th>Number of 180s</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="player180 in achievementCtrl.player180s">
+                <tr ng-class="{ success:achievementCtrl.isMost180s(player180.noOf180s) }" ng-repeat="player180 in achievementCtrl.player180s | orderBy:'-noOf180s'">
                     <td>{{player180.player}}</td>
-                    <td>{{player180.week}}</td>
                     <td>{{player180.noOf180s}}</td>
                 </tr>
             </tbody>

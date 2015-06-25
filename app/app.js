@@ -697,6 +697,20 @@
         achievementCtrl.tab = setTab;
     };
 
+    achievementCtrl.isMost180s = function(numberOf180s) {
+        var isMost180s = true;
+
+        for (var player180 in achievementCtrl.player180s) {
+            if (achievementCtrl.player180s.hasOwnProperty(player180)) {
+                var currentNoOf180s = achievementCtrl.player180s[player180].noOf180s;
+                if (currentNoOf180s > numberOf180s) {
+                    isMost180s = false;
+                }
+            }
+        }
+        return isMost180s;
+    };
+
     achievementCtrl.isBestLeg = function(numberOfDarts) {
         var isBestLeg = true;
 
