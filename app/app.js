@@ -499,6 +499,30 @@
         fixtureCtrl.fixtures = data.fixtures;
     });
 
+    fixtureCtrl.filter = function() {        
+        if (!$scope.weekfilter | $scope.weekfilter === 'all') {
+            if (!$scope.groupfilter | $scope.groupfilter === 'all') {
+                $http.get(baseUrl + '/fixtures/').success(function(data) {
+                    fixtureCtrl.fixtures = data.fixtures;
+                });
+            } else {
+                $http.get(baseUrl + '/fixtures/group/' + $scope.groupfilter).success(function(data) {
+                    fixtureCtrl.fixtures = data.fixtures;
+                });                        
+            }
+        } else {
+            if (!$scope.groupfilter | $scope.groupfilter === 'all') {
+                $http.get(baseUrl + '/fixtures/week/' + $scope.weekfilter).success(function(data) {
+                    fixtureCtrl.fixtures = data.fixtures;
+                });
+            } else {
+                $http.get(baseUrl + '/fixtures/week/' + $scope.weekfilter + '/group/' + $scope.groupfilter).success(function(data) {
+                    fixtureCtrl.fixtures = data.fixtures;
+                });                         
+            }
+        }
+    },
+
     $scope.addFixture = function() {
         isIncompleteFormAttempt = false;
         isDuplicatePlayerAttempt = false;

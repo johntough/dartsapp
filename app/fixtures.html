@@ -1,4 +1,31 @@
 <div ng-controller="FixtureController as fixtureCtrl">
+
+    <form id="filterForm" class="form-horizontal">
+        <div class="form-group">    
+        <label for="weekFilter" class="col-sm-3 control-label">Filter fixtures by week</label>
+            <div class="col-sm-6">
+            <select id="weekFilter" ng-model="weekfilter" ng-change="fixtureCtrl.filter()" class="form-control" >
+                <option value="all">All</option>
+                <option value="{{week.id}}" ng-repeat="week in fixtureCtrl.getWeeks()">
+                   {{week.name}}
+                </option>
+            </select>
+        </div>
+        </div>
+
+        <div class="form-group">
+        <label for="groupFilter" class="col-sm-3 control-label">Filter fixtures by group</label>
+            <div class="col-sm-6">
+            <select id="groupFilter" ng-model="groupfilter" ng-change="fixtureCtrl.filter()" class="form-control">
+                <option value="all">All</option>
+                <option value="{{group.id}}" ng-repeat="group in fixtureCtrl.getGroups()">
+                   {{group.name}}
+                </option>
+            </select>
+        </div>
+        </div>
+    </form>
+
     <table class="table">
         <thead>
             <tr>
