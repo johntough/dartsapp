@@ -569,7 +569,129 @@
         }
     }
   }]);
-  
+
+  app.controller('ResultController', ['$scope', '$http', 'loginService', 'dialogs', function($scope, $http, loginService, dialogs) {
+    var resultCtrl = this;
+    resultCtrl.results = [];
+
+    resultCtrl.showPrivilegedData = function() {
+        return loginService.isAuthorised();
+    },
+
+    // gets the template to ng-include for a table row / item
+    resultCtrl.getTemplate = function (venue) {
+        if ($scope.selected && venue.id === $scope.selected.id) { 
+            return 'result-edit';
+        } else {
+            return 'result-display';
+        }
+    };
+
+    resultCtrl.deleteRecord  = function(id) {
+
+        var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the result?');
+        dialog.result.then(function(btn) {
+            $http.delete(baseUrl + '/result/' + id).success(function(data) {
+                // refresh controllers internal state for results
+                $http.get(baseUrl + '/results').success(function(data) {
+                    resultCtrl.results = data.results;
+                });
+            });
+        }, function(btn){
+            // do nothing - user chose not to delete the result
+        });
+    },
+
+    resultCtrl.saveChanges = function (id, p1legs, p2legs) {
+        $http.put(baseUrl + '/result/' + id + '/' + p1legs + '/' + p2legs).success(function(data) {
+            // refresh controllers internal state for results
+            $http.get(baseUrl + '/results').success(function(data) {
+                resultCtrl.results = data.results;
+            });
+        });
+        resultCtrl.cancelChanges();
+    };
+
+    resultCtrl.edit = function (result) {
+        $scope.selected = angular.copy(result);
+    };
+
+    resultCtrl.cancelChanges = function () {
+        $scope.selected = {};
+    };
+
+    $http.get(baseUrl + '/results').success(function(data) {
+        resultCtrl.results = data.results;
+    });
+  }]);
+
+  app.controller('AchievementController', ['$scope', '$http', 'loginService', 'dialogs', function($scope, $http, loginService, dialogs) {
+    var achievementCtrl = this;
+    achievementCtrl.player180s = [];
+    achievementCtrl.highfinishes = [];
+    achievementCtrl.bestlegs = [];
+    achievementCtrl.tab = 'player180s';
+
+    achievementCtrl.showPrivilegedData = function() {
+        return loginService.isAuthorised();
+    },
+
+    achievementCtrl.isSet = function(checkTab) {
+        return achievementCtrl.tab === checkTab;
+    };
+
+    achievementCtrl.setTab = function(setTab) {
+        achievementCtrl.tab = setTab;
+    };
+
+    achievementCtrl.isBestLeg = function(numberOfDarts) {
+        var isBestLeg = true;
+
+        for (var bestleg in achievementCtrl.bestlegs) {
+            if (achievementCtrl.bestlegs.hasOwnProperty(bestleg)) {
+                var currentNumberOfDarts = achievementCtrl.bestlegs[bestleg].numberOfDarts;
+                if (currentNumberOfDarts < numberOfDarts) {
+                    isBestLeg = false;
+                }
+            }
+        }
+        return isBestLeg;
+    };
+
+    achievementCtrl.isHighestFinish = function(checkout) {
+        var isHighestFinish = true;
+
+        for (var highfinish in achievementCtrl.highfinishes) {
+            if (achievementCtrl.highfinishes.hasOwnProperty(highfinish)) {
+                var currentHighFinish = achievementCtrl.highfinishes[highfinish].checkout;
+                if (currentHighFinish > checkout) {
+                    isHighestFinish = false;
+                }
+            }
+        }
+        return isHighestFinish;
+    };
+
+    // gets the template to ng-include for a table row / item
+    achievementCtrl.getTemplate = function (venue) {
+        if ($scope.selected && venue.id === $scope.selected.id) { 
+            return 'achievement-edit';
+        } else {
+            return 'achievement-display';
+        }
+    };
+
+    $http.get(baseUrl + '/180s').success(function(data) {
+        achievementCtrl.player180s = data.player180s;
+    });
+    $http.get(baseUrl + '/highfinishes').success(function(data) {
+        achievementCtrl.highfinishes = data.highfinishes;
+    });
+    $http.get(baseUrl + '/bestlegs').success(function(data) {
+        achievementCtrl.bestlegs = data.bestlegs;
+    });
+  }]);
+
   app.controller('LoginController', ['$scope', 'loginService', function($scope, loginService) {
     var loginCtrl = this;
     
@@ -627,6 +749,20 @@
     return {
       restrict: 'E',
       templateUrl: 'fixtures.html'
+    };
+  });
+
+  app.directive('resultsList', function() {
+    return {
+      restrict: 'E',
+      templateUrl: 'results.html'
+    };
+  });
+
+  app.directive('achievementsList', function() {
+    return {
+      restrict: 'E',
+      templateUrl: 'achievements.html'
     };
   });
 })();

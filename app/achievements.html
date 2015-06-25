@@ -1,0 +1,70 @@
+<div ng-controller="AchievementController as achievementCtrl">
+    <ul class="nav nav-tabs">
+        <li role="presentation" ng-class="{ active:achievementCtrl.isSet('player180s') }">
+            <a href ng-click="achievementCtrl.setTab('player180s')">Most 180s</a>
+        </li>
+        <li role="presentation" ng-class="{ active:achievementCtrl.isSet('highfinishes') }">
+            <a href ng-click="achievementCtrl.setTab('highfinishes')">Highest Checkouts</a>
+        </li>
+        <li role="presentation" ng-class="{ active:achievementCtrl.isSet('bestlegs') }">
+            <a href ng-click="achievementCtrl.setTab('bestlegs')">Best Legs</a>
+        </li>
+    </ul>
+
+    <div ng-show="achievementCtrl.isSet('player180s')">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Player</th>
+                    <th>Week</th>
+                    <th>Number of 180s</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="player180 in achievementCtrl.player180s">
+                    <td>{{player180.player}}</td>
+                    <td>{{player180.week}}</td>
+                    <td>{{player180.noOf180s}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div ng-show="achievementCtrl.isSet('highfinishes')">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Player</th>
+                    <th>Week</th>
+                    <th>Checkout</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-class="{ success:achievementCtrl.isHighestFinish(highfinish.checkout) }" ng-repeat="highfinish in achievementCtrl.highfinishes | orderBy:'-checkout'">
+                    <td>{{highfinish.player}}</td>
+                    <td>{{highfinish.week}}</td>
+                    <td>{{highfinish.checkout}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div ng-show="achievementCtrl.isSet('bestlegs')">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Player</th>
+                    <th>Week</th>
+                    <th>Number of darts</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-class="{ success:achievementCtrl.isBestLeg(bestleg.numberOfDarts) }" ng-repeat="bestleg in achievementCtrl.bestlegs | orderBy:'-numberOfDarts':true">
+                    <td>{{bestleg.player}}</td>
+                    <td>{{bestleg.week}}</td>
+                    <td>{{bestleg.numberOfDarts}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

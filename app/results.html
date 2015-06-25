@@ -1,0 +1,24 @@
+<div ng-controller="ResultController as resultCtrl">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Week</th>
+                <th>Group</th>
+                <th>Player 1</th>
+                <th>Player 1 Legs</th>
+                <th>Player 2</th>
+                <th>Player 2 Legs</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="result in resultCtrl.results">
+                <td>{{result.week}}</td>
+                <td>{{result.group}}</td>
+                <td>{{result.playerOne}}</td>
+                <td>{{result.playerOneLegsWon}}</td>
+                <td>{{result.playerTwo}}</td>
+                <td>{{result.playerTwoLegsWon}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
