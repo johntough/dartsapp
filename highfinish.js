@@ -7,20 +7,23 @@ module.exports = function(restapi, db) {
         var json_obj_response = { highfinishes: [], count: 0};
 
          db.each("SELECT high_finish_tbl.id, high_finish_tbl.checkout, " +
+         "w.name AS week_name, " +
          "p.forename AS p_forename, p.surname AS p_surname " +
          "FROM high_finish_tbl " +
-         "JOIN player_tbl AS p ON p.id = high_finish_tbl.player_id ",
+         "JOIN player_tbl AS p ON p.id = high_finish_tbl.player_id " +
+         "JOIN result_tbl AS r ON r.id = high_finish_tbl.result_id " +
+         "JOIN fixture_tbl AS f ON f.id = r.fixture_id " +
+         "JOIN week_tbl AS w ON w.id = f.week_id",
         function(err, row) {
-            console.log("Callback on /highfinishes");
             var highfinish = { id: '', checkout: 0, player: '', week: ''};
 
             highfinish.id = row.id;
             highfinish.checkout = row.checkout;
+            highfinish.week = row.week_name;
             highfinish.player = row.p_forename + ' ' + row.p_surname;
             json_obj_response.highfinishes.push(highfinish);
         }, 
         function complete(err, found) {
-            console.log("Complete on /highfinishes");
             json_obj_response.count = json_obj_response.highfinishes.length;
             response.json(json_obj_response);
         });
@@ -44,8 +47,4 @@ module.exports = function(restapi, db) {
             response.end();
         });
     });
- 
-    console.log('highfinish.js included');
-    console.log('GET endpoint: http://localhost:3000/highfinishes');
-    console.log('POST endpoint: http://localhost:3000/highfinish/:checkout/:result/:player');
 }

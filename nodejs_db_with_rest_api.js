@@ -86,6 +86,7 @@ db.serialize(function() {
 var express = require('express');
 var restapi = express();
 
+require('./week')(restapi, db);
 require('./venue')(restapi, db);
 require('./group')(restapi, db);
 require('./player')(restapi, db);
@@ -93,7 +94,7 @@ require('./fixture')(restapi, db);
 require('./result')(restapi, db);
 require('./180')(restapi, db);
 require('./highfinish')(restapi, db);
-require('./week')(restapi, db);
+require('./bestleg')(restapi, db);
 
 restapi.use(express.static(__dirname + '/app'));
 

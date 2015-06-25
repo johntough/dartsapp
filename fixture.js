@@ -22,7 +22,6 @@ module.exports = function(restapi, db) {
          "JOIN player_tbl AS m1 ON m1.id = fixture_tbl.marker_one_id " +
          "JOIN player_tbl AS m2 ON m2.id = fixture_tbl.marker_two_id",
         function(err, row) {
-            console.log("Callback on /fixtures");
             var fixture = { id: '', weekNumber: '', orderOfPlay: '', venue: '', group: '', playerOne: '', playerTwo: '', markerOne: '', markerTwo: ''};
 
             fixture.id = row.id;
@@ -37,7 +36,6 @@ module.exports = function(restapi, db) {
             json_obj_response.fixtures.push(fixture);
         }, 
         function complete(err, found) {
-            console.log("Complete on /fixtures");
             json_obj_response.count = json_obj_response.fixtures.length;
             response.json(json_obj_response);
         });
@@ -66,8 +64,4 @@ module.exports = function(restapi, db) {
             response.end();
         });
     });
- 
-    console.log('fixture.js included');
-    console.log('GET endpoint: http://localhost:3000/fixtures');
-    console.log('POST endpoint: http://localhost:3000/fixture/:week/:order/:venue/:player1/:player2/:marker1/:marker2');
 }
