@@ -355,7 +355,6 @@
   
   app.controller('VenueController', ['$scope', '$http', 'venueService', 'loginService', 'dialogs', function($scope, $http, venueService, loginService, dialogs) {
     var venueCtrl = this;
-    var isDuplicateVenueAttempt = false;
 
     venueCtrl.showPrivilegedData = function() {
         return loginService.isAuthorised();
@@ -410,35 +409,21 @@
     $http.get(baseUrl + '/venues').success(function(data) {
         venueService.setVenues(data.venues);
     });
-    
-    $scope.addVenue = function() {
-        isDuplicateVenueAttempt = false;
 
-        for (var venue in venueService.getVenues()) {
-            if (venueService.getVenues().hasOwnProperty(venue)) {
-                // if there's a match then alert the user the group already exists
-                if (venueService.getVenues()[venue].name === $scope.venuename) {
-                    isDuplicateVenueAttempt = true;
-                    $scope.venuename = '';
-                    dialogs.error('Oops...', 'It looks like you tried to enter a board that already exists in the system.');
-                }
-            }
-        }
-        
-        if (!isDuplicateVenueAttempt) {
-            $http.post(baseUrl + '/venue/' + $scope.venuename).success(function(data) {
-                $scope.venuename = '';
-                isDuplicateVenueAttempt = false;
-                // refresh controllers internal state for venues
-                $http.get(baseUrl + '/venues').success(function(data) {
-                    venueService.setVenues(data.venues);
-                });
+    venueCtrl.showAddForm = function() {
+        var dialog = dialogs.create('/addvenuesdialog.html', 'AddVenueController', {}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});
+        dialog.result.then(function() {
+            // refresh controllers internal state for venues
+            $http.get(baseUrl + '/venues').success(function(data) {
+                venueService.setVenues(data.venues);
             });
-        }
+        },function() {
+            // do nothing as user did not add venue
+        });
     }
   }]);
 
-  app.controller('AddWeekController', ['$scope', '$http', '$modalInstance', 'data', 'weekService', function($scope, $http, $modalInstance, data, weekService) {
+  app.controller('AddWeekController', ['$scope', '$http', '$modalInstance', 'data', 'weekService', 'dialogs', function($scope, $http, $modalInstance, data, weekService, dialogs) {
     var addWeekCtrl = this;
     $scope.week = {name : '', date: ''};
 
@@ -484,7 +469,7 @@
     }
   }]);
 
-  app.controller('AddGroupController', ['$scope', '$http', '$modalInstance', 'data', 'groupService', function($scope, $http, $modalInstance, data, groupService) {
+  app.controller('AddGroupController', ['$scope', '$http', '$modalInstance', 'data', 'groupService', 'dialogs', function($scope, $http, $modalInstance, data, groupService, dialogs) {
     var addGroupCtrl = this;
     $scope.group = {name : ''};
 
@@ -513,6 +498,41 @@
         
         if (!isDuplicateGroupAttempt) {
             $http.post(baseUrl + '/group/' + groupname).success(function(data) {
+                // do nothing
+            });
+        }
+    }
+  }]);
+
+  app.controller('AddVenueController', ['$scope', '$http', '$modalInstance', 'data', 'venueService', 'dialogs', function($scope, $http, $modalInstance, data, venueService, dialogs) {
+    var addVenueCtrl = this;
+    $scope.venue = {name : ''};
+
+    $scope.cancel = function() {
+      $modalInstance.dismiss('canceled');  
+    };
+  
+    $scope.save = function() {
+      addVenueCtrl.addVenue($scope.venue.name);
+      $modalInstance.close();
+    };
+
+    addVenueCtrl.addVenue = function(venuename) {
+        isDuplicateVenueAttempt = false;
+
+        for (var venue in venueService.getVenues()) {
+            if (venueService.getVenues().hasOwnProperty(venue)) {
+                // if there's a match then alert the user the group already exists
+                if (venueService.getVenues()[venue].name === venuename) {
+                    isDuplicateVenueAttempt = true;
+                    $scope.venuename = '';
+                    dialogs.error('Oops...', 'It looks like you tried to enter a board that already exists in the system.');
+                }
+            }
+        }
+        
+        if (!isDuplicateVenueAttempt) {
+            $http.post(baseUrl + '/venue/' + venuename).success(function(data) {
                 // do nothing
             });
         }

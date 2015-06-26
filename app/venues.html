@@ -28,16 +28,5 @@
         </td>
     </script>
 
-    <form class="form-horizontal" ng-submit="addVenue()">
-    <h2 class="form-signin-heading">Enter details to add board</h2>
-
-    <div class="form-group">
-        <label for="inputName" class="col-sm-3 control-label">Board Name</label>
-        <div class="col-sm-6">
-        <input type="text" id="inputName" ng-model="venuename" class="form-control" placeholder="group name" required autofocus>
-    </div>
-    </div>
-
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Add Board</button>
-</form>
+    <button class="btn btn-lg btn-primary btn-block" ng-click="venueCtrl.showAddForm()">Add Board</button>
 </div>

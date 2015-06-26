@@ -1,0 +1,19 @@
+<div class="modal-header">
+    <h4 class="modal-title">
+    <span class="glyphicon glyphicon-plus">
+    </span> Add Board</h4>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal" name="addVenueDialog" novalidate role="form">
+        <div class="form-group">
+            <label for="venuename" class="col-sm-3 control-label">Board Name</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" name="venuename" id="venuename" ng-model="venue.name" placeholder="board name" required>
+            </div>
+        </div>
+    </form>
+ </div>
+ <div class="modal-footer">
+     <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+     <button type="button" class="btn btn-primary" ng-click="save()" ng-disabled="(addVenueDialog.$dirty && addVenueDialog.$invalid) || addVenueDialog.$pristine">Save</button>
+ </div>
