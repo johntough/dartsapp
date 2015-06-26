@@ -37,6 +37,8 @@
                 <th>Player 2</th>
                 <th>Marker 1</th>
                 <th>Marker 2</th>
+                <th></th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -49,6 +51,12 @@
                 <td>{{fixture.playerTwo}}</td>
                 <td>{{fixture.markerOne}}</td>
                 <td>{{fixture.markerTwo}}</td>
+                <td>
+                    <span ng-show="fixtureCtrl.showPrivilegedData()" ng-click="fixtureCtrl.completeFixture(fixture)" data-toggle="tooltip" data-placement="bottom" title="Record Result" ng-class="fixture.complete ? '' : 'glyphicon glyphicon-play-circle'" style="color:green">
+                </td>
+                <td>
+                    <span ng-class="fixture.complete ? 'glyphicon glyphicon-ok' : ''" data-toggle="tooltip" data-placement="bottom" title="Result Recorded" style="color:green">
+                </td>
             </tr>
         </tbody>
     </table>

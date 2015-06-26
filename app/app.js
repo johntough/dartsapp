@@ -665,6 +665,71 @@
     }
   }]);
 
+  app.controller('CompleteFixtureController', ['$scope', '$http', '$modalInstance', 'data', 'dialogs', 'fixtureService',
+  function($scope, $http, $modalInstance, data, dialogs, fixtureService) {
+
+    var completeFixtureCtrl = this;
+    $scope.player1Achievements = false;
+    $scope.player2Achievements = false;
+    $scope.player1HighFinishes = [];
+    $scope.player2HighFinishes = [];
+    $scope.player1BestLegs = [];
+    $scope.player2BestLegs = [];
+
+    $scope.result = {player1LegsWon: '', player2LegsWon: ''};
+
+    $scope.player1 = data.fixture.playerOne;
+    $scope.player2 = data.fixture.playerTwo;
+    $scope.date = data.fixture.weekNumber + ' ( ' +data.fixture.weekDate + ' )';
+
+    $scope.addPlayer1Finish = function() {
+        $scope.player1HighFinishes.push($scope.player1Checkout);
+        $scope.player1Checkout = '';
+    },
+
+    $scope.addPlayer2Finish = function() {
+        $scope.player2HighFinishes.push($scope.player2Checkout);
+        $scope.player2Checkout = '';
+    },
+
+    $scope.addPlayer1Leg = function() {
+        $scope.player1BestLegs.push($scope.player1BestLeg);
+        $scope.player1BestLeg = '';
+    },
+
+    $scope.addPlayer2Leg = function() {
+        $scope.player2BestLegs.push($scope.player2BestLeg);
+        $scope.player2BestLeg = '';
+    },
+
+    $scope.cancel = function() {
+      $modalInstance.dismiss('canceled');  
+    };
+  
+    $scope.save = function() {
+
+        completeFixtureCtrl.addResult(
+            $scope.result.player1LegsWon,
+            $scope.result.player1LegsWon
+        );
+        $modalInstance.close();
+    };
+
+    completeFixtureCtrl.addResult = function(player1LegsWon, player2LegsWon) {
+
+        var isValidResult = false;
+
+        if (isValidResult) {
+            $http.post(baseUrl + '/fixture/' + week.id + '/' + orderOfPlay + '/' + venue.id + '/' + group.id + '/' + player1.id + '/' + player2.id + '/' + marker1.id + '/' + marker2.id).success(function(data) {
+                // refresh controllers internal state for fixtures
+                $http.get(baseUrl + '/fixtures').success(function(data) {
+                    // do nothing
+                });
+            });            
+        }
+    }
+  }]);
+
   app.controller('FixtureController', ['$scope', '$http', 'loginService', 'fixtureService', 'groupService', 'weekService', 'dialogs',
   function($scope, $http, loginService, fixtureService, groupService, weekService, dialogs) {
     var fixtureCtrl = this;
@@ -720,6 +785,15 @@
             $http.get(baseUrl + '/fixtures').success(function(data) {
                 fixtureService.setFixtures(data.fixtures);
             });
+        },function() {
+            // do nothing as user did not add venue
+        });
+    },
+
+    fixtureCtrl.completeFixture = function(fixture) {
+        var dialog = dialogs.create('/completefixturesdialog.html', 'CompleteFixtureController', {fixture}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});
+        dialog.result.then(function() {
+            console.log('fixture completed');
         },function() {
             // do nothing as user did not add venue
         });

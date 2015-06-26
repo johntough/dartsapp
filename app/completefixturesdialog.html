@@ -1,0 +1,107 @@
+<div class="modal-header">
+    <h4 class="modal-title">
+    <span class="glyphicon glyphicon-play-circle" style="color:green">
+    </span> Record Result</h4>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal" name="completeFixtureDialog" novalidate role="form">
+        <div class="form-group">
+            <label for="date" class="col-md-2 control-label">Date</label>
+            <div class="col-md-8">
+                <input type="text" class="form-control" name="date" id="date" readonly='true' ng-model="date" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="player1" class="col-md-2 control-label">Player 1</label>
+            <div class="col-md-3">
+                <input type="text" class="form-control" name="player1" id="player1" readonly='true' ng-model="player1" required>
+            </div>
+            <label for="player1LegsWon" class="col-md-2 control-label">Legs Won</label>
+            <div class="col-md-3">
+                <input type="number" min="0" max="7" class="form-control" name="player1LegsWon" id="player1LegsWon" ng-model="player1LegsWon" required>
+            </div>
+        </div>
+    <button type="button" class="btn btn-primary" ng-click="player1Achievements = !player1Achievements">Achievements</button>
+    <div ng-show="player1Achievements">
+        <div class="form-group">
+            <label for="player1180s" class="col-md-2 control-label">180s <span class="glyphicon glyphicon-star" style="color:gold"></label>
+            <div class="col-md-3">
+                <input type="number" min="0" class="form-control" name="player1180s" id="player1180s" ng-model="player1180s">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="player1Checkouts" class="col-md-2 control-label">High Finishes <span class="glyphicon glyphicon-star" style="color:gold"></label>
+            <div class="col-md-3">
+                <input type="number" min="0" class="form-control" name="player1Checkouts" id="player1Checkouts" ng-model="player1Checkout">
+            </div>
+            <div class="col-md-1">
+                <h4>
+                    <span class="glyphicon glyphicon-check" ng-click="addPlayer1Finish()" data-toggle="tooltip" data-placement="bottom" title="Add Checkout" style="color:blue"></span>
+                </h4>
+            </div>
+            <label ng-model="player1HighFinishes" class="col-md-2 control-label">{{player1HighFinishes}}</label>
+        </div>
+        <div class="form-group">
+            <label for="player1BestLegs" class="col-md-2 control-label">Best Legs <span class="glyphicon glyphicon-star" style="color:gold"></label>
+            <div class="col-md-3">
+                <input type="number" min="0" class="form-control" name="player1BestLegs" id="player1BestLegs" ng-model="player1BestLeg">
+            </div>
+            <div class="col-md-1">
+                <h4>
+                    <span class="glyphicon glyphicon-check" ng-click="addPlayer1Leg()" data-toggle="tooltip" data-placement="bottom" title="Add Leg" style="color:blue"></span>
+                </h4>
+            </div>
+            <label ng-model="player1BestLegs" class="col-md-2 control-label">{{player1BestLegs}}</label>
+        </div>
+    </div>
+        <div class="form-group">
+            <label for="player2" class="col-md-2 control-label">Player 2</label>
+            <div class="col-md-3">
+                <input type="text" class="form-control" name="player2" id="player2" readonly='true' ng-model="player2" required>
+            </div>
+            <label for="player2LegsWon" class="col-md-2 control-label">Legs Won</label>
+            <div class="col-md-3">
+                <input type="number" min="0" max="7" class="form-control" name="player2LegsWon" id="player2LegsWon" ng-model="player2LegsWon" required>
+            </div>
+        </div>
+
+    <button type="button" class="btn btn-primary" ng-click="player2Achievements = !player2Achievements">Achievements</button>
+    <div ng-show="player2Achievements">
+        <div class="form-group">
+            <label for="player2180s" class="col-md-2 control-label">180s <span class="glyphicon glyphicon-star" style="color:gold"></label>
+            <div class="col-md-3">
+                <input type="number" min="0" class="form-control" name="player2180s" id="player2180s" ng-model="player2180s">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="player2Checkouts" class="col-md-2 control-label">High Finishes <span class="glyphicon glyphicon-star" style="color:gold"></label>
+            <div class="col-md-3">
+                <input type="number" min="0" class="form-control" name="player2Checkouts" id="player2Checkouts" ng-model="player2Checkout">
+            </div>
+            <div class="col-md-1">
+                <h4>
+                    <span class="glyphicon glyphicon-check" ng-click="addPlayer2Finish()" data-toggle="tooltip" data-placement="bottom" title="Add Checkout" style="color:blue"></span>
+                </h4>
+            </div>
+            <label ng-model="player2HighFinishes" class="col-md-2 control-label">{{player2HighFinishes}}</label>
+        </div>
+        <div class="form-group">
+            <label for="player2BestLegs" class="col-md-2 control-label">Best Legs <span class="glyphicon glyphicon-star" style="color:gold"></label>
+            <div class="col-md-3">
+                <input type="number" min="0" class="form-control" name="player2BestLegs" id="player2BestLegs" ng-model="player2BestLeg">
+            </div>
+            <div class="col-md-1">
+                <h4>
+                    <span class="glyphicon glyphicon-check" ng-click="addPlayer2Leg()" data-toggle="tooltip" data-placement="bottom" title="Add Leg" style="color:blue"></span>
+                </h4>
+            </div>
+            <label ng-model="player2BestLegs" class="col-md-2 control-label">{{player2BestLegs}}</label>
+        </div>
+    </div>
+    </form>
+ </div>
+ <div class="modal-footer">
+     <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+     <button type="button" class="btn btn-primary" ng-click="save()" ng-disabled="(completeFixtureDialog.$dirty && completeFixtureDialog.$invalid) || completeFixtureDialog.$pristine">Record Result</button>
+ </div>

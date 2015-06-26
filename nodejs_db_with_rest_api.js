@@ -39,6 +39,7 @@ db.serialize(function() {
     "   player_two_id INTEGER NOT NULL," +
     "   marker_one_id INTEGER NOT NULL," +
     "   marker_two_id INTEGER NOT NULL," +
+    "   complete INTEGER NOT NULL," +
     "   FOREIGN KEY(week_id) REFERENCES week_tbl(id)," +
     "   FOREIGN KEY(group_id) REFERENCES group_tbl(id)," +
     "   FOREIGN KEY(venue_id) REFERENCES venue_tbl(id)," +
