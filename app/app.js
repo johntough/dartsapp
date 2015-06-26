@@ -167,46 +167,16 @@
         playerService.setPlayers(data.players);
     });
 
-    $scope.addPlayer = function() {
-        isDuplicateplayerAttempt = false;
-        var forename = $scope.forename;
-        var surname = $scope.surname;
-        var group = $scope.playergroup;
-        var email = ($scope.email) ? $scope.email : 'unknown';
-        var phone = ($scope.phonenumber) ? $scope.phonenumber : 'unknown';
-
-        for (var player in playerService.getPlayers()) {
-            if (playerService.getPlayers().hasOwnProperty(player)) {
-                // if there's a match then alert the user the group already exists                
-                if (playerService.getPlayers()[player].forename.toLowerCase() === forename.toLowerCase()
-                   && playerService.getPlayers()[player].surname.toLowerCase() === surname.toLowerCase()
-                ) {
-                    isDuplicateplayerAttempt = true;
-                    $scope.forename = '';
-                    $scope.surname = '';
-                    $scope.email = '';
-                    $scope.phonenumber = '';
-                    dialogs.error('Oops...', 'It looks like you tried to enter a player that already exists in the system.');
-                }
-            }
-        }
-        
-        if (!isDuplicateplayerAttempt) {
-            if (group && group.id) {
-                $http.post(baseUrl + '/player/' + forename + '/' + surname + '/' + phone + '/' + email + '/' + group.id).success(function(data) {
-                    // refresh controllers internal state for players
-                    $http.get(baseUrl + '/players').success(function(data) {
-                        playerService.setPlayers(data.players);
-                        $scope.forename = '';
-                        $scope.surname = '';
-                        $scope.email = '';
-                        $scope.phonenumber = '';
-                    });
-                });
-            } else {
-                dialogs.notify('Doh!','Remember to select a group.');
-            }
-        }
+    playerCtrl.showAddForm = function() {
+        var dialog = dialogs.create('/addplayersdialog.html', 'AddPlayerController', {}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});
+        dialog.result.then(function() {
+            // refresh controllers internal state for players
+            $http.get(baseUrl + '/players').success(function(data) {
+                playerService.setPlayers(data.players);
+            });
+        },function() {
+            // do nothing as user did not add week
+        });
     }
   }]);
 
@@ -490,7 +460,6 @@
                 // if there's a match then alert the user the group already exists
                 if (groupService.getGroups()[group].name === groupname) {
                     isDuplicateGroupAttempt = true;
-                    $scope.groupname = '';
                     dialogs.error('Oops...', 'It looks like you tried to enter a group that already exists in the system.');
                 }
             }
@@ -525,7 +494,6 @@
                 // if there's a match then alert the user the group already exists
                 if (venueService.getVenues()[venue].name === venuename) {
                     isDuplicateVenueAttempt = true;
-                    $scope.venuename = '';
                     dialogs.error('Oops...', 'It looks like you tried to enter a board that already exists in the system.');
                 }
             }
@@ -533,6 +501,49 @@
         
         if (!isDuplicateVenueAttempt) {
             $http.post(baseUrl + '/venue/' + venuename).success(function(data) {
+                // do nothing
+            });
+        }
+    }
+  }]);
+
+  app.controller('AddPlayerController', ['$scope', '$http', '$modalInstance', 'data', 'groupService', 'playerService', 'dialogs', function($scope, $http, $modalInstance, data, groupService, playerService, dialogs) {
+    var addPlayerCtrl = this;
+    $scope.player = {forename: '', surname: '', group: '', email: '', phonenumber: ''};
+
+    $scope.getGroups = function() {
+        return groupService.getGroups();
+    },
+
+    $scope.cancel = function() {
+      $modalInstance.dismiss('canceled');  
+    };
+  
+    $scope.save = function() {
+        var email = ($scope.player.email) ? $scope.player.email : 'unknown';
+        var phone = ($scope.player.phonenumber) ? $scope.player.phonenumber : 'unknown';
+
+        addPlayerCtrl.addPlayer($scope.player.forename, $scope.player.surname, $scope.player.group, email, phone);
+        $modalInstance.close();
+    };
+
+    addPlayerCtrl.addPlayer = function(forename, surname, group, email, phone) {
+        isDuplicateplayerAttempt = false;
+
+        for (var player in playerService.getPlayers()) {
+            if (playerService.getPlayers().hasOwnProperty(player)) {
+                // if there's a match then alert the user the player already exists
+                if (playerService.getPlayers()[player].forename.toLowerCase() === forename.toLowerCase()
+                   && playerService.getPlayers()[player].surname.toLowerCase() === surname.toLowerCase()
+                ) {
+                    isDuplicateplayerAttempt = true;
+                    dialogs.error('Oops...', 'It looks like you tried to enter a player that already exists in the system.');
+                }
+            }
+        }
+        
+        if (!isDuplicateplayerAttempt) {
+            $http.post(baseUrl + '/player/' + forename + '/' + surname + '/' + phone + '/' + email + '/' + group.id).success(function(data) {
                 // do nothing
             });
         }

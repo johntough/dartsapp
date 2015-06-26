@@ -1,0 +1,45 @@
+<div class="modal-header">
+    <h4 class="modal-title">
+    <span class="glyphicon glyphicon-plus">
+    </span> Add Player</h4>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal" name="addPlayerDialog" novalidate role="form">
+        <div class="form-group">
+            <label for="forename" class="col-sm-3 control-label">Forename</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" name="forename" id="forename" ng-model="player.forename" placeholder="forename" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="surname" class="col-sm-3 control-label">Surname</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" name="surname" id="surname" ng-model="player.surname" placeholder="surname" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="group" class="col-sm-3 control-label">Group</label>
+            <div class="col-sm-6">
+            <select class="form-control" id="group" form="addPlayerDialog" ng-model="player.group" ng-options="group.name for group in getGroups()" required></select>
+        </div>
+        </div>
+
+        <div class="form-group">
+            <label for="email" class="col-sm-3 control-label">Email</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" name="email" id="email" ng-model="player.email" placeholder="email">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="phonenumber" class="col-sm-3 control-label">Phone Number</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" name="phonenumber" id="phonenumber" ng-model="player.phonenumber" placeholder="phone number">
+            </div>
+        </div>
+    </form>
+ </div>
+ <div class="modal-footer">
+     <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+     <button type="button" class="btn btn-primary" ng-click="save()" ng-disabled="(addPlayerDialog.$dirty && addPlayerDialog.$invalid) || addPlayerDialog.$pristine">Save</button>
+ </div>
