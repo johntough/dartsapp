@@ -84,7 +84,28 @@
           playerservice.players = players;
       }
   }]);
-  
+
+  app.service('fixtureService', ['$http', function($http) {
+      var fixtureservice = this;
+      fixtureservice.fixtures = [];
+
+      fixtureservice.getFixtures = function() {
+          return fixtureservice.fixtures;
+      },      
+
+      fixtureservice.setFixtures = function(fixtures) {
+          var formattedFixtures = [];
+
+          for (var fixture in fixtures) {
+              if (fixtures.hasOwnProperty(fixture)) {
+                  fixtures[fixture].weekDateFormatted = Date.parse(fixtures[fixture].weekDate);
+                  formattedFixtures.push(fixtures[fixture]);
+              }
+          }
+          fixtureservice.fixtures = formattedFixtures;
+      }
+  }]);
+
   app.controller('NavigationController', ['loginService', function(loginService) {
     var navigationCtrl = this;
     navigationCtrl.tab = 'home';
@@ -550,95 +571,55 @@
     }
   }]);
 
-  app.controller('FixtureController', ['$scope', '$http', 'loginService', 'weekService', 'groupService', 'venueService', 'playerService', 'dialogs',
-  function($scope, $http, loginService, weekService, groupService, venueService, playerService, dialogs) {
-    var fixtureCtrl = this;
-    fixtureCtrl.fixtures = [];
+  app.controller('AddFixtureController', ['$scope', '$http', '$modalInstance', 'data', 'groupService', 'playerService', 'venueService', 'weekService', 'fixtureService', 'dialogs',
+  function($scope, $http, $modalInstance, data, groupService, playerService, venueService, weekService, fixtureService, dialogs) {
+
+    var addFixtureCtrl = this;
     $scope.players = [];
-    var isIncompleteFormAttempt = false;
-    var isDuplicatePlayerAttempt = false;
-    var isPlayerAlsoMarkerAttempt = false;
-    var isDuplicateFixtureAttempt = false;
+    $scope.fixture = {week: '', group: '', orderofplay: '', playerone: '', playertwo: '', marker1: '', markertwo: ''};
 
-    fixtureCtrl.showPrivilegedData = function() {
-        return loginService.isAuthorised();
-    },
-
-    fixtureCtrl.getWeeks = function() {
-        return weekService.getWeeks();
-    },
-
-    fixtureCtrl.getGroups = function() {
+    $scope.getGroups = function() {
         return groupService.getGroups();
     },
 
-    fixtureCtrl.getVenues = function() {
+    $scope.getWeeks = function() {
+        return weekService.getWeeks();
+    },
+
+    $scope.getVenues = function() {
         return venueService.getVenues();
     },
 
-    fixtureCtrl.groupSelected = function(groupId) {
+    $scope.groupSelected = function(groupId) {
         $http.get(baseUrl + '/players/group/' + groupId).success(function(data) {
             $scope.players = data.players;
         });
     },
 
-    fixtureCtrl.setFixtures = function(fixtures) {
-        var formattedFixtures = [];
-        for (var fixture in fixtures) {
-            if (fixtures.hasOwnProperty(fixture)) {
-                fixtures[fixture].weekDateFormatted = Date.parse(fixtures[fixture].weekDate);
-                formattedFixtures.push(fixtures[fixture]);
-            }
-        }
-        fixtureCtrl.fixtures = formattedFixtures;
-    },
+    $scope.cancel = function() {
+      $modalInstance.dismiss('canceled');  
+    };
+  
+    $scope.save = function() {
 
-    $http.get(baseUrl + '/fixtures').success(function(data) {
-        fixtureCtrl.setFixtures(data.fixtures);
-    });
+        addFixtureCtrl.addFixture(
+            $scope.fixture.week,
+            $scope.fixture.group,
+            $scope.fixture.venue,
+            $scope.fixture.orderofplay,
+            $scope.fixture.player1,
+            $scope.fixture.player2,
+            $scope.fixture.marker1,
+            $scope.fixture.marker2
+        );
+        $modalInstance.close();
+    };
 
-    fixtureCtrl.filter = function() {        
-        if (!$scope.weekfilter | $scope.weekfilter === 'all') {
-            if (!$scope.groupfilter | $scope.groupfilter === 'all') {
-                $http.get(baseUrl + '/fixtures/').success(function(data) {
-                    fixtureCtrl.setFixtures(data.fixtures);
-                });
-            } else {
-                $http.get(baseUrl + '/fixtures/group/' + $scope.groupfilter).success(function(data) {
-                    fixtureCtrl.setFixtures(data.fixtures);
-                });
-            }
-        } else {
-            if (!$scope.groupfilter | $scope.groupfilter === 'all') {
-                $http.get(baseUrl + '/fixtures/week/' + $scope.weekfilter).success(function(data) {
-                    fixtureCtrl.setFixtures(data.fixtures);
-                });
-            } else {
-                $http.get(baseUrl + '/fixtures/week/' + $scope.weekfilter + '/group/' + $scope.groupfilter).success(function(data) {
-                    fixtureCtrl.setFixtures(data.fixtures);
-                });
-            }
-        }
-    },
+    addFixtureCtrl.addFixture = function(week, group, venue, orderOfPlay, player1, player2, marker1, marker2) {
 
-    $scope.addFixture = function() {
-        isIncompleteFormAttempt = false;
-        isDuplicatePlayerAttempt = false;
-        isPlayerAlsoMarkerAttempt = false;
-        isDuplicateFixtureAttempt = false;
-        var week = $scope.week;
-        var group = $scope.group;
-        var orderOfPlay = $scope.orderofplay;
-        var venue = $scope.venue;
-        var player1 = $scope.playerone;
-        var player2 = $scope.playertwo;
-        var marker1 = $scope.markerone;
-        var marker2 = $scope.markertwo;
-
-        if (!(week && group && venue && player1 && player2 && marker1 && marker2)) {
-            isIncompleteFormAttempt = true;
-            dialogs.notify('Doh!','You need to ensure all fields are complete.');
-        }
+        var isDuplicatePlayerAttempt = false;
+        var isPlayerAlsoMarkerAttempt = false;
+        var isDuplicateFixtureAttempt = false;
 
         if (player1 && player2 && player1 === player2) {
             isDuplicatePlayerAttempt = true;
@@ -652,19 +633,19 @@
             dialogs.notify('Doh!','You don\'t expect a player to mark their own game do you?');
         }
 
-        if (!isIncompleteFormAttempt && !isDuplicatePlayerAttempt && !isPlayerAlsoMarkerAttempt) {
+        if (!isDuplicatePlayerAttempt && !isPlayerAlsoMarkerAttempt) {
 
-            for (var fixture in fixtureCtrl.fixtures) {
-                if (fixtureCtrl.fixtures.hasOwnProperty(fixture)) {
+            for (var fixture in fixtureService.getFixtures()) {
+                if (fixtureService.getFixtures().hasOwnProperty(fixture)) {
                     // if there's a match then alert the user the fixture already exists
-                    if (fixtureCtrl.fixtures[fixture].weekNumber.toLowerCase() === week.name.toLowerCase()
-                       && fixtureCtrl.fixtures[fixture].orderOfPlay.toString().toLowerCase() === orderOfPlay.toString().toLowerCase()
-                       && fixtureCtrl.fixtures[fixture].group.toLowerCase() === group.name.toLowerCase()
-                       && fixtureCtrl.fixtures[fixture].venue.toLowerCase() === venue.name.toLowerCase()
-                       && fixtureCtrl.fixtures[fixture].playerOne.toLowerCase() === (player1.forename + ' ' + player1.surname).toLowerCase()
-                       && fixtureCtrl.fixtures[fixture].playerTwo.toLowerCase() === (player2.forename + ' ' + player2.surname).toLowerCase()
-                       && fixtureCtrl.fixtures[fixture].markerOne.toLowerCase() === (marker1.forename + ' ' + marker1.surname).toLowerCase()
-                       && fixtureCtrl.fixtures[fixture].markerTwo.toLowerCase() === (marker2.forename + ' ' + marker2.surname).toLowerCase()
+                    if (fixtureService.getFixtures()[fixture].weekNumber.toLowerCase() === week.name.toLowerCase()
+                       && fixtureService.getFixtures()[fixture].orderOfPlay.toString().toLowerCase() === orderOfPlay.toString().toLowerCase()
+                       && fixtureService.getFixtures()[fixture].group.toLowerCase() === group.name.toLowerCase()
+                       && fixtureService.getFixtures()[fixture].venue.toLowerCase() === venue.name.toLowerCase()
+                       && fixtureService.getFixtures()[fixture].playerOne.toLowerCase() === (player1.forename + ' ' + player1.surname).toLowerCase()
+                       && fixtureService.getFixtures()[fixture].playerTwo.toLowerCase() === (player2.forename + ' ' + player2.surname).toLowerCase()
+                       && fixtureService.getFixtures()[fixture].markerOne.toLowerCase() === (marker1.forename + ' ' + marker1.surname).toLowerCase()
+                       && fixtureService.getFixtures()[fixture].markerTwo.toLowerCase() === (marker2.forename + ' ' + marker2.surname).toLowerCase()
                     ) {
                         isDuplicateFixtureAttempt = true;
                         dialogs.error('Oops...', 'It looks like you tried to enter a fixture that already exists in the system.');
@@ -676,19 +657,72 @@
                 $http.post(baseUrl + '/fixture/' + week.id + '/' + orderOfPlay + '/' + venue.id + '/' + group.id + '/' + player1.id + '/' + player2.id + '/' + marker1.id + '/' + marker2.id).success(function(data) {
                     // refresh controllers internal state for fixtures
                     $http.get(baseUrl + '/fixtures').success(function(data) {
-                        fixtureCtrl.setFixtures(data.fixtures);
-                        $scope.week = '';
-                        $scope.group = '';
-                        $scope.orderofplay = '';
-                        $scope.venue = '';
-                        $scope.playerone = '';
-                        $scope.playertwo = '';
-                        $scope.markerone = '';
-                        $scope.markertwo = '';
+                        // do nothing
                     });
                 });            
             }
         }
+    }
+  }]);
+
+  app.controller('FixtureController', ['$scope', '$http', 'loginService', 'fixtureService', 'groupService', 'weekService', 'dialogs',
+  function($scope, $http, loginService, fixtureService, groupService, weekService, dialogs) {
+    var fixtureCtrl = this;
+
+    fixtureCtrl.showPrivilegedData = function() {
+        return loginService.isAuthorised();
+    },
+
+    fixtureCtrl.getFixtures = function() {
+        return fixtureService.getFixtures();
+    },
+
+    fixtureCtrl.getGroups = function() {
+        return groupService.getGroups();
+    },
+
+    fixtureCtrl.getWeeks = function() {
+        return weekService.getWeeks();
+    },
+
+    $http.get(baseUrl + '/fixtures').success(function(data) {
+        fixtureService.setFixtures(data.fixtures);
+    });
+
+    fixtureCtrl.filter = function() {        
+        if (!$scope.weekfilter | $scope.weekfilter === 'all') {
+            if (!$scope.groupfilter | $scope.groupfilter === 'all') {
+                $http.get(baseUrl + '/fixtures/').success(function(data) {
+                    fixtureService.setFixtures(data.fixtures);
+                });
+            } else {
+                $http.get(baseUrl + '/fixtures/group/' + $scope.groupfilter).success(function(data) {
+                    fixtureService.setFixtures(data.fixtures);
+                });
+            }
+        } else {
+            if (!$scope.groupfilter | $scope.groupfilter === 'all') {
+                $http.get(baseUrl + '/fixtures/week/' + $scope.weekfilter).success(function(data) {
+                    fixtureService.setFixtures(data.fixtures);
+                });
+            } else {
+                $http.get(baseUrl + '/fixtures/week/' + $scope.weekfilter + '/group/' + $scope.groupfilter).success(function(data) {
+                    fixtureService.setFixtures(data.fixtures);
+                });
+            }
+        }
+    },
+
+    fixtureCtrl.showAddForm = function() {
+        var dialog = dialogs.create('/addfixturesdialog.html', 'AddFixtureController', {}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});
+        dialog.result.then(function() {
+            // refresh controllers internal state for fixtures
+            $http.get(baseUrl + '/fixtures').success(function(data) {
+                fixtureService.setFixtures(data.fixtures);
+            });
+        },function() {
+            // do nothing as user did not add venue
+        });
     }
   }]);
 

@@ -1,0 +1,68 @@
+<div class="modal-header">
+    <h4 class="modal-title">
+    <span class="glyphicon glyphicon-plus">
+    </span> Add Fixture</h4>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal" name="addFixtureDialog" novalidate role="form">
+        <div class="form-group">
+            <label for="week" class="col-sm-3 control-label">Week</label>
+            <div class="col-sm-6">
+                <select class="form-control" id="week" form="addFixtureDialog" ng-model="fixture.week" ng-options='(week.name + " ( " + week.date + " )") for week in getWeeks()' required></select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="group" class="col-sm-3 control-label">Group</label>
+            <div class="col-sm-6">
+                <select class="form-control" id="group" form="addFixtureDialog" ng-change="groupSelected(fixture.group.id)" ng-model="fixture.group" ng-options="group.name for group in getGroups()" required></select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="venue" class="col-sm-3 control-label">Board</label>
+            <div class="col-sm-6">
+                <select class="form-control"  id="venue" form="addFixtureDialog" ng-model="fixture.venue" ng-options="venue.name for venue in getVenues()" required></select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="orderofplay" class="col-sm-3 control-label">Order of Play</label>
+            <div class="col-sm-6">
+                <input class="form-control" type="number" min="1" id="orderofplay" ng-model="fixture.orderofplay" placeholder="order of play" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="player1" class="col-sm-3 control-label">Player 1</label>
+            <div class="col-sm-6">
+                <select class="form-control" id="player1" form="addFixtureDialog" ng-model="fixture.player1" ng-options='(player.forename + " " + player.surname) for player in players' required></select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="player2" class="col-sm-3 control-label">Player 2</label>
+            <div class="col-sm-6">
+                <select class="form-control" id="player2" form="addFixtureDialog" ng-model="fixture.player2" ng-options='(player.forename + " " + player.surname) for player in players' required></select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="marker1" class="col-sm-3 control-label">Marker 1</label>
+            <div class="col-sm-6">
+                <select class="form-control" id="marker1" form="addFixtureDialog" ng-model="fixture.marker1" ng-options='(player.forename + " " + player.surname) for player in players' required></select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="marker2" class="col-sm-3 control-label">Marker 2</label>
+            <div class="col-sm-6">
+                <select class="form-control" id="marker" form="addFixtureDialog" ng-model="fixture.marker2" ng-options='(player.forename + " " + player.surname) for player in players' required></select>
+            </div>
+        </div>
+    </form>
+ </div>
+ <div class="modal-footer">
+     <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+     <button type="button" class="btn btn-primary" ng-click="save()" ng-disabled="(addFixtureDialog.$dirty && addFixtureDialog.$invalid) || addFixtureDialog.$pristine">Save</button>
+ </div>
