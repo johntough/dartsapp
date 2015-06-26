@@ -10,7 +10,8 @@ db.serialize(function() {
 
     db.run("CREATE TABLE IF NOT EXISTS week_tbl" +
     "(  id INTEGER PRIMARY KEY NOT NULL," +
-    "   name CHAR(50) NOT NULL" +
+    "   name CHAR(50) NOT NULL," +
+    "   date CHAR(50) NOT NULL" +
     ")");
 
     db.run("CREATE TABLE IF NOT EXISTS group_tbl" +

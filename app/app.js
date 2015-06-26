@@ -270,36 +270,14 @@
     
     weekCtrl.showAddForm = function() {
         var dialog = dialogs.create('/addweeksdialog.html', 'AddWeekController', {}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});
-        dialog.result.then(function(weekname) {
-            weekCtrl.addWeek(weekname);
-        },function(){
+        dialog.result.then(function() {
+            // refresh controllers internal state for weeks
+            $http.get(baseUrl + '/weeks').success(function(data) {
+                weekService.setWeeks(data.weeks);
+            });
+        },function() {
             // do nothing as user did not add week
         });
-    },
-
-    weekCtrl.addWeek = function(weekname) {
-        isDuplicateWeekAttempt = false;
-
-        for (var week in weekService.getWeeks()) {
-            if (weekService.getWeeks().hasOwnProperty(week)) {
-                // if there's a match then alert the user the week already exists
-                if (weekService.getWeeks()[week].name === weekname) {
-                    isDuplicateWeekAttempt = true;
-                    dialogs.error('Oops...', 'It looks like you tried to enter a week that already exists in the system.');
-                }
-            }
-        }
-        
-        if (!isDuplicateWeekAttempt) {
-            $http.post(baseUrl + '/week/' + weekname).success(function(data) {
-                $scope.weekname = '';
-                isDuplicateWeekAttempt = false;
-                // refresh controllers internal state for weeks
-                $http.get(baseUrl + '/weeks').success(function(data) {
-                    weekService.setWeeks(data.weeks);
-                });
-            });
-        }
     }
   }]);
   
@@ -474,22 +452,50 @@
     }
   }]);
 
-  app.controller('AddWeekController', ['$scope', '$modalInstance', 'data', function($scope, $modalInstance, data) {
-    $scope.week = {name : ''};
+  app.controller('AddWeekController', ['$scope', '$http', '$modalInstance', 'data', 'weekService', function($scope, $http, $modalInstance, data, weekService) {
+    var addWeekCtrl = this;
+    $scope.week = {name : '', date: ''};
 
     $scope.cancel = function() {
       $modalInstance.dismiss('canceled');  
     };
   
     $scope.save = function() {
-      $modalInstance.close($scope.week.name);
+      // converting the date into a readable string
+      $scope.week.date = $scope.week.date.toLocaleDateString(
+          'en-UK',
+          { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}
+      );
+      addWeekCtrl.addWeek($scope.week.name, $scope.week.date);
+      $modalInstance.close();
     };
-  
-    $scope.hitEnter = function(evt) {
-        if (angular.equals(evt.keyCode,13) && !(angular.equals($scope.week, null) || angular.equals($scope.week, ''))) {
-            $scope.save();
+
+    $scope.openDatePicker = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+
+        $scope.datePickerOpened = true;
+    };
+
+    addWeekCtrl.addWeek = function(weekname, weekdate) {
+        isDuplicateWeekAttempt = false;
+
+        for (var week in weekService.getWeeks()) {
+            if (weekService.getWeeks().hasOwnProperty(week)) {
+                // if there's a match then alert the user the week already exists
+                if (weekService.getWeeks()[week].name === weekname) {
+                    isDuplicateWeekAttempt = true;
+                    dialogs.error('Oops...', 'It looks like you tried to enter a week that already exists in the system.');
+                }
+            }
         }
-      };
+        
+        if (!isDuplicateWeekAttempt) {
+            $http.post(baseUrl + '/week/' + weekname + '/' + weekdate).success(function(data) {
+                // do nothing
+            });
+        }
+    }
   }]);
 
   app.controller('FixtureController', ['$scope', '$http', 'loginService', 'weekService', 'groupService', 'venueService', 'playerService', 'dialogs',

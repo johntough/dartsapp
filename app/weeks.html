@@ -3,6 +3,7 @@
         <thead>
             <tr>
                 <th>Name</th>
+                <th>Date</th>
                 <th ng-show="weekCtrl.showPrivilegedData()">Edit</th>
             </tr>
         </thead>
@@ -14,6 +15,7 @@
 
     <script type="text/ng-template" id="week-display">
         <td>{{week.name}}</td>
+        <td>{{week.date}}</td>
         <td>
             <img src="resources/images/edit.png" data-toggle="tooltip" data-placement="bottom" title="Edit Week" height="32" width="32" ng-click="weekCtrl.edit(week)"/>
             <img src="resources/images/delete.png" data-toggle="tooltip" data-placement="bottom" title="Delete Week" height="32" width="32" ng-click="weekCtrl.deleteRecord(week.id)"/>

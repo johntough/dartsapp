@@ -4,12 +4,25 @@
     </span> Add Week</h4>
 </div>
 <div class="modal-body">
-    <ng-form name="addWeekDialog" novalidate role="form">
-    <div class="form-group input-group-lg">
-        <label class="control-label" for="course">Week Name:</label>
-        <input type="text" class="form-control" name="weekname" id="weekname" ng-model="week.name" ng-keyup="hitEnter($event)" placeholder="week name" required>
-    </div>
-    </ng-form>
+    <form class="form-horizontal" name="addWeekDialog" novalidate role="form">
+        <div class="form-group">
+            <label for="weekname" class="col-sm-3 control-label">Week Name</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" name="weekname" id="weekname" ng-model="week.name" placeholder="week name" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="weekdate" class="col-sm-3 control-label">Date</label>
+            <div class="col-sm-6">
+                 <p class="input-group">
+                    <input type="text" class="form-control" name="weekdate" id="weekdate" readonly='true' datepicker-popup="dd-MMMM-yyyy" ng-model="week.date" is-open="datePickerOpened" ng-required="true" close-text="Close" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </p>
+            </div>
+        </div>
+    </form>
  </div>
  <div class="modal-footer">
      <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>

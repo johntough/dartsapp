@@ -6,9 +6,10 @@ module.exports = function(restapi, db) {
         var json_obj_response = { weeks : [], count: 0};
 
         db.each("SELECT * FROM week_tbl", function(err, row) {
-            var week = { id: '', name: ''};
+            var week = { id: '', name: '', date: ''};
             week.id = row.id;
             week.name = row.name;
+            week.date = row.date;
             json_obj_response.weeks.push(week);
         }, 
         function complete(err, found) {
@@ -17,12 +18,11 @@ module.exports = function(restapi, db) {
         });
     });
 
-    restapi.post('/week/:name', function(request, response) {
+    restapi.post('/week/:name/:date', function(request, response) {
         var new_week_name = request.params.name;
-
-        db.run("INSERT INTO week_tbl (name) VALUES (?)", new_week_name, function(err, row) {
+        var new_week_date = request.params.date;
+        db.run("INSERT INTO week_tbl (name, date) VALUES (?, ?)", new_week_name, new_week_date, function(err, row) {
             if (err) {
-                console.err(err);
                 response.status(500);
             }
             else {
@@ -32,13 +32,13 @@ module.exports = function(restapi, db) {
         });
     });
 
-    restapi.put('/week/:id/:name', function(request, response) {
+    restapi.put('/week/:id/:name/:date', function(request, response) {
         var week_id = request.params.id;
         var updated_week_name = request.params.name;
+        var updated_week_date = request.params.date;
 
-        db.run("UPDATE week_tbl SET name = (?) WHERE id = (?)", updated_week_name, week_id, function(err, row) {
+        db.run("UPDATE week_tbl SET name = (?), date = (?) WHERE id = (?)", updated_week_name, updated_week_date, week_id, function(err, row) {
             if (err) {
-                console.log(err);
                 response.status(500);
             }
             else {
@@ -53,7 +53,6 @@ module.exports = function(restapi, db) {
 
         db.run("DELETE FROM week_tbl WHERE id = (?)", week_id, function(err, row) {
             if (err) {
-                console.log(err);
                 response.status(500);
             }
             else {
