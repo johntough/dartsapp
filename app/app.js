@@ -530,30 +530,41 @@
         });
     },
 
+    fixtureCtrl.setFixtures = function(fixtures) {
+        var formattedFixtures = [];
+        for (var fixture in fixtures) {
+            if (fixtures.hasOwnProperty(fixture)) {
+                fixtures[fixture].weekDateFormatted = Date.parse(fixtures[fixture].weekDate);
+                formattedFixtures.push(fixtures[fixture]);
+            }
+        }
+        fixtureCtrl.fixtures = formattedFixtures;
+    },
+
     $http.get(baseUrl + '/fixtures').success(function(data) {
-        fixtureCtrl.fixtures = data.fixtures;
+        fixtureCtrl.setFixtures(data.fixtures);
     });
 
     fixtureCtrl.filter = function() {        
         if (!$scope.weekfilter | $scope.weekfilter === 'all') {
             if (!$scope.groupfilter | $scope.groupfilter === 'all') {
                 $http.get(baseUrl + '/fixtures/').success(function(data) {
-                    fixtureCtrl.fixtures = data.fixtures;
+                    fixtureCtrl.setFixtures(data.fixtures);
                 });
             } else {
                 $http.get(baseUrl + '/fixtures/group/' + $scope.groupfilter).success(function(data) {
-                    fixtureCtrl.fixtures = data.fixtures;
-                });                        
+                    fixtureCtrl.setFixtures(data.fixtures);
+                });
             }
         } else {
             if (!$scope.groupfilter | $scope.groupfilter === 'all') {
                 $http.get(baseUrl + '/fixtures/week/' + $scope.weekfilter).success(function(data) {
-                    fixtureCtrl.fixtures = data.fixtures;
+                    fixtureCtrl.setFixtures(data.fixtures);
                 });
             } else {
                 $http.get(baseUrl + '/fixtures/week/' + $scope.weekfilter + '/group/' + $scope.groupfilter).success(function(data) {
-                    fixtureCtrl.fixtures = data.fixtures;
-                });                         
+                    fixtureCtrl.setFixtures(data.fixtures);
+                });
             }
         }
     },
@@ -595,7 +606,7 @@
                 if (fixtureCtrl.fixtures.hasOwnProperty(fixture)) {
                     // if there's a match then alert the user the fixture already exists
                     if (fixtureCtrl.fixtures[fixture].weekNumber.toLowerCase() === week.name.toLowerCase()
-                       && fixtureCtrl.fixtures[fixture].orderOfPlay.toString().toLowerCase() === orderOfPlay.toLowerCase()
+                       && fixtureCtrl.fixtures[fixture].orderOfPlay.toString().toLowerCase() === orderOfPlay.toString().toLowerCase()
                        && fixtureCtrl.fixtures[fixture].group.toLowerCase() === group.name.toLowerCase()
                        && fixtureCtrl.fixtures[fixture].venue.toLowerCase() === venue.name.toLowerCase()
                        && fixtureCtrl.fixtures[fixture].playerOne.toLowerCase() === (player1.forename + ' ' + player1.surname).toLowerCase()
@@ -613,7 +624,7 @@
                 $http.post(baseUrl + '/fixture/' + week.id + '/' + orderOfPlay + '/' + venue.id + '/' + group.id + '/' + player1.id + '/' + player2.id + '/' + marker1.id + '/' + marker2.id).success(function(data) {
                     // refresh controllers internal state for fixtures
                     $http.get(baseUrl + '/fixtures').success(function(data) {
-                        fixtureCtrl.fixtures = data.fixtures;
+                        fixtureCtrl.setFixtures(data.fixtures);
                         $scope.week = '';
                         $scope.group = '';
                         $scope.orderofplay = '';

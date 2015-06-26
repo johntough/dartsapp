@@ -7,7 +7,7 @@
             <select id="weekFilter" ng-model="weekfilter" ng-change="fixtureCtrl.filter()" class="form-control" >
                 <option value="all">All</option>
                 <option value="{{week.id}}" ng-repeat="week in fixtureCtrl.getWeeks()">
-                   {{week.name}}
+                   {{week.name}} ( {{week.date}} )
                 </option>
             </select>
         </div>
@@ -29,7 +29,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Week</th>
+                <th>Date</th>
                 <th>Group</th>
                 <th>Board</th>
                 <th>Order of Play</th>
@@ -40,8 +40,8 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="fixture in fixtureCtrl.fixtures">
-                <td>{{fixture.weekNumber}}</td>
+            <tr ng-repeat="fixture in fixtureCtrl.fixtures | orderBy:['weekDateFormatted', 'group', 'orderOfPlay']">
+                <td>{{fixture.weekNumber}} ( {{fixture.weekDate}} )</td>
                 <td>{{fixture.group}}</td>
                 <td>{{fixture.venue}}</td>
                 <td>{{fixture.orderOfPlay}}</td>
@@ -59,7 +59,7 @@
         <div class="form-group">
             <label for="inputWeek" class="col-sm-3 control-label">Week</label>
             <div class="col-sm-6">
-            <select id="inputWeek" form="newFixtureForm" ng-model="week" class="form-control" ng-options="week.name for week in fixtureCtrl.getWeeks()">
+            <select id="inputWeek" form="newFixtureForm" ng-model="week" class="form-control" ng-options='(week.name + " ( " + week.date + " )") for week in fixtureCtrl.getWeeks()'>
             </select>
         </div>
         </div>
@@ -75,7 +75,7 @@
         <div class="form-group">
             <label for="inputOrderOfPlay" class="col-sm-3 control-label">Order of Play</label>
             <div class="col-sm-6">
-            <input type="text" id="inputOrderOfPlay" ng-model="orderofplay" class="form-control" placeholder="order of play" required autofocus>
+            <input type="number" min="1" id="inputOrderOfPlay" ng-model="orderofplay" class="form-control" placeholder="order of play" required autofocus>
         </div>
         </div>
 
