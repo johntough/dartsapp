@@ -340,30 +340,16 @@
         groupService.setGroups(data.groups);
     });
     
-    $scope.addGroup = function() {
-        isDuplicateGroupAttempt = false;
-
-        for (var group in groupService.getGroups()) {
-            if (groupService.getGroups().hasOwnProperty(group)) {
-                // if there's a match then alert the user the group already exists
-                if (groupService.getGroups()[group].name === $scope.groupname) {
-                    isDuplicateGroupAttempt = true;
-                    $scope.groupname = '';
-                    dialogs.error('Oops...', 'It looks like you tried to enter a group that already exists in the system.');
-                }
-            }
-        }
-        
-        if (!isDuplicateGroupAttempt) {
-            $http.post(baseUrl + '/group/' + $scope.groupname).success(function(data) {
-                $scope.groupname = '';
-                isDuplicateGroupAttempt = false;
-                // refresh controllers internal state for groups
-                $http.get(baseUrl + '/groups').success(function(data) {
-                    groupService.setGroups(data.groups);
-                });
+    groupCtrl.showAddForm = function() {
+        var dialog = dialogs.create('/addgroupsdialog.html', 'AddGroupController', {}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});
+        dialog.result.then(function() {
+            // refresh controllers internal state for groups
+            $http.get(baseUrl + '/groups').success(function(data) {
+                groupService.setGroups(data.groups);
             });
-        }
+        },function() {
+            // do nothing as user did not add week
+        });
     }
   }]);
   
@@ -492,6 +478,41 @@
         
         if (!isDuplicateWeekAttempt) {
             $http.post(baseUrl + '/week/' + weekname + '/' + weekdate).success(function(data) {
+                // do nothing
+            });
+        }
+    }
+  }]);
+
+  app.controller('AddGroupController', ['$scope', '$http', '$modalInstance', 'data', 'groupService', function($scope, $http, $modalInstance, data, groupService) {
+    var addGroupCtrl = this;
+    $scope.group = {name : ''};
+
+    $scope.cancel = function() {
+      $modalInstance.dismiss('canceled');  
+    };
+  
+    $scope.save = function() {
+      addGroupCtrl.addGroup($scope.group.name);
+      $modalInstance.close();
+    };
+
+    addGroupCtrl.addGroup = function(groupname) {
+        isDuplicateGroupAttempt = false;
+
+        for (var group in groupService.getGroups()) {
+            if (groupService.getGroups().hasOwnProperty(group)) {
+                // if there's a match then alert the user the group already exists
+                if (groupService.getGroups()[group].name === groupname) {
+                    isDuplicateGroupAttempt = true;
+                    $scope.groupname = '';
+                    dialogs.error('Oops...', 'It looks like you tried to enter a group that already exists in the system.');
+                }
+            }
+        }
+        
+        if (!isDuplicateGroupAttempt) {
+            $http.post(baseUrl + '/group/' + groupname).success(function(data) {
                 // do nothing
             });
         }

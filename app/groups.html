@@ -28,16 +28,5 @@
         </td>
     </script>
 
-    <form class="form-horizontal" ng-submit="addGroup()">
-    <h2 class="form-signin-heading">Enter details to add group</h2>
-
-    <div class="form-group">
-        <label for="inputName" class="col-sm-3 control-label">Group Name</label>
-        <div class="col-sm-6">
-        <input type="text" id="inputName" ng-model="groupname" class="form-control" placeholder="group name" required autofocus>
-    </div>
-    </div>
-
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Add Group</button>
-</form>
+    <button class="btn btn-lg btn-primary btn-block" ng-click="groupCtrl.showAddForm()">Add Group</button>
 </div>
