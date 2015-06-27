@@ -183,8 +183,8 @@
     }
   }]);
   
-  app.controller('PlayerController', ['$scope', '$http', 'loginService', 'groupService', 'playerService', 'dialogs', 
-  function($scope, $http, loginService, groupService, playerService, dialogs) {
+  app.controller('PlayerController', ['$scope', '$http', 'loginService', 'groupService', 'playerService', 'dialogs', 'toastr', 'toastrConfig',
+  function($scope, $http, loginService, groupService, playerService, dialogs, toastr, toastrConfig) {
     var playerCtrl = this;
 
     var isDuplicateplayerAttempt = false;
@@ -254,6 +254,9 @@
             // refresh controllers internal state for players
             $http.get(baseUrl + '/players').success(function(data) {
                 playerService.setPlayers(data.players);
+                toastrConfig.positionClass = 'toast-bottom-right';
+                toastrConfig.timeOut = 2000;
+                toastr.success('Player added!');
             });
         },function() {
             // do nothing as user did not add week
@@ -335,7 +338,7 @@
     }
   }]);
   
-  app.controller('GroupController', ['$scope', '$http', 'loginService', 'groupService', 'dialogs', function($scope, $http, loginService, groupService, dialogs) {
+  app.controller('GroupController', ['$scope', '$http', 'loginService', 'groupService', 'dialogs', 'toastr', 'toastrConfig', function($scope, $http, loginService, groupService, dialogs, toastr, toastrConfig) {
     var groupCtrl = this
 
     var isDuplicateGroupAttempt = false;
@@ -400,6 +403,9 @@
             // refresh controllers internal state for groups
             $http.get(baseUrl + '/groups').success(function(data) {
                 groupService.setGroups(data.groups);
+                toastrConfig.positionClass = 'toast-bottom-right';
+                toastrConfig.timeOut = 2000;
+                toastr.success('Group added!');
             });
         },function() {
             // do nothing as user did not add week
@@ -407,7 +413,7 @@
     }
   }]);
   
-  app.controller('VenueController', ['$scope', '$http', 'venueService', 'loginService', 'dialogs', function($scope, $http, venueService, loginService, dialogs) {
+  app.controller('VenueController', ['$scope', '$http', 'venueService', 'loginService', 'dialogs', 'toastr', 'toastrConfig', function($scope, $http, venueService, loginService, dialogs, toastr, toastrConfig) {
     var venueCtrl = this;
 
     venueCtrl.showPrivilegedData = function() {
@@ -470,6 +476,9 @@
             // refresh controllers internal state for venues
             $http.get(baseUrl + '/venues').success(function(data) {
                 venueService.setVenues(data.venues);
+                toastrConfig.positionClass = 'toast-bottom-right';
+                toastrConfig.timeOut = 2000;
+                toastr.success('Board added!');
             });
         },function() {
             // do nothing as user did not add venue
@@ -967,8 +976,8 @@
     }
   }]);
 
-  app.controller('FixtureController', ['$scope', '$http', 'loginService', 'fixtureService', 'groupService', 'weekService', 'dialogs',
-  function($scope, $http, loginService, fixtureService, groupService, weekService, dialogs) {
+  app.controller('FixtureController', ['$scope', '$http', 'loginService', 'fixtureService', 'groupService', 'weekService', 'dialogs', 'toastr', 'toastrConfig',
+  function($scope, $http, loginService, fixtureService, groupService, weekService, dialogs, toastr, toastrConfig) {
     var fixtureCtrl = this;
 
     fixtureCtrl.showPrivilegedData = function() {
@@ -1021,6 +1030,9 @@
             // refresh service internal state for fixtures
             $http.get(baseUrl + '/fixtures').success(function(data) {
                 fixtureService.setFixtures(data.fixtures);
+                toastrConfig.positionClass = 'toast-bottom-right';
+                toastrConfig.timeOut = 2000;
+                toastr.success('Fixture added!');
             });
         },function() {
             // do nothing as user did not add venue
@@ -1034,6 +1046,9 @@
             $http.put(baseUrl + '/fixture/complete/' + fixture.id).success(function(data) {
                 $http.get(baseUrl + '/fixtures').success(function(data) {
                     fixtureService.setFixtures(data.fixtures);
+                    toastrConfig.positionClass = 'toast-bottom-right';
+                    toastrConfig.timeOut = 2000;
+                    toastr.success('Result added!');
                 });
             });
         },function() {
