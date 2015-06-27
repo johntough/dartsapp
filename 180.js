@@ -25,13 +25,13 @@ module.exports = function(restapi, db) {
         });
     });
 
-    restapi.post('/180/:number180s/:result/:player', function(request, response) {
+    restapi.post('/180/:number180s/:fixture/:player', function(request, response) {
         var new_number180s = request.params.number180s;
-        var new_result = request.params.result;
+        var new_fixture = request.params.fixture;
         var new_player = request.params.player;
 
-        db.run("INSERT INTO player_180_tbl (no_of_180s, result_id, player_id) VALUES (?, ?, ?)",
-         [new_number180s, new_result, new_player],
+        db.run("INSERT INTO player_180_tbl (no_of_180s, fixture_id, player_id) VALUES (?, ?, ?)",
+         [new_number180s, new_fixture, new_player],
          function(err, row) {
             if (err) {
                 console.log(err);

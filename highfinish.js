@@ -11,8 +11,7 @@ module.exports = function(restapi, db) {
          "p.forename AS p_forename, p.surname AS p_surname " +
          "FROM high_finish_tbl " +
          "JOIN player_tbl AS p ON p.id = high_finish_tbl.player_id " +
-         "JOIN result_tbl AS r ON r.id = high_finish_tbl.result_id " +
-         "JOIN fixture_tbl AS f ON f.id = r.fixture_id " +
+         "JOIN fixture_tbl AS f ON f.id = high_finish_tbl.fixture_id " +
          "JOIN week_tbl AS w ON w.id = f.week_id",
         function(err, row) {
             var highfinish = { id: '', checkout: 0, player: '', week: ''};
@@ -29,13 +28,13 @@ module.exports = function(restapi, db) {
         });
     });
 
-    restapi.post('/highfinish/:checkout/:result/:player', function(request, response) {
+    restapi.post('/highfinish/:checkout/:fixture/:player', function(request, response) {
         var new_checkout = request.params.checkout;
-        var new_result = request.params.result;
+        var new_fixture = request.params.fixture;
         var new_player = request.params.player;
 
-        db.run("INSERT INTO high_finish_tbl (checkout, result_id, player_id) VALUES (?, ?, ?)",
-         [new_checkout, new_result, new_player],
+        db.run("INSERT INTO high_finish_tbl (checkout, fixture_id, player_id) VALUES (?, ?, ?)",
+         [new_checkout, new_fixture, new_player],
          function(err, row) {
             if (err) {
                 console.log(err);

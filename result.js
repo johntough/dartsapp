@@ -53,4 +53,19 @@ module.exports = function(restapi, db) {
             response.end();
         });
     });
+
+    restapi.delete('/result/:id', function(request, response) {
+        var result_id = request.params.id;
+
+        db.run("DELETE FROM result_tbl WHERE id = (?)", result_id, function(err, row) {
+            if (err) {
+                console.log(err);
+                response.status(500);
+            }
+            else {
+                response.status(204);
+            }
+            response.end();
+        });
+    });
 }

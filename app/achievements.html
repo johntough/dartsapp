@@ -20,7 +20,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-class="{ success:achievementCtrl.isMost180s(player180.noOf180s) }" ng-repeat="player180 in achievementCtrl.player180s | orderBy:'-noOf180s'">
+                <tr ng-class="{ success:achievementCtrl.isMost180s(player180.noOf180s) }" ng-repeat="player180 in achievementCtrl.get180s() | orderBy:'-noOf180s'">
                     <td>{{player180.player}}</td>
                     <td>{{player180.noOf180s}}</td>
                 </tr>
@@ -38,7 +38,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-class="{ success:achievementCtrl.isHighestFinish(highfinish.checkout) }" ng-repeat="highfinish in achievementCtrl.highfinishes | orderBy:'-checkout'">
+                <tr ng-class="{ success:achievementCtrl.isHighestFinish(highfinish.checkout) }" ng-repeat="highfinish in achievementCtrl.getHighFinishes() | orderBy:'-checkout'">
                     <td>{{highfinish.player}}</td>
                     <td>{{highfinish.week}}</td>
                     <td>{{highfinish.checkout}}</td>
@@ -57,7 +57,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-class="{ success:achievementCtrl.isBestLeg(bestleg.numberOfDarts) }" ng-repeat="bestleg in achievementCtrl.bestlegs | orderBy:'-numberOfDarts':true">
+                <tr ng-class="{ success:achievementCtrl.isBestLeg(bestleg.numberOfDarts) }" ng-repeat="bestleg in achievementCtrl.getBestLegs() | orderBy:'-numberOfDarts':true">
                     <td>{{bestleg.player}}</td>
                     <td>{{bestleg.week}}</td>
                     <td>{{bestleg.numberOfDarts}}</td>

@@ -106,6 +106,58 @@
       }
   }]);
 
+  app.service('resultService', function() {
+      var resultservice = this;
+      resultservice.results = [];
+
+      resultservice.getResults = function() {
+          return resultservice.results;
+      },      
+
+      resultservice.setResults = function(results) {
+          resultservice.results = results;
+      }
+  });
+
+  app.service('highFinishService', function() {
+      var highfinishservice = this;
+      highfinishservice.finishes = [];
+
+      highfinishservice.getFinishes = function() {
+          return highfinishservice.finishes;
+      },
+
+      highfinishservice.setFinishes = function(finishes) {
+          highfinishservice.finishes = finishes;
+      }
+  });
+
+  app.service('bestLegService', function() {
+      var bestlegservice = this;
+      bestlegservice.legs = [];
+
+      bestlegservice.getLegs = function() {
+          return bestlegservice.legs;
+      },
+
+      bestlegservice.setLegs = function(legs) {
+          bestlegservice.legs = legs;
+      }
+  });
+
+  app.service('player180Service', function() {
+      var player180service = this;
+      player180service.player180s = [];
+
+      player180service.get180s = function() {
+          return player180service.player180s;
+      },
+
+      player180service.set180s = function(player180s) {
+          player180service.player180s = player180s;
+      }
+  });
+
   app.controller('NavigationController', ['loginService', function(loginService) {
     var navigationCtrl = this;
     navigationCtrl.tab = 'home';
@@ -668,12 +720,13 @@
     }
   }]);
 
-  app.controller('CompleteFixtureController', ['$scope', '$http', '$modalInstance', 'data', 'dialogs', 'fixtureService',
-  function($scope, $http, $modalInstance, data, dialogs, fixtureService) {
+  app.controller('CompleteFixtureController', ['$scope', '$http', '$modalInstance', 'data', 'dialogs', 'fixtureService', 'resultService', 'player180Service', 'highFinishService', 'bestLegService',
+  function($scope, $http, $modalInstance, data, dialogs, fixtureService, resultService, player180Service, highFinishService, bestLegService) {
 
     var completeFixtureCtrl = this;
     $scope.player1Achievements = false;
     $scope.player2Achievements = false;
+
     $scope.player1HighFinishes = '';
     $scope.player2HighFinishes = '';
     $scope.player1BestLegs = '';
@@ -695,7 +748,6 @@
         if (!Number.isInteger(value) || value === '' || value < 9 || value > 18) {
             isValid = false;
         }
-              
         return isValid;
     },
 
@@ -788,7 +840,6 @@
         }
     },
 
-
     $scope.removePlayer1Leg = function() {
         if ($scope.player1BestLegs !== '') {
             if ($scope.player1BestLegs.indexOf(',') !== -1) {
@@ -815,24 +866,95 @@
   
     $scope.save = function() {
 
-        completeFixtureCtrl.addResult(
-            $scope.result.player1LegsWon,
-            $scope.result.player1LegsWon
-        );
+        completeFixtureCtrl.addResult();
         $modalInstance.close();
     };
 
-    completeFixtureCtrl.addResult = function(player1LegsWon, player2LegsWon) {
+    completeFixtureCtrl.addResult = function() {
+        var anyPlayer1180s = ($scope.player1180s && $scope.player1180s > 0) ? true : false;
+        var anyPlayer2180s = ($scope.player2180s && $scope.player2180s > 0) ? true : false;
 
-        var isValidResult = false;
+        var anyPlayer1HighFinishes = ($scope.player1HighFinishes !== '') ? true : false;
+        var anyPlayer2HighFinishes = ($scope.player2HighFinishes !== '') ? true : false;
 
-        if (isValidResult) {
-            $http.post(baseUrl + '/fixture/' + week.id + '/' + orderOfPlay + '/' + venue.id + '/' + group.id + '/' + player1.id + '/' + player2.id + '/' + marker1.id + '/' + marker2.id).success(function(data) {
-                // refresh controllers internal state for fixtures
-                $http.get(baseUrl + '/fixtures').success(function(data) {
-                    // do nothing
+        var anyPlayer1BestLegs = ($scope.player1BestLegs !== '') ? true : false;
+        var anyPlayer2BestLegs = ($scope.player2BestLegs !== '') ? true : false;
+
+        $http.post(baseUrl + '/result/' + data.fixture.id + '/' + $scope.player1LegsWon + '/' + $scope.player2LegsWon).success(function(data) {
+            $http.get(baseUrl + '/results').success(function(data) {
+                resultService.setResults(data.results);
+            });
+        });
+
+        if (anyPlayer1180s) {
+            $http.post(baseUrl + '/180/' + $scope.player1180s + '/' + data.fixture.id + '/' + data.fixture.playerOneId).success(function(data) {
+                $http.get(baseUrl + '/180s').success(function(data) {
+                    player180Service.set180s(data.player180s);
                 });
-            });            
+            });
+        }
+        if (anyPlayer2180s) {
+            $http.post(baseUrl + '/180/' + $scope.player2180s + '/' + data.fixture.id + '/' + data.fixture.playerTwoId).success(function(data) {
+                $http.get(baseUrl + '/180s').success(function(data) {
+                    player180Service.set180s(data.player180s);
+                });
+            });
+        }
+        if (anyPlayer1HighFinishes) {
+            var highFinishArray = $scope.player1HighFinishes.split(',');
+
+            for (var highFinish in highFinishArray) {
+                if (highFinishArray.hasOwnProperty(highFinish)) {
+                    $http.post(baseUrl + '/highfinish/' + highFinishArray[highFinish] + '/' + data.fixture.id + '/' + data.fixture.playerOneId).success(function(data) {
+                        // do nothing
+                    });
+                }
+            }
+            $http.get(baseUrl + '/highfinishes').success(function(data) {
+                highFinishService.setFinishes(data.highfinishes);
+            });
+        }
+        if (anyPlayer2HighFinishes) {
+            var highFinishArray = $scope.player2HighFinishes.split(',');
+
+            for (var highFinish in highFinishArray) {
+                if (highFinishArray.hasOwnProperty(highFinish)) {
+                    $http.post(baseUrl + '/highfinish/' + highFinishArray[highFinish] + '/' + data.fixture.id + '/' + data.fixture.playerTwoId).success(function(data) {
+                        // do nothing
+                    });
+                }
+            }
+            $http.get(baseUrl + '/highfinishes').success(function(data) {
+                highFinishService.setFinishes(data.highfinishes);
+            });
+        }
+        if (anyPlayer1BestLegs) {
+            var bestLegArray = $scope.player1BestLegs.split(',');
+
+            for (var bestLeg in bestLegArray) {
+                if (bestLegArray.hasOwnProperty(bestLeg)) {
+                    $http.post(baseUrl + '/bestleg/' + bestLegArray[bestLeg] + '/' + data.fixture.id + '/' + data.fixture.playerOneId).success(function(data) {
+                        // do nothing
+                    });
+                }
+            }
+            $http.get(baseUrl + '/bestlegs').success(function(data) {
+                bestLegService.setLegs(data.bestlegs);
+            });
+        }
+        if (anyPlayer2BestLegs) {
+            var bestLegArray = $scope.player2BestLegs.split(',');
+
+            for (var bestLeg in bestLegArray) {
+                if (bestLegArray.hasOwnProperty(bestLeg)) {
+                    $http.post(baseUrl + '/bestleg/' + bestLegArray[bestLeg] + '/' + data.fixture.id + '/' + data.fixture.playerTwoId).success(function(data) {
+                        // do nothing
+                    });
+                }
+            }
+            $http.get(baseUrl + '/bestlegs').success(function(data) {
+                bestLegService.setLegs(data.bestlegs);
+            });
         }
     }
   }]);
@@ -888,7 +1010,7 @@
     fixtureCtrl.showAddForm = function() {
         var dialog = dialogs.create('/addfixturesdialog.html', 'AddFixtureController', {}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});
         dialog.result.then(function() {
-            // refresh controllers internal state for fixtures
+            // refresh service internal state for fixtures
             $http.get(baseUrl + '/fixtures').success(function(data) {
                 fixtureService.setFixtures(data.fixtures);
             });
@@ -900,19 +1022,27 @@
     fixtureCtrl.completeFixture = function(fixture) {
         var dialog = dialogs.create('/completefixturesdialog.html', 'CompleteFixtureController', {fixture}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});
         dialog.result.then(function() {
-            console.log('fixture completed');
+            // refresh service internal state for fixtures after updating the fixture complete flag
+            $http.put(baseUrl + '/fixture/complete/' + fixture.id).success(function(data) {
+                $http.get(baseUrl + '/fixtures').success(function(data) {
+                    fixtureService.setFixtures(data.fixtures);
+                });
+            });
         },function() {
             // do nothing as user did not add venue
         });
     }
   }]);
 
-  app.controller('ResultController', ['$scope', '$http', 'loginService', 'dialogs', function($scope, $http, loginService, dialogs) {
+  app.controller('ResultController', ['$scope', '$http', 'loginService', 'dialogs', 'resultService', function($scope, $http, loginService, dialogs, resultService) {
     var resultCtrl = this;
-    resultCtrl.results = [];
 
     resultCtrl.showPrivilegedData = function() {
         return loginService.isAuthorised();
+    },
+
+    resultCtrl.getResults = function() {
+        return resultService.getResults();
     },
 
     // gets the template to ng-include for a table row / item
@@ -931,7 +1061,7 @@
             $http.delete(baseUrl + '/result/' + id).success(function(data) {
                 // refresh controllers internal state for results
                 $http.get(baseUrl + '/results').success(function(data) {
-                    resultCtrl.results = data.results;
+                    resultService.setResults(data.results);
                 });
             });
         }, function(btn){
@@ -943,7 +1073,7 @@
         $http.put(baseUrl + '/result/' + id + '/' + p1legs + '/' + p2legs).success(function(data) {
             // refresh controllers internal state for results
             $http.get(baseUrl + '/results').success(function(data) {
-                resultCtrl.results = data.results;
+                resultService.setResults(data.results);
             });
         });
         resultCtrl.cancelChanges();
@@ -958,19 +1088,29 @@
     };
 
     $http.get(baseUrl + '/results').success(function(data) {
-        resultCtrl.results = data.results;
+        resultService.setResults(data.results);
     });
   }]);
 
-  app.controller('AchievementController', ['$scope', '$http', 'loginService', 'dialogs', function($scope, $http, loginService, dialogs) {
+  app.controller('AchievementController', ['$scope', '$http', 'loginService', 'dialogs', 'player180Service', 'bestLegService', 'highFinishService',
+  function($scope, $http, loginService, dialogs, player180Service, bestLegService, highFinishService) {
     var achievementCtrl = this;
-    achievementCtrl.player180s = [];
-    achievementCtrl.highfinishes = [];
-    achievementCtrl.bestlegs = [];
     achievementCtrl.tab = 'player180s';
 
     achievementCtrl.showPrivilegedData = function() {
         return loginService.isAuthorised();
+    },
+
+    achievementCtrl.get180s = function() {
+        return player180Service.get180s();
+    },
+
+    achievementCtrl.getHighFinishes = function() {
+        return highFinishService.getFinishes();
+    },
+
+    achievementCtrl.getBestLegs = function() {
+        return bestLegService.getLegs();
     },
 
     achievementCtrl.isSet = function(checkTab) {
@@ -984,9 +1124,9 @@
     achievementCtrl.isMost180s = function(numberOf180s) {
         var isMost180s = true;
 
-        for (var player180 in achievementCtrl.player180s) {
-            if (achievementCtrl.player180s.hasOwnProperty(player180)) {
-                var currentNoOf180s = achievementCtrl.player180s[player180].noOf180s;
+        for (var player180 in player180Service.get180s()) {
+            if (player180Service.get180s().hasOwnProperty(player180)) {
+                var currentNoOf180s = player180Service.get180s()[player180].noOf180s;
                 if (currentNoOf180s > numberOf180s) {
                     isMost180s = false;
                 }
@@ -998,9 +1138,9 @@
     achievementCtrl.isBestLeg = function(numberOfDarts) {
         var isBestLeg = true;
 
-        for (var bestleg in achievementCtrl.bestlegs) {
-            if (achievementCtrl.bestlegs.hasOwnProperty(bestleg)) {
-                var currentNumberOfDarts = achievementCtrl.bestlegs[bestleg].numberOfDarts;
+        for (var bestleg in bestLegService.getLegs()) {
+            if (bestLegService.getLegs().hasOwnProperty(bestleg)) {
+                var currentNumberOfDarts = bestLegService.getLegs()[bestleg].numberOfDarts;
                 if (currentNumberOfDarts < numberOfDarts) {
                     isBestLeg = false;
                 }
@@ -1012,9 +1152,9 @@
     achievementCtrl.isHighestFinish = function(checkout) {
         var isHighestFinish = true;
 
-        for (var highfinish in achievementCtrl.highfinishes) {
-            if (achievementCtrl.highfinishes.hasOwnProperty(highfinish)) {
-                var currentHighFinish = achievementCtrl.highfinishes[highfinish].checkout;
+        for (var highfinish in highFinishService.getFinishes()) {
+            if (highFinishService.getFinishes().hasOwnProperty(highfinish)) {
+                var currentHighFinish = highFinishService.getFinishes()[highfinish].checkout;
                 if (currentHighFinish > checkout) {
                     isHighestFinish = false;
                 }
@@ -1033,13 +1173,13 @@
     };
 
     $http.get(baseUrl + '/180s').success(function(data) {
-        achievementCtrl.player180s = data.player180s;
+        player180Service.set180s(data.player180s);
     });
     $http.get(baseUrl + '/highfinishes').success(function(data) {
-        achievementCtrl.highfinishes = data.highfinishes;
+        highFinishService.setFinishes(data.highfinishes);
     });
     $http.get(baseUrl + '/bestlegs').success(function(data) {
-        achievementCtrl.bestlegs = data.bestlegs;
+        bestLegService.setLegs(data.bestlegs);
     });
   }]);
 

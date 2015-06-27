@@ -49,7 +49,7 @@ module.exports = function(restapi, db) {
         });
     });
 
-   restapi.delete('/group/:id', function(request, response) {
+    restapi.delete('/group/:id', function(request, response) {
         var group_id = request.params.id;
 
         db.run("DELETE FROM group_tbl WHERE id = (?)", group_id, function(err, row) {

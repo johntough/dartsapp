@@ -60,28 +60,28 @@ db.serialize(function() {
     db.run("CREATE TABLE IF NOT EXISTS high_finish_tbl" +
     "(  id INTEGER PRIMARY KEY NOT NULL," +
     "   checkout INTEGER NOT NULL," +
-    "   result_id INTEGER NOT NULL," +
+    "   fixture_id INTEGER NOT NULL," +
     "   player_id INTEGER NOT NULL," +
     "   FOREIGN KEY(player_id) REFERENCES player_tbl(id)," +
-    "   FOREIGN KEY(result_id) REFERENCES result_tbl(id)" +
+    "   FOREIGN KEY(fixture_id) REFERENCES fixture_tbl(id)" +
     ")");
 
     db.run("CREATE TABLE IF NOT EXISTS best_leg_tbl" +
     "(  id INTEGER PRIMARY KEY NOT NULL," +
     "   number_of_darts INTEGER NOT NULL," +
-    "   result_id INTEGER NOT NULL," +
+    "   fixture_id INTEGER NOT NULL," +
     "   player_id INTEGER NOT NULL," +
     "   FOREIGN KEY(player_id) REFERENCES player_tbl(id)," +
-    "   FOREIGN KEY(result_id) REFERENCES result_tbl(id)" +
+    "   FOREIGN KEY(fixture_id) REFERENCES fixture_tbl(id)" +
     ")");
 
     db.run("CREATE TABLE IF NOT EXISTS player_180_tbl" +
     "(  id INTEGER PRIMARY KEY NOT NULL," +
     "   no_of_180s INTEGER NOT NULL," +
-    "   result_id INTEGER NOT NULL," +
+    "   fixture_id INTEGER NOT NULL," +
     "   player_id INTEGER NOT NULL," +
     "   FOREIGN KEY(player_id) REFERENCES player_tbl(id)," +
-    "   FOREIGN KEY(result_id) REFERENCES result_tbl(id)" +
+    "   FOREIGN KEY(fixture_id) REFERENCES fixture_tbl(id)" +
     ")");
 });
 
