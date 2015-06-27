@@ -18,7 +18,7 @@
             </div>
             <label for="player1LegsWon" class="col-md-2 control-label">Legs Won</label>
             <div class="col-md-3">
-                <input type="number" min="0" max="7" class="form-control" name="player1LegsWon" id="player1LegsWon" ng-model="player1LegsWon" required>
+                <select class="form-control" id="player1LegsWon" form="completeFixtureDialog" ng-model="player1LegsWon" ng-options="legswon for legswon in [0, 1, 2, 3, 4, 5, 6, 7]" required></select>
             </div>
         </div>
     <button type="button" class="btn btn-primary" ng-click="player1Achievements = !player1Achievements">Achievements</button>
@@ -26,7 +26,7 @@
         <div class="form-group">
             <label for="player1180s" class="col-md-2 control-label">180s <span class="glyphicon glyphicon-star" style="color:gold"></label>
             <div class="col-md-3">
-                <select class="form-control" id="player1180s" form="completeFixtureDialog" ng-model="player1180s" ng-options="tota180s for tota180s in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]"></select>
+                <select class="form-control" id="player1180s" form="completeFixtureDialog" ng-model="player1180s" ng-options="tota180s for tota180s in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]"></select>
             </div>
         </div>
 
@@ -37,10 +37,11 @@
             </div>
             <div class="col-md-1">
                 <h4>
-                    <span class="glyphicon glyphicon-check" ng-click="addPlayer1Finish()" data-toggle="tooltip" data-placement="bottom" title="Add Checkout" ng-style="{true: {color: 'green'}, false: {color: 'red'}}[isValidCheckout(player1Checkout)]"></span>
+                    <span class="glyphicon glyphicon-floppy-saved" ng-click="addPlayer1Finish()" data-toggle="tooltip" data-placement="bottom" title="Add Checkout" ng-style="{true: {color: 'green'}, false: {color: 'red'}}[isValidCheckout(player1Checkout)]"></span>
+                    <span class="glyphicon glyphicon-floppy-remove" ng-click="removePlayer1Finish()" data-toggle="tooltip" data-placement="bottom" title="Remove Checkout" ng-style="{true: {color: 'green'}, false: {color: 'red'}}[player1HighFinishes !== '']"></span>
                 </h4>
             </div>
-            <label ng-model="player1HighFinishes" class="col-md-2 control-label">{{player1HighFinishes}}</label>
+            <label ng-model="player1HighFinishes" style="color: #959595" class="col-md-3 control-label">{{player1HighFinishes}}</label>
         </div>
  
         <div class="form-group">
@@ -50,10 +51,11 @@
             </div>
             <div class="col-md-1">
                 <h4>
-                    <span class="glyphicon glyphicon-check" ng-click="addPlayer1Leg()" data-toggle="tooltip" data-placement="bottom" title="Add Leg" ng-style="{true: {color: 'green'}, false: {color: 'red'}}[isValidLeg(player1BestLeg)]"></span>
+                    <span class="glyphicon glyphicon-floppy-saved" ng-click="addPlayer1Leg()" data-toggle="tooltip" data-placement="bottom" title="Add Leg" ng-style="{true: {color: 'green'}, false: {color: 'red'}}[isValidLeg(player1BestLeg)]"></span>
+                    <span class="glyphicon glyphicon-floppy-remove" ng-click="removePlayer1Leg()" data-toggle="tooltip" data-placement="bottom" title="Remove Leg" ng-style="{true: {color: 'green'}, false: {color: 'red'}}[player1BestLegs !== '']"></span>
                 </h4>
             </div>
-            <label ng-model="player1BestLegs" class="col-md-2 control-label">{{player1BestLegs}}</label>
+            <label ng-model="player1BestLegs" style="color: #959595" class="col-md-3 control-label">{{player1BestLegs}}</label>
         </div>
 
     </div>
@@ -64,7 +66,7 @@
             </div>
             <label for="player2LegsWon" class="col-md-2 control-label">Legs Won</label>
             <div class="col-md-3">
-                <input type="number" min="0" max="7" class="form-control" name="player2LegsWon" id="player2LegsWon" ng-model="player2LegsWon" required>
+                <select class="form-control" id="player2LegsWon" form="completeFixtureDialog" ng-model="player2LegsWon" ng-options="legswon for legswon in [0, 1, 2, 3, 4, 5, 6, 7]" required></select>
             </div>
         </div>
 
@@ -73,7 +75,7 @@
         <div class="form-group">
             <label for="player2180s" class="col-md-2 control-label">180s <span class="glyphicon glyphicon-star" style="color:gold"></label>
             <div class="col-md-3">
-                <select class="form-control" id="player2180s" form="completeFixtureDialog" ng-model="player2180s" ng-options="tota180s for tota180s in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]"></select>
+                <select class="form-control" id="player2180s" form="completeFixtureDialog" ng-model="player2180s" ng-options="tota180s for tota180s in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]"></select>
             </div>
         </div>
         <div class="form-group">
@@ -83,10 +85,11 @@
             </div>
             <div class="col-md-1">
                 <h4>
-                    <span class="glyphicon glyphicon-check" ng-click="addPlayer2Finish()" data-toggle="tooltip" data-placement="bottom" title="Add Checkout" ng-style="{true: {color: 'green'}, false: {color: 'red'}}[isValidCheckout(player2Checkout)]"></span>
+                    <span class="glyphicon glyphicon-floppy-saved" ng-click="addPlayer2Finish()" data-toggle="tooltip" data-placement="bottom" title="Add Checkout" ng-style="{true: {color: 'green'}, false: {color: 'red'}}[isValidCheckout(player2Checkout)]"></span>
+                    <span class="glyphicon glyphicon-floppy-remove" ng-click="removePlayer2Finish()" data-toggle="tooltip" data-placement="bottom" title="Remove Checkout" ng-style="{true: {color: 'green'}, false: {color: 'red'}}[player2HighFinishes !== '']"></span>
                 </h4>
             </div>
-            <label ng-model="player2HighFinishes" class="col-md-2 control-label">{{player2HighFinishes}}</label>
+            <label ng-model="player2HighFinishes" style="color: #959595" class="col-md-3 control-label">{{player2HighFinishes}}</label>
         </div>
         <div class="form-group">
             <label for="player2BestLegs" class="col-md-2 control-label">Best Legs <span class="glyphicon glyphicon-star" style="color:gold"></label>
@@ -95,10 +98,11 @@
             </div>
             <div class="col-md-1">
                 <h4>
-                    <span class="glyphicon glyphicon-check" ng-click="addPlayer2Leg()" data-toggle="tooltip" data-placement="bottom" title="Add Leg" ng-style="{true: {color: 'green'}, false: {color: 'red'}}[isValidLeg(player2BestLeg)]"></span>
+                    <span class="glyphicon glyphicon-floppy-saved" ng-click="addPlayer2Leg()" data-toggle="tooltip" data-placement="bottom" title="Add Leg" ng-style="{true: {color: 'green'}, false: {color: 'red'}}[isValidLeg(player2BestLeg)]"></span>
+                    <span class="glyphicon glyphicon-floppy-remove" ng-click="removePlayer2Leg()" data-toggle="tooltip" data-placement="bottom" title="Remove Leg" ng-style="{true: {color: 'green'}, false: {color: 'red'}}[player2BestLegs !== '']"></span>
                 </h4>
             </div>
-            <label ng-model="player2BestLegs" class="col-md-2 control-label">{{player2BestLegs}}</label>
+            <label ng-model="player2BestLegs" style="color: #959595" class="col-md-3 control-label">{{player2BestLegs}}</label>
         </div>
     </div>
     </form>

@@ -674,10 +674,10 @@
     var completeFixtureCtrl = this;
     $scope.player1Achievements = false;
     $scope.player2Achievements = false;
-    $scope.player1HighFinishes = [];
-    $scope.player2HighFinishes = [];
-    $scope.player1BestLegs = [];
-    $scope.player2BestLegs = [];
+    $scope.player1HighFinishes = '';
+    $scope.player2HighFinishes = '';
+    $scope.player1BestLegs = '';
+    $scope.player2BestLegs = '';
     $scope.result = {player1LegsWon: '', player2LegsWon: ''};
 
     $scope.player1 = data.fixture.playerOne;
@@ -702,10 +702,7 @@
     $scope.isValidCheckout = function(value) {
         var isValid = true;
 
-        if (!Number.isInteger(value) || value < 100 || value > 170 || value === 169 ||
-            value === 168 || value === 166 || value === 165 ||
-            value === 163 || value === 162 || value === 159)
-        {
+        if (!Number.isInteger(value)) {
             isValid = false;
         }
               
@@ -714,29 +711,101 @@
 
     $scope.addPlayer1Finish = function() {
         if ($scope.isValidCheckout($scope.player1Checkout)) {
-            $scope.player1HighFinishes.push($scope.player1Checkout);
-            $scope.player1Checkout = '';
+            if ($scope.player1HighFinishes === '') {
+                $scope.player1HighFinishes = '' + $scope.player1Checkout  + '';
+                $scope.player1Checkout = '';
+            } else {
+                $scope.player1HighFinishes = $scope.player1HighFinishes + ', ' + $scope.player1Checkout;
+                $scope.player1Checkout = '';
+            }
         }
     },
 
     $scope.addPlayer2Finish = function() {
         if ($scope.isValidCheckout($scope.player2Checkout)) {
-            $scope.player2HighFinishes.push($scope.player2Checkout);
-            $scope.player2Checkout = '';
+            if ($scope.player2HighFinishes === '') {
+                $scope.player2HighFinishes = '' + $scope.player2Checkout + '';
+                $scope.player2Checkout = '';
+            } else {
+                $scope.player2HighFinishes = $scope.player2HighFinishes + ', ' + $scope.player2Checkout;
+                $scope.player2Checkout = '';
+            }
+        }
+    },
+
+    $scope.removePlayer1Finish = function() {
+        if ($scope.player1HighFinishes !== '') {
+            if ($scope.player1HighFinishes.indexOf(',') !== -1) {
+                $scope.player1HighFinishes = $scope.player1HighFinishes.substring(0, $scope.player1HighFinishes.length - 5);
+            } else {
+                $scope.player1HighFinishes = '';
+            }
+        }
+    },
+
+    $scope.removePlayer2Finish = function() {
+        if ($scope.player2HighFinishes !== '') {
+            if ($scope.player2HighFinishes.indexOf(',') !== -1) {
+                $scope.player2HighFinishes = $scope.player2HighFinishes.substring(0, $scope.player2HighFinishes.length - 5);
+            } else {
+                $scope.player2HighFinishes = '';
+            }
         }
     },
 
     $scope.addPlayer1Leg = function() {
         if ($scope.isValidLeg($scope.player1BestLeg)) {
-            $scope.player1BestLegs.push($scope.player1BestLeg);
-            $scope.player1BestLeg = '';
+            if ($scope.player1BestLegs === '') {
+                $scope.player1BestLegs = '' + $scope.player1BestLeg + '';
+                $scope.player1BestLeg = '';
+            } else {
+                if ($scope.player1BestLeg === 9) {
+                    $scope.player1BestLegs = $scope.player1BestLegs + ',  9';
+                    $scope.player1BestLeg = '';
+                } else {
+                    $scope.player1BestLegs = $scope.player1BestLegs + ', ' + $scope.player1BestLeg;
+                    $scope.player1BestLeg = '';
+                }
+
+            }
         }
     },
 
     $scope.addPlayer2Leg = function() {
         if ($scope.isValidLeg($scope.player2BestLeg)) {
-            $scope.player2BestLegs.push($scope.player2BestLeg);
-            $scope.player2BestLeg = '';
+            if ($scope.player2BestLegs === '') {
+                $scope.player2BestLegs = '' + $scope.player2BestLeg + '';
+                $scope.player2BestLeg = '';
+            } else {
+                if ($scope.player2BestLeg === 9) {
+                    $scope.player2BestLegs = $scope.player2BestLegs + ',  9';
+                    $scope.player2BestLeg = '';
+                } else {
+                    $scope.player2BestLegs = $scope.player2BestLegs + ', ' + $scope.player2BestLeg;
+                    $scope.player2BestLeg = '';
+                }
+            }
+        }
+    },
+
+
+    $scope.removePlayer1Leg = function() {
+        if ($scope.player1BestLegs !== '') {
+            if ($scope.player1BestLegs.indexOf(',') !== -1) {
+                $scope.player1BestLegs = $scope.player1BestLegs.substring(0, $scope.player1BestLegs.length - 4);
+            } else {
+                $scope.player1BestLegs = '';
+            }
+        }
+    },
+
+    $scope.removePlayer2Leg = function() {
+        if ($scope.player2BestLegs !== '') {
+            if ($scope.player2BestLegs.indexOf(',') !== -1) {
+                $scope.player2BestLegs = $scope.player2BestLegs.substring(0, $scope.player2BestLegs.length - 4);
+            } else {
+                $scope.player2BestLegs = '';
+            }
         }
     },
 
