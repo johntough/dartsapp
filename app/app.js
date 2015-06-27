@@ -1,5 +1,5 @@
 (function() {
-  var app = angular.module('dartsApp', ['ui.bootstrap', 'dialogs.main']);
+  var app = angular.module('dartsApp', ['ui.bootstrap', 'dialogs.main', 'ngAnimate', 'toastr']);
 
   var baseUrl = !(document.location.port) ?
       'http://' + document.location.hostname :
@@ -201,7 +201,7 @@
     }
   }]);
 
-  app.controller('WeekController', ['$scope', '$http', 'loginService', 'weekService', 'dialogs', function($scope, $http, loginService, weekService, dialogs) {
+  app.controller('WeekController', ['$scope', '$http', 'loginService', 'weekService', 'dialogs', 'toastr', 'toastrConfig', function($scope, $http, loginService, weekService, dialogs, toastr, toastrConfig) {
     var weekCtrl = this;
     var isDuplicateWeekAttempt = false;
 
@@ -265,6 +265,9 @@
             // refresh controllers internal state for weeks
             $http.get(baseUrl + '/weeks').success(function(data) {
                 weekService.setWeeks(data.weeks);
+                toastrConfig.positionClass = 'toast-bottom-right';
+                toastrConfig.timeOut = 2000;
+                toastr.success('Week added!');
             });
         },function() {
             // do nothing as user did not add week
