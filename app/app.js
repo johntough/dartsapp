@@ -678,31 +678,60 @@
     $scope.player2HighFinishes = [];
     $scope.player1BestLegs = [];
     $scope.player2BestLegs = [];
-
     $scope.result = {player1LegsWon: '', player2LegsWon: ''};
 
     $scope.player1 = data.fixture.playerOne;
     $scope.player2 = data.fixture.playerTwo;
     $scope.date = data.fixture.weekNumber + ' ( ' +data.fixture.weekDate + ' )';
 
+    $scope.isValidLeg = function(value) {
+        var isValid = true;
+        if (!Number.isInteger(value) || value === '' || value < 9 || value > 18) {
+            isValid = false;
+        }
+              
+        return isValid;
+    },
+
+    $scope.isValidCheckout = function(value) {
+        var isValid = true;
+
+        if (!Number.isInteger(value) || value < 100 || value > 170 || value === 169 ||
+            value === 168 || value === 166 || value === 165 ||
+            value === 163 || value === 162 || value === 159)
+        {
+            isValid = false;
+        }
+              
+        return isValid;
+    },
+
     $scope.addPlayer1Finish = function() {
-        $scope.player1HighFinishes.push($scope.player1Checkout);
-        $scope.player1Checkout = '';
+        if ($scope.isValidCheckout($scope.player1Checkout)) {
+            $scope.player1HighFinishes.push($scope.player1Checkout);
+            $scope.player1Checkout = '';
+        }
     },
 
     $scope.addPlayer2Finish = function() {
-        $scope.player2HighFinishes.push($scope.player2Checkout);
-        $scope.player2Checkout = '';
+        if ($scope.isValidCheckout($scope.player2Checkout)) {
+            $scope.player2HighFinishes.push($scope.player2Checkout);
+            $scope.player2Checkout = '';
+        }
     },
 
     $scope.addPlayer1Leg = function() {
-        $scope.player1BestLegs.push($scope.player1BestLeg);
-        $scope.player1BestLeg = '';
+        if ($scope.isValidLeg($scope.player1BestLeg)) {
+            $scope.player1BestLegs.push($scope.player1BestLeg);
+            $scope.player1BestLeg = '';
+        }
     },
 
     $scope.addPlayer2Leg = function() {
-        $scope.player2BestLegs.push($scope.player2BestLeg);
-        $scope.player2BestLeg = '';
+        if ($scope.isValidLeg($scope.player2BestLeg)) {
+            $scope.player2BestLegs.push($scope.player2BestLeg);
+            $scope.player2BestLeg = '';
+        }
     },
 
     $scope.cancel = function() {
