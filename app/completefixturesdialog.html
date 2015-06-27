@@ -26,14 +26,14 @@
         <div class="form-group">
             <label for="player1180s" class="col-md-2 control-label">180s <span class="glyphicon glyphicon-star" style="color:gold"></label>
             <div class="col-md-3">
-                <input type="number" min="0" class="form-control" name="player1180s" id="player1180s" ng-model="player1180s">
+                <select class="form-control" id="player1180s" form="completeFixtureDialog" ng-model="player1180s" ng-options="tota180s for tota180s in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]"></select>
             </div>
         </div>
 
         <div class="form-group">
             <label for="player1Checkouts" class="col-md-2 control-label">High Finishes <span class="glyphicon glyphicon-star" style="color:gold"></label>
             <div class="col-md-3">
-                <input type="number" min="0" class="form-control" name="player1Checkouts" id="player1Checkouts" ng-model="player1Checkout">
+                <select class="form-control" id="player1Checkouts" form="completeFixtureDialog" ng-model="player1Checkout" ng-options="checkout for checkout in validCheckouts"></select>
             </div>
             <div class="col-md-1">
                 <h4>
@@ -73,13 +73,13 @@
         <div class="form-group">
             <label for="player2180s" class="col-md-2 control-label">180s <span class="glyphicon glyphicon-star" style="color:gold"></label>
             <div class="col-md-3">
-                <input type="number" min="0" class="form-control" name="player2180s" id="player2180s" ng-model="player2180s">
+                <select class="form-control" id="player2180s" form="completeFixtureDialog" ng-model="player2180s" ng-options="tota180s for tota180s in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]"></select>
             </div>
         </div>
         <div class="form-group">
             <label for="player2Checkouts" class="col-md-2 control-label">High Finishes <span class="glyphicon glyphicon-star" style="color:gold"></label>
             <div class="col-md-3">
-                <input type="number" min="0" class="form-control" name="player2Checkouts" id="player2Checkouts" ng-model="player2Checkout">
+                <select class="form-control" id="player2Checkouts" form="completeFixtureDialog" ng-model="player2Checkout" ng-options="checkout for checkout in validCheckouts"></select>
             </div>
             <div class="col-md-1">
                 <h4>

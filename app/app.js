@@ -684,6 +684,12 @@
     $scope.player2 = data.fixture.playerTwo;
     $scope.date = data.fixture.weekNumber + ' ( ' +data.fixture.weekDate + ' )';
 
+    $scope.validCheckouts = [100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117,
+        118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139,
+        140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 160, 161, 164,
+        167, 170
+    ];
+
     $scope.isValidLeg = function(value) {
         var isValid = true;
         if (!Number.isInteger(value) || value === '' || value < 9 || value > 18) {
