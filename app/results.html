@@ -2,7 +2,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Week</th>
+                <th>Date</th>
                 <th>Group</th>
                 <th>Player 1</th>
                 <th>Player 1 Legs</th>
@@ -11,13 +11,13 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="result in resultCtrl.getResults()">
-                <td>{{result.week}}</td>
+            <tr ng-repeat="result in resultCtrl.getResults() | orderBy:['-weekDateFormatted', 'group']">
+                <td>{{result.weekNumber}} ( {{result.weekDate}} )</td>
                 <td>{{result.group}}</td>
-                <td>{{result.playerOne}}</td>
-                <td>{{result.playerOneLegsWon}}</td>
-                <td>{{result.playerTwo}}</td>
-                <td>{{result.playerTwoLegsWon}}</td>
+                <td ng-class="resultCtrl.getClass('1', result)">{{result.playerOne}}</td>
+                <td ng-class="resultCtrl.getClass('1', result)">{{result.playerOneLegsWon}}</td>
+                <td ng-class="resultCtrl.getClass('2', result)">{{result.playerTwo}}</td>
+                <td ng-class="resultCtrl.getClass('2', result)">{{result.playerTwoLegsWon}}</td>
             </tr>
         </tbody>
     </table>

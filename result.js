@@ -9,7 +9,7 @@ module.exports = function(restapi, db) {
          db.each("SELECT result_tbl.id, result_tbl.player_one_legs_won, result_tbl.player_two_legs_won, " +
          "p1.forename AS p1_forename, p1.surname AS p1_surname, " +
          "p2.forename AS p2_forename, p2.surname AS p2_surname, " +
-         "week_tbl.name AS week_name, " +
+         "week_tbl.name AS week_name, week_tbl.date AS week_date, " +
          "group_tbl.name AS group_name " +
          "FROM result_tbl " +
          "JOIN fixture_tbl AS f ON f.id = result_tbl.fixture_id " +
@@ -18,12 +18,13 @@ module.exports = function(restapi, db) {
          "JOIN player_tbl AS p2 ON p2.id = f.player_two_id " +
          "JOIN group_tbl ON group_tbl.id = p1.group_id",
         function(err, row) {
-            var result = { id: '', week: '', group: '', playerOneLegsWon: '', playerTwoLegsWon: '', playerOne: '', playerTwo: ''};
+            var result = { id: '', weekNumber: '', weekDate: '', group: '', playerOneLegsWon: '', playerTwoLegsWon: '', playerOne: '', playerTwo: ''};
 
             result.id = row.id;
             result.playerOneLegsWon = row.player_one_legs_won;
             result.playerTwoLegsWon = row.player_two_legs_won;
-            result.week = row.week_name;
+            result.weekNumber = row.week_name;
+            result.weekDate = row.week_date;
             result.group = row.group_name;
             result.playerOne = row.p1_forename + ' ' + row.p1_surname;            
             result.playerTwo = row.p2_forename + ' ' + row.p2_surname;

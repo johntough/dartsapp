@@ -115,7 +115,15 @@
       },      
 
       resultservice.setResults = function(results) {
-          resultservice.results = results;
+          var formattedResults = [];
+
+          for (var result in results) {
+              if (results.hasOwnProperty(result)) {
+                  results[result].weekDateFormatted = Date.parse(results[result].weekDate);
+                  formattedResults.push(results[result]);
+              }
+          }
+          resultservice.results = formattedResults;
       }
   });
 
@@ -1043,6 +1051,25 @@
 
     resultCtrl.getResults = function() {
         return resultService.getResults();
+    },
+
+    resultCtrl.getClass = function(player, result) {
+        var win = '{ success : true }';
+        var draw = '{ warning : true }';
+        var cellClass = '';
+
+        if (result.playerOneLegsWon === result.playerTwoLegsWon) {
+            cellClass = draw;
+        } else if (player === '1') {
+            if (result.playerOneLegsWon > result.playerTwoLegsWon) {
+                cellClass = win;
+            }
+        } else if (player === '2') {
+            if (result.playerTwoLegsWon > result.playerOneLegsWon) {
+                cellClass = win;
+            }
+        }
+        return cellClass;
     },
 
     // gets the template to ng-include for a table row / item
