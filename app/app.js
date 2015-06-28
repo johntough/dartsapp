@@ -337,6 +337,10 @@
 
     var isDuplicateplayerAttempt = false;
 
+    playerCtrl.getGroups = function() {
+        return groupService.getGroups();
+    },
+
     playerCtrl.getPlayers = function() {
         return playerService.getPlayers();
     },
@@ -347,6 +351,18 @@
 
     playerCtrl.getGroups = function() {
         return groupService.getGroups();
+    },
+
+    playerCtrl.filter = function() {
+            if ($scope.groupfilter === 'all') {
+                $http.get(baseUrl + '/players/').success(function(data) {
+                    playerService.setPlayers(data.players);
+                });
+            } else {
+                $http.get(baseUrl + '/players/group/' + $scope.groupfilter).success(function(data) {
+                    playerService.setPlayers(data.players);
+                });
+            }
     },
 
     // gets the template to ng-include for a table row / item

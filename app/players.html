@@ -1,4 +1,19 @@
 <div ng-controller="PlayerController as playerCtrl">
+
+    <form id="filterForm" class="form-horizontal">
+        <div class="form-group">    
+        <label for="groupFilter" class="col-sm-3 control-label">Filter players by group</label>
+            <div class="col-sm-6">
+            <select id="groupFilter" ng-model="groupfilter" ng-change="playerCtrl.filter()" class="form-control" >
+                <option value="all">All</option>
+                <option value="{{group.id}}" ng-repeat="group in playerCtrl.getGroups()">
+                   {{group.name}} 
+                </option>
+            </select>
+        </div>
+        </div>
+    </form>
+
     <table class="table">
         <thead>
             <tr>
