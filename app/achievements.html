@@ -33,14 +33,12 @@
             <thead>
                 <tr>
                     <th>Player</th>
-                    <th>Week</th>
                     <th>Checkout</th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-class="{ success:achievementCtrl.isHighestFinish(highfinish.checkout) }" ng-repeat="highfinish in achievementCtrl.getHighFinishes() | orderBy:'-checkout'">
                     <td>{{highfinish.player}}</td>
-                    <td>{{highfinish.week}}</td>
                     <td>{{highfinish.checkout}}</td>
                 </tr>
             </tbody>
@@ -52,14 +50,12 @@
             <thead>
                 <tr>
                     <th>Player</th>
-                    <th>Week</th>
                     <th>Number of darts</th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-class="{ success:achievementCtrl.isBestLeg(bestleg.numberOfDarts) }" ng-repeat="bestleg in achievementCtrl.getBestLegs() | orderBy:'-numberOfDarts':true">
                     <td>{{bestleg.player}}</td>
-                    <td>{{bestleg.week}}</td>
                     <td>{{bestleg.numberOfDarts}}</td>
                 </tr>
             </tbody>
