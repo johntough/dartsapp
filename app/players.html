@@ -1,5 +1,12 @@
 <div ng-controller="PlayerController as playerCtrl">
-
+    <p>
+    <div class="col-sm-2"/>
+        <button class="btn btn-lg btn-primary btn-block" ng-show="playerCtrl.showPrivilegedData()" ng-click="playerCtrl.showAddForm()">Add Player</button>
+    </div>
+    <form id="addForm" class="form-horizontal">
+        <div class="form-group">
+        </div>
+    </form>
     <form id="filterForm" class="form-horizontal">
         <div class="form-group">    
         <label for="groupFilter" class="col-sm-3 control-label">Filter players by group</label>
@@ -51,6 +58,4 @@
             <img src="resources/images/cancel.png" data-toggle="tooltip" data-placement="bottom" title="Cancel Changes" height="32" width="32" ng-click="playerCtrl.cancelChanges()"/>
         </td>
     </script>
-
-    <button class="btn btn-lg btn-primary btn-block" ng-show="playerCtrl.showPrivilegedData()" ng-click="playerCtrl.showAddForm()">Add Player</button>
 </div>

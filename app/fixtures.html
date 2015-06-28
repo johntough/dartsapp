@@ -1,7 +1,14 @@
 <div ng-controller="FixtureController as fixtureCtrl">
-
+    <p>
+    <div class="col-sm-2"/>
+        <button class="btn btn-lg btn-primary btn-block" ng-show="fixtureCtrl.showPrivilegedData()" ng-click="fixtureCtrl.showAddForm()">Add Fixture</button>
+    </div>
+    <form id="addForm" class="form-horizontal">
+        <div class="form-group">
+        </div>
+    </form>
     <form id="filterForm" class="form-horizontal">
-        <div class="form-group">    
+        <div class="form-group">
         <label for="weekFilter" class="col-sm-3 control-label">Filter fixtures by week</label>
             <div class="col-sm-6">
             <select id="weekFilter" ng-model="weekfilter" ng-change="fixtureCtrl.filter()" class="form-control" >
@@ -72,6 +79,4 @@
             </tr>
         </tbody>
     </table>
-
-    <button class="btn btn-lg btn-primary btn-block" ng-show="fixtureCtrl.showPrivilegedData()" ng-click="fixtureCtrl.showAddForm()">Add Fixture</button>
 </div>

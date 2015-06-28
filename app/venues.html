@@ -1,4 +1,8 @@
 <div ng-controller="VenueController as venueCtrl">
+    <p>
+    <div class="col-sm-2"/>
+        <button class="btn btn-lg btn-primary btn-block" ng-click="venueCtrl.showAddForm()">Add Board</button>
+    </div>
     <table class="table">
         <thead>
             <tr>
@@ -27,6 +31,4 @@
             <img src="resources/images/cancel.png" data-toggle="tooltip" data-placement="bottom" title="Cancel Changes" height="32" width="32" ng-click="venueCtrl.cancelChanges()"/>
         </td>
     </script>
-
-    <button class="btn btn-lg btn-primary btn-block" ng-click="venueCtrl.showAddForm()">Add Board</button>
 </div>
