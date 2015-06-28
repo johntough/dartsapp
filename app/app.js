@@ -106,9 +106,10 @@
       }
   }]);
 
-  app.service('resultService', function() {
+  app.service('resultService', ['$http', function($http) {
       var resultservice = this;
       resultservice.results = [];
+      resultservice.tables = [];
 
       resultservice.getResults = function() {
           return resultservice.results;
@@ -127,8 +128,12 @@
           resultservice.setTables(results);
       },
 
+      resultservice.getTables = function() {
+          return resultservice.tables;
+      },
+
       resultservice.setTables = function(results) {
-          var formattedResults= [];
+          var formattedResults = [];
           var groups = [];
           var players = [];
           var playersSimpleArray = [];
@@ -164,10 +169,13 @@
           // build up player array
           for (var result in results) {
               if (results.hasOwnProperty(result)) {
+                  // check for player one
                   if (indexOf.call(playersSimpleArray, results[result].playerOne) === -1) {
                      playersSimpleArray.push(results[result].playerOne);
                      players.push({ player: results[result].playerOne, group: results[result].group });
-                  } else if (indexOf.call(playersSimpleArray, results[result].playerTwo) === -1) {
+                  } 
+                  // check for player two
+                  if (indexOf.call(playersSimpleArray, results[result].playerTwo) === -1) {
                      playersSimpleArray.push(results[result].playerTwo);
                      players.push({ player: results[result].playerTwo, group: results[result].group });
                   }
@@ -216,26 +224,56 @@
               }
           }
   
-          // calculating total games played
-          for (player in players) {
-              if (players.hasOwnProperty(player)) {
-                  var player = players[player];
-                  (player.drawn === undefined) ? player.drawn = 0 : '';
-                  (player.won === undefined) ? player.won = 0 : '';
-                  (player.lost === undefined) ? player.lost = 0 : '';
-                   
-                  player.played = player.drawn + player.won + player.lost;
-                  player.points = (player.drawn) + (player.won * 2);
+          // checking for additional players missed in results
+          var maybeAdditionalPlayers = false;
+          $http.get(baseUrl + '/players/names').success(function(data) {
+              if (data.count > playersSimpleArray.length) {
+                  maybeAdditionalPlayers = data.players;
               }
-          }
+              // adding in players that have not played and don't show up in results
+              if (maybeAdditionalPlayers) {
+                  for (maybeAdditionalPlayer in maybeAdditionalPlayers) {
+                      if (maybeAdditionalPlayers.hasOwnProperty(maybeAdditionalPlayer)) {
+                          if (indexOf.call(playersSimpleArray, maybeAdditionalPlayers[maybeAdditionalPlayer].name) === -1) {
+                              players.push({ player: maybeAdditionalPlayers[maybeAdditionalPlayer].name, group: maybeAdditionalPlayers[maybeAdditionalPlayer].group});
+                          }
+                      }
+                  }
+              }
 
-          resultservice.tables = formattedResults;
-      },
+              // calculating total games played
+              for (player in players) {
+                  if (players.hasOwnProperty(player)) {
+                      var player = players[player];
+                      (player.drawn === undefined) ? player.drawn = 0 : '';
+                      (player.won === undefined) ? player.won = 0 : '';
+                      (player.lost === undefined) ? player.lost = 0 : '';
+                      (player.legsWon === undefined) ? player.legsWon = 0 : '';
+                      (player.legsLost === undefined) ? player.legsLost = 0 : '';
+  
+                      player.played = player.drawn + player.won + player.lost;
+                      player.points = (player.drawn) + (player.won * 2);
+                  }
+              }
 
-      resultservice.getTables = function() {
-          return resultservice.tables;
+              // bundling players up into groups
+              for (group in groups) {
+                  if (groups.hasOwnProperty(group)) {
+                      formattedResults.push({ groupName: groups[group], players: [] });
+                      for (player in players) {
+                          if (players.hasOwnProperty(player)) {
+                              if (players[player].group === groups[group]) {
+                                  formattedResults[group].players.push(players[player]);
+                              }
+                          }
+                      }
+                  }
+             }
+
+              resultservice.tables = formattedResults;
+          });
       }
-  });
+  }]);
 
   app.service('highFinishService', function() {
       var highfinishservice = this;
@@ -1244,6 +1282,14 @@
     });
   }]);
 
+  app.controller('TableController', ['$scope', '$http', 'resultService', function($scope, $http, resultService) {
+    var tableCtrl = this;
+
+    tableCtrl.getTables = function() {
+        return resultService.getTables();
+    }
+  }]);
+
   app.controller('AchievementController', ['$scope', '$http', 'loginService', 'dialogs', 'player180Service', 'bestLegService', 'highFinishService',
   function($scope, $http, loginService, dialogs, player180Service, bestLegService, highFinishService) {
     var achievementCtrl = this;
@@ -1406,6 +1452,13 @@
     return {
       restrict: 'E',
       templateUrl: 'achievements.html'
+    };
+  });
+
+  app.directive('tablesList', function() {
+    return {
+      restrict: 'E',
+      templateUrl: 'tables.html'
     };
   });
 })();

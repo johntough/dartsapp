@@ -1,5 +1,5 @@
 <div ng-controller="TableController as tableCtrl">
-    <div ng-repeat="table in resultCtrl.getTables()">
+    <div ng-repeat="table in tableCtrl.getTables()">
     <h2>{{table.groupName}}</h2>
         <table class="table">
             <thead>
@@ -9,20 +9,21 @@
                     <th>Won</th>
                     <th>Drawn</th>
                     <th>Lost</th>
-                    <th>Legs for</th>
-                    <th>Legs against</th>
+                    <th>Legs For</th>
+                    <th>Legs Against</th>
                     <th>Points</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="player in table.players | orderBy:['points', 'legsWon', '-legsLost']">
-                    <th>{{player.played}}</th>
-                    <th>{{player.won}}</th>
-                    <th>{{player.drawn}}</th>
-                    <th>{{player.lost}}</th>
-                    <th>{{player.legsWon}}</th>
-                    <th>{{player.legsLost}}</th>
-                    <th>{{player.points}}</th>
+                <tr ng-repeat="player in table.players | orderBy:['-points', '-legsWon', 'legsLost']">
+                    <th ng-class="{ success: $index < 4 }">{{player.player}}</th>
+                    <th ng-class="{ success: $index < 4 }">{{player.played}}</th>
+                    <th ng-class="{ success: $index < 4 }">{{player.won}}</th>
+                    <th ng-class="{ success: $index < 4 }">{{player.drawn}}</th>
+                    <th ng-class="{ success: $index < 4 }">{{player.lost}}</th>
+                    <th ng-class="{ success: $index < 4 }">{{player.legsWon}}</th>
+                    <th ng-class="{ success: $index < 4 }">{{player.legsLost}}</th>
+                    <th ng-class="{ success: $index < 4 }">{{player.points}}</th>
                 </tr>
             </tbody>
         </table>
