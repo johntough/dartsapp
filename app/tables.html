@@ -1,0 +1,30 @@
+<div ng-controller="TableController as tableCtrl">
+    <div ng-repeat="table in resultCtrl.getTables()">
+    <h2>{{table.groupName}}</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Player</th>
+                    <th>Played</th>
+                    <th>Won</th>
+                    <th>Drawn</th>
+                    <th>Lost</th>
+                    <th>Legs for</th>
+                    <th>Legs against</th>
+                    <th>Points</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="player in table.players | orderBy:['points', 'legsWon', '-legsLost']">
+                    <th>{{player.played}}</th>
+                    <th>{{player.won}}</th>
+                    <th>{{player.drawn}}</th>
+                    <th>{{player.lost}}</th>
+                    <th>{{player.legsWon}}</th>
+                    <th>{{player.legsLost}}</th>
+                    <th>{{player.points}}</th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

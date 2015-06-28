@@ -112,7 +112,7 @@
 
       resultservice.getResults = function() {
           return resultservice.results;
-      },      
+      },
 
       resultservice.setResults = function(results) {
           var formattedResults = [];
@@ -124,6 +124,116 @@
               }
           }
           resultservice.results = formattedResults;
+          resultservice.setTables(results);
+      },
+
+      resultservice.setTables = function(results) {
+          var formattedResults= [];
+          var groups = [];
+          var players = [];
+          var playersSimpleArray = [];
+
+          var indexOf = function(item) {
+              if (typeof Array.prototype.indexOf === 'function') {
+                  indexOf = Array.prototype.indexOf;
+              } else {
+                  indexOf = function(item) {
+                      var i = -1, index = -1;
+        
+                      for(i = 0; i < this.length; i++) {
+                          if(this[i] === item) {
+                              index = i;
+                              break;
+                          }
+                      }
+                      return index;
+                  };
+              }
+              return indexOf.call(this, item);
+          };
+
+          // build up group array
+          for (var result in results) {
+              if (results.hasOwnProperty(result)) {
+                  if (indexOf.call(groups, results[result].group) === -1) {
+                    groups.push(results[result].group);
+                  }
+              }
+          }
+
+          // build up player array
+          for (var result in results) {
+              if (results.hasOwnProperty(result)) {
+                  if (indexOf.call(playersSimpleArray, results[result].playerOne) === -1) {
+                     playersSimpleArray.push(results[result].playerOne);
+                     players.push({ player: results[result].playerOne, group: results[result].group });
+                  } else if (indexOf.call(playersSimpleArray, results[result].playerTwo) === -1) {
+                     playersSimpleArray.push(results[result].playerTwo);
+                     players.push({ player: results[result].playerTwo, group: results[result].group });
+                  }
+              }
+          }
+
+          // add legs won / lost
+          for (var result in results) {
+              if (results.hasOwnProperty(result)) {
+                  var result = results[result];
+                  for (player in players) {
+                      if (players.hasOwnProperty(player)) {
+                        if (result.playerOne === players[player].player) {
+                            // increment legs won
+                            (players[player].legsWon === undefined) ? players[player].legsWon = result.playerOneLegsWon : players[player].legsWon = players[player].legsWon + result.playerOneLegsWon;
+                            // increment legs lost
+                            (players[player].legsLost === undefined) ? players[player].legsLost = result.playerTwoLegsWon : players[player].legsLost = players[player].legsLost + result.playerTwoLegsWon;
+                            // increment drawn games
+                            if (result.playerOneLegsWon === result.playerTwoLegsWon) {
+                                (players[player].drawn === undefined) ? players[player].drawn = 1 : players[player].drawn = players[player].drawn + 1;
+                            } // increment won games
+                            else if (result.playerOneLegsWon > result.playerTwoLegsWon) {
+                                (players[player].won === undefined) ? players[player].won = 1 : players[player].won = players[player].won + 1;
+                            } // increment lost games
+                            else if (result.playerOneLegsWon < result.playerTwoLegsWon) {
+                                (players[player].lost === undefined) ? players[player].lost = 1 : players[player].lost = players[player].lost + 1;
+                            }
+                        } else if (result.playerTwo === players[player].player) {
+                            // increment legs won
+                            (players[player].legsWon === undefined) ? players[player].legsWon = result.playerTwoLegsWon  : players[player].legsWon = players[player].legsWon + result.playerTwoLegsWon;
+                            // increment legs lost
+                            (players[player].legsLost === undefined) ? players[player].legsLost = result.playerOneLegsWon : players[player].legsLost = players[player].legsLost + result.playerOneLegsWon;
+                            // increment drawn games
+                            if (result.playerOneLegsWon === result.playerTwoLegsWon) {
+                                (players[player].drawn === undefined) ? players[player].drawn = 1 : players[player].drawn = players[player].drawn + 1;
+                            } // increment won games
+                            else if (result.playerTwoLegsWon > result.playerOneLegsWon) {
+                                (players[player].won === undefined) ? players[player].won = 1 : players[player].won = players[player].won + 1;
+                            } // increment lost games
+                            else if (result.playerTwoLegsWon < result.playerOneLegsWon) {
+                                (players[player].lost === undefined) ? players[player].lost = 1 : players[player].lost = players[player].lost + 1;
+                            }
+                        }
+                      }
+                  }
+              }
+          }
+  
+          // calculating total games played
+          for (player in players) {
+              if (players.hasOwnProperty(player)) {
+                  var player = players[player];
+                  (player.drawn === undefined) ? player.drawn = 0 : '';
+                  (player.won === undefined) ? player.won = 0 : '';
+                  (player.lost === undefined) ? player.lost = 0 : '';
+                   
+                  player.played = player.drawn + player.won + player.lost;
+                  player.points = (player.drawn) + (player.won * 2);
+              }
+          }
+
+          resultservice.tables = formattedResults;
+      },
+
+      resultservice.getTables = function() {
+          return resultservice.tables;
       }
   });
 
