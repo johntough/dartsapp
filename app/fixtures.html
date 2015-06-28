@@ -24,6 +24,18 @@
             </select>
         </div>
         </div>
+
+        <div class="form-group">
+        <label for="playerFilter" class="col-sm-3 control-label">Filter fixtures by player</label>
+            <div class="col-sm-6">
+            <select id="playerFilter" ng-model="playerfilter" ng-change="fixtureCtrl.filter()" class="form-control">
+                <option value="all">All</option>
+                <option value="{{player.id}}" ng-repeat="player in fixtureCtrl.getPlayers()">
+                   {{player.forename + ' ' + player.surname}}
+                </option>
+            </select>
+        </div>
+        </div>
     </form>
 
     <table class="table">

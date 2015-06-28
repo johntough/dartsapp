@@ -1,4 +1,43 @@
 <div ng-controller="ResultController as resultCtrl">
+
+    <form id="filterForm" class="form-horizontal">
+        <div class="form-group">    
+        <label for="weekFilter" class="col-sm-3 control-label">Filter results by week</label>
+            <div class="col-sm-6">
+            <select id="weekFilter" ng-model="weekfilter" ng-change="resultCtrl.filter()" class="form-control" >
+                <option value="all">All</option>
+                <option value="{{week.id}}" ng-repeat="week in resultCtrl.getWeeks()">
+                   {{week.name}} ( {{week.date}} )
+                </option>
+            </select>
+        </div>
+        </div>
+
+        <div class="form-group">
+        <label for="groupFilter" class="col-sm-3 control-label">Filter results by group</label>
+            <div class="col-sm-6">
+            <select id="groupFilter" ng-model="groupfilter" ng-change="resultCtrl.filter()" class="form-control">
+                <option value="all">All</option>
+                <option value="{{group.id}}" ng-repeat="group in resultCtrl.getGroups()">
+                   {{group.name}}
+                </option>
+            </select>
+        </div>
+        </div>
+
+        <div class="form-group">
+        <label for="playerFilter" class="col-sm-3 control-label">Filter results by player</label>
+            <div class="col-sm-6">
+            <select id="playerFilter" ng-model="playerfilter" ng-change="resultCtrl.filter()" class="form-control">
+                <option value="all">All</option>
+                <option value="{{player.id}}" ng-repeat="player in resultCtrl.getPlayers()">
+                   {{player.forename + ' ' + player.surname}}
+                </option>
+            </select>
+        </div>
+        </div>
+    </form>
+
     <table class="table">
         <thead>
             <tr>

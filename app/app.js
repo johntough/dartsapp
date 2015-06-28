@@ -354,15 +354,15 @@
     },
 
     playerCtrl.filter = function() {
-            if ($scope.groupfilter === 'all') {
-                $http.get(baseUrl + '/players/').success(function(data) {
-                    playerService.setPlayers(data.players);
-                });
-            } else {
-                $http.get(baseUrl + '/players/group/' + $scope.groupfilter).success(function(data) {
-                    playerService.setPlayers(data.players);
-                });
-            }
+        if ($scope.groupfilter === 'all') {
+            $http.get(baseUrl + '/players/').success(function(data) {
+                playerService.setPlayers(data.players);
+            });
+        } else {
+            $http.get(baseUrl + '/players/group/' + $scope.groupfilter).success(function(data) {
+                playerService.setPlayers(data.players);
+            });
+        }
     },
 
     // gets the template to ng-include for a table row / item
@@ -1140,8 +1140,8 @@
     }
   }]);
 
-  app.controller('FixtureController', ['$scope', '$http', 'loginService', 'fixtureService', 'groupService', 'weekService', 'dialogs', 'toastr', 'toastrConfig',
-  function($scope, $http, loginService, fixtureService, groupService, weekService, dialogs, toastr, toastrConfig) {
+  app.controller('FixtureController', ['$scope', '$http', 'loginService', 'fixtureService', 'groupService', 'playerService', 'weekService', 'dialogs', 'toastr', 'toastrConfig',
+  function($scope, $http, loginService, fixtureService, groupService, playerService, weekService, dialogs, toastr, toastrConfig) {
     var fixtureCtrl = this;
 
     fixtureCtrl.showPrivilegedData = function() {
@@ -1156,6 +1156,10 @@
         return groupService.getGroups();
     },
 
+    fixtureCtrl.getPlayers = function() {
+        return playerService.getPlayers();
+    },
+
     fixtureCtrl.getWeeks = function() {
         return weekService.getWeeks();
     },
@@ -1164,27 +1168,51 @@
         fixtureService.setFixtures(data.fixtures);
     });
 
-    fixtureCtrl.filter = function() {        
-        if (!$scope.weekfilter | $scope.weekfilter === 'all') {
-            if (!$scope.groupfilter | $scope.groupfilter === 'all') {
-                $http.get(baseUrl + '/fixtures/').success(function(data) {
-                    fixtureService.setFixtures(data.fixtures);
-                });
-            } else {
-                $http.get(baseUrl + '/fixtures/group/' + $scope.groupfilter).success(function(data) {
-                    fixtureService.setFixtures(data.fixtures);
-                });
-            }
-        } else {
-            if (!$scope.groupfilter | $scope.groupfilter === 'all') {
-                $http.get(baseUrl + '/fixtures/week/' + $scope.weekfilter).success(function(data) {
-                    fixtureService.setFixtures(data.fixtures);
-                });
-            } else {
-                $http.get(baseUrl + '/fixtures/week/' + $scope.weekfilter + '/group/' + $scope.groupfilter).success(function(data) {
-                    fixtureService.setFixtures(data.fixtures);
-                });
-            }
+    fixtureCtrl.filter = function() {
+        var filterGroups = (!$scope.groupfilter | $scope.groupfilter === 'all') ? false: true;
+        var filterWeeks = (!$scope.weekfilter | $scope.weekfilter === 'all') ? false: true;
+        var filterPlayers = (!$scope.playerfilter | $scope.playerfilter === 'all') ? false: true;
+
+        // no filters
+        if (!filterGroups && !filterWeeks && !filterPlayers) {
+            $http.get(baseUrl + '/fixtures/').success(function(data) {
+                fixtureService.setFixtures(data.fixtures);
+            });
+        // by group
+        } else if (filterGroups && !filterWeeks && !filterPlayers) {
+            $http.get(baseUrl + '/fixtures/group/' + $scope.groupfilter).success(function(data) {
+                fixtureService.setFixtures(data.fixtures);
+            });
+        // by week
+        } else if (!filterGroups && filterWeeks && !filterPlayers) {
+            $http.get(baseUrl + '/fixtures/week/' + $scope.weekfilter).success(function(data) {
+                fixtureService.setFixtures(data.fixtures);
+            });
+        // by player
+        } else if (!filterGroups && !filterWeeks && filterPlayers) {
+            $http.get(baseUrl + '/fixtures/player/' + $scope.playerfilter).success(function(data) {
+                fixtureService.setFixtures(data.fixtures);
+            });
+        // by group && week
+        } else if (filterGroups && filterWeeks && !filterPlayers) {
+            $http.get(baseUrl + '/fixtures/week/' + $scope.weekfilter + '/group/' + $scope.groupfilter).success(function(data) {
+                fixtureService.setFixtures(data.fixtures);
+            });
+        // by group && player
+        } else if (filterGroups && !filterWeeks && filterPlayers) {
+            $http.get(baseUrl + '/fixtures/group/' + $scope.groupfilter + '/player/' + $scope.playerfilter).success(function(data) {
+                fixtureService.setFixtures(data.fixtures);
+            });
+        // by week && player
+        } else if (!filterGroups && filterWeeks && filterPlayers) {
+            $http.get(baseUrl + '/fixtures/week/' + $scope.weekfilter + '/player/' + $scope.playerfilter).success(function(data) {
+                fixtureService.setFixtures(data.fixtures);
+            });
+        // by group && week && player
+        } else if (filterGroups && filterWeeks && filterPlayers) {
+            $http.get(baseUrl + '/fixtures/group/' + $scope.groupfilter + '/week/' + $scope.weekfilter + '/player/' + $scope.playerfilter).success(function(data) {
+                fixtureService.setFixtures(data.fixtures);
+            });
         }
     },
 
@@ -1221,7 +1249,8 @@
     }
   }]);
 
-  app.controller('ResultController', ['$scope', '$http', 'loginService', 'dialogs', 'resultService', function($scope, $http, loginService, dialogs, resultService) {
+  app.controller('ResultController', ['$scope', '$http', 'loginService', 'dialogs', 'resultService', 'weekService', 'groupService', 'playerService',
+  function($scope, $http, loginService, dialogs, resultService, weekService, groupService, playerService) {
     var resultCtrl = this;
 
     resultCtrl.showPrivilegedData = function() {
@@ -1230,6 +1259,66 @@
 
     resultCtrl.getResults = function() {
         return resultService.getResults();
+    },
+
+    resultCtrl.getWeeks = function() {
+        return weekService.getWeeks();
+    },
+
+    resultCtrl.getGroups = function() {
+        return groupService.getGroups();
+    },
+
+    resultCtrl.getPlayers = function() {
+        return playerService.getPlayers();
+    },
+
+    resultCtrl.filter = function() {
+        var filterGroups = (!$scope.groupfilter | $scope.groupfilter === 'all') ? false: true;
+        var filterWeeks = (!$scope.weekfilter | $scope.weekfilter === 'all') ? false: true;
+        var filterPlayers = (!$scope.playerfilter | $scope.playerfilter === 'all') ? false: true;
+
+        // no filters
+        if (!filterGroups && !filterWeeks && !filterPlayers) {
+            $http.get(baseUrl + '/results/').success(function(data) {
+                resultService.setResults(data.results);
+            });
+        // by group
+        } else if (filterGroups && !filterWeeks && !filterPlayers) {
+            $http.get(baseUrl + '/results/group/' + $scope.groupfilter).success(function(data) {
+                resultService.setResults(data.results);
+            });
+        // by week
+        } else if (!filterGroups && filterWeeks && !filterPlayers) {
+            $http.get(baseUrl + '/results/week/' + $scope.weekfilter).success(function(data) {
+                resultService.setResults(data.results);
+            });
+        // by player
+        } else if (!filterGroups && !filterWeeks && filterPlayers) {
+            $http.get(baseUrl + '/results/player/' + $scope.playerfilter).success(function(data) {
+                resultService.setResults(data.results);
+            });
+        // by group && week
+        } else if (filterGroups && filterWeeks && !filterPlayers) {
+            $http.get(baseUrl + '/results/group/' + $scope.groupfilter + '/week/' + $scope.weekfilter).success(function(data) {
+                resultService.setResults(data.results);
+            });
+        // by group && player
+        } else if (filterGroups && !filterWeeks && filterPlayers) {
+            $http.get(baseUrl + '/results/group/' + $scope.groupfilter + '/player/' + $scope.playerfilter).success(function(data) {
+                resultService.setResults(data.results);
+            });
+        // by week && player
+        } else if (!filterGroups && filterWeeks && filterPlayers) {
+            $http.get(baseUrl + '/results/week/' + $scope.weekfilter + '/player/' + $scope.playerfilter).success(function(data) {
+                resultService.setResults(data.results);
+            });
+        // by group && week && player
+        } else if (filterGroups && filterWeeks && filterPlayers) {
+            $http.get(baseUrl + '/results/group/' + $scope.groupfilter + '/week/' + $scope.weekfilter + '/player/' + $scope.playerfilter).success(function(data) {
+                resultService.setResults(data.results);
+            });
+        }
     },
 
     resultCtrl.getClass = function(player, result) {
