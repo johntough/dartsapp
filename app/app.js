@@ -106,33 +106,15 @@
       }
   }]);
 
-  app.service('resultService', ['$http', function($http) {
-      var resultservice = this;
-      resultservice.results = [];
-      resultservice.tables = [];
+  app.service('tableService', ['$http', function($http) {
+      var tableservice = this;
+      tableservice.tables = [];
 
-      resultservice.getResults = function() {
-          return resultservice.results;
+      tableservice.getTables = function() {
+          return tableservice.tables;
       },
 
-      resultservice.setResults = function(results) {
-          var formattedResults = [];
-
-          for (var result in results) {
-              if (results.hasOwnProperty(result)) {
-                  results[result].weekDateFormatted = Date.parse(results[result].weekDate);
-                  formattedResults.push(results[result]);
-              }
-          }
-          resultservice.results = formattedResults;
-          resultservice.setTables(results);
-      },
-
-      resultservice.getTables = function() {
-          return resultservice.tables;
-      },
-
-      resultservice.setTables = function(results) {
+      tableservice.setTables = function(results) {
           var formattedResults = [];
           var groups = [];
           var players = [];
@@ -270,8 +252,31 @@
                   }
              }
 
-              resultservice.tables = formattedResults;
+              tableservice.tables = formattedResults;
           });
+      }
+  }]);
+
+  app.service('resultService', ['$http', 'tableService', function($http, tableService) {
+      var resultservice = this;
+      resultservice.results = [];
+      resultservice.tables = [];
+
+      resultservice.getResults = function() {
+          return resultservice.results;
+      },
+
+      resultservice.setResults = function(results) {
+          var formattedResults = [];
+
+          for (var result in results) {
+              if (results.hasOwnProperty(result)) {
+                  results[result].weekDateFormatted = Date.parse(results[result].weekDate);
+                  formattedResults.push(results[result]);
+              }
+          }
+          resultservice.results = formattedResults;
+          tableService.setTables(results);
       }
   }]);
 
@@ -1387,11 +1392,27 @@
     });
   }]);
 
-  app.controller('TableController', ['$scope', '$http', 'resultService', function($scope, $http, resultService) {
+  app.controller('TableController', ['$scope', '$http', 'tableService', 'groupService', function($scope, $http, tableService, groupService) {
     var tableCtrl = this;
 
+    tableCtrl.getGroups = function() {
+        return groupService.getGroups();
+    },
+
+    tableCtrl.filter = function() {
+        if ($scope.tableFilter !== 'all') {
+            $http.get(baseUrl + '/results/group/' + $scope.tableFilter).success(function(data) {
+                tableService.setTables(data.results);
+            });
+        } else {
+            $http.get(baseUrl + '/results').success(function(data) {
+                tableService.setTables(data.results);
+            });
+        }
+    },
+
     tableCtrl.getTables = function() {
-        return resultService.getTables();
+        return tableService.getTables();
     }
   }]);
 
