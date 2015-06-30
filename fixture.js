@@ -53,6 +53,7 @@ module.exports = function(restapi, db) {
          db.each("SELECT fixture_tbl.id, week_tbl.name AS week_name, week_tbl.date AS week_date, fixture_tbl.order_of_play, fixture_tbl.complete, " +
          "venue_tbl.name AS venue_name," +
          "group_tbl.name AS group_name," +
+         "fixture_tbl.player_one_id, fixture_tbl.player_two_id," +
          "p1.forename AS p1_forename, p1.surname AS p1_surname, " +
          "p2.forename AS p2_forename, p2.surname AS p2_surname, " +
          "m1.forename AS m1_forename, m1.surname AS m1_surname, " +
@@ -67,7 +68,7 @@ module.exports = function(restapi, db) {
          "JOIN player_tbl AS m2 ON m2.id = fixture_tbl.marker_two_id " +
          "WHERE fixture_tbl.week_id = " + request.params.week,
         function(err, row) {
-            var fixture = { id: '', weekNumber: '', weekDate: '', orderOfPlay: '', venue: '', group: '', playerOne: '', playerTwo: '', markerOne: '', markerTwo: '', complete: ''};
+            var fixture = { id: '', weekNumber: '', weekDate: '', orderOfPlay: '', venue: '', group: '', playerOne: '', playerOneId: '', playerTwo: '', playerTwoId: '', markerOne: '', markerTwo: '', complete: ''};
 
             fixture.id = row.id;
             fixture.weekNumber = row.week_name;
@@ -75,9 +76,11 @@ module.exports = function(restapi, db) {
             fixture.orderOfPlay = row.order_of_play;
             fixture.venue = row.venue_name;
             fixture.group = row.group_name;
-            fixture.playerOne = row.p1_forename + ' ' + row.p1_surname;            
+            fixture.playerOne = row.p1_forename + ' ' + row.p1_surname;
+            fixture.playerOneId = row.player_one_id;
             fixture.playerTwo = row.p2_forename + ' ' + row.p2_surname;
-            fixture.markerOne = row.m1_forename + ' ' + row.m1_surname;            
+            fixture.markerOne = row.m1_forename + ' ' + row.m1_surname;
+            fixture.playerTwoId = row.player_two_id;
             fixture.markerTwo = row.m2_forename + ' ' + row.m2_surname;
             fixture.complete = row.complete;
             json_obj_response.fixtures.push(fixture);
@@ -95,6 +98,7 @@ module.exports = function(restapi, db) {
          db.each("SELECT fixture_tbl.id, week_tbl.name AS week_name, week_tbl.date AS week_date, fixture_tbl.order_of_play, fixture_tbl.complete, " +
          "venue_tbl.name AS venue_name," +
          "group_tbl.name AS group_name," +
+         "fixture_tbl.player_one_id, fixture_tbl.player_two_id," +
          "p1.forename AS p1_forename, p1.surname AS p1_surname, " +
          "p2.forename AS p2_forename, p2.surname AS p2_surname, " +
          "m1.forename AS m1_forename, m1.surname AS m1_surname, " +
@@ -109,7 +113,7 @@ module.exports = function(restapi, db) {
          "JOIN player_tbl AS m2 ON m2.id = fixture_tbl.marker_two_id " +
          "WHERE fixture_tbl.group_id = " + request.params.group,
         function(err, row) {
-            var fixture = { id: '', weekNumber: '', weekDate: '', orderOfPlay: '', venue: '', group: '', playerOne: '', playerTwo: '', markerOne: '', markerTwo: '', complete: ''};
+            var fixture = { id: '', weekNumber: '', weekDate: '', orderOfPlay: '', venue: '', group: '', playerOne: '', playerOneId: '', playerTwo: '', playerTwoId: '', markerOne: '', markerTwo: '', complete: ''};
 
             fixture.id = row.id;
             fixture.weekNumber = row.week_name;
@@ -117,9 +121,11 @@ module.exports = function(restapi, db) {
             fixture.orderOfPlay = row.order_of_play;
             fixture.venue = row.venue_name;
             fixture.group = row.group_name;
-            fixture.playerOne = row.p1_forename + ' ' + row.p1_surname;            
+            fixture.playerOne = row.p1_forename + ' ' + row.p1_surname;
+            fixture.playerOneId = row.player_one_id;
             fixture.playerTwo = row.p2_forename + ' ' + row.p2_surname;
-            fixture.markerOne = row.m1_forename + ' ' + row.m1_surname;            
+            fixture.markerOne = row.m1_forename + ' ' + row.m1_surname;
+            fixture.playerTwoId = row.player_two_id;
             fixture.markerTwo = row.m2_forename + ' ' + row.m2_surname;
             fixture.complete = row.complete;
             json_obj_response.fixtures.push(fixture);
@@ -137,6 +143,7 @@ module.exports = function(restapi, db) {
          db.each("SELECT fixture_tbl.id, week_tbl.name AS week_name, week_tbl.date AS week_date, fixture_tbl.order_of_play, fixture_tbl.complete, " +
          "venue_tbl.name AS venue_name," +
          "group_tbl.name AS group_name," +
+         "fixture_tbl.player_one_id, fixture_tbl.player_two_id," +
          "p1.forename AS p1_forename, p1.surname AS p1_surname, " +
          "p2.forename AS p2_forename, p2.surname AS p2_surname, " +
          "m1.forename AS m1_forename, m1.surname AS m1_surname, " +
@@ -151,7 +158,7 @@ module.exports = function(restapi, db) {
          "JOIN player_tbl AS m2 ON m2.id = fixture_tbl.marker_two_id " +
          "WHERE (p1.id = " + request.params.player + " OR p2.id = " + request.params.player + ")",
         function(err, row) {
-            var fixture = { id: '', weekNumber: '', weekDate: '', orderOfPlay: '', venue: '', group: '', playerOne: '', playerTwo: '', markerOne: '', markerTwo: '', complete: ''};
+            var fixture = { id: '', weekNumber: '', weekDate: '', orderOfPlay: '', venue: '', group: '', playerOne: '', playerOneId: '', playerTwo: '', playerTwoId: '', markerOne: '', markerTwo: '', complete: ''};
 
             fixture.id = row.id;
             fixture.weekNumber = row.week_name;
@@ -159,9 +166,11 @@ module.exports = function(restapi, db) {
             fixture.orderOfPlay = row.order_of_play;
             fixture.venue = row.venue_name;
             fixture.group = row.group_name;
-            fixture.playerOne = row.p1_forename + ' ' + row.p1_surname;            
+            fixture.playerOne = row.p1_forename + ' ' + row.p1_surname;
+            fixture.playerOneId = row.player_one_id;
             fixture.playerTwo = row.p2_forename + ' ' + row.p2_surname;
-            fixture.markerOne = row.m1_forename + ' ' + row.m1_surname;            
+            fixture.markerOne = row.m1_forename + ' ' + row.m1_surname;
+            fixture.playerTwoId = row.player_two_id;
             fixture.markerTwo = row.m2_forename + ' ' + row.m2_surname;
             fixture.complete = row.complete;
             json_obj_response.fixtures.push(fixture);
@@ -179,6 +188,7 @@ module.exports = function(restapi, db) {
          db.each("SELECT fixture_tbl.id, week_tbl.name AS week_name, week_tbl.date AS week_date, fixture_tbl.order_of_play, fixture_tbl.complete, " +
          "venue_tbl.name AS venue_name," +
          "group_tbl.name AS group_name," +
+         "fixture_tbl.player_one_id, fixture_tbl.player_two_id," +
          "p1.forename AS p1_forename, p1.surname AS p1_surname, " +
          "p2.forename AS p2_forename, p2.surname AS p2_surname, " +
          "m1.forename AS m1_forename, m1.surname AS m1_surname, " +
@@ -194,7 +204,7 @@ module.exports = function(restapi, db) {
          "WHERE fixture_tbl.week_id = " + request.params.week + " " +
          "AND fixture_tbl.group_id = " + request.params.group,
         function(err, row) {
-            var fixture = { id: '', weekNumber: '', weekDate: '', orderOfPlay: '', venue: '', group: '', playerOne: '', playerTwo: '', markerOne: '', markerTwo: '', complete: ''};
+            var fixture = { id: '', weekNumber: '', weekDate: '', orderOfPlay: '', venue: '', group: '', playerOne: '', playerOneId: '', playerTwo: '', playerTwoId: '', markerOne: '', markerTwo: '', complete: ''};
 
             fixture.id = row.id;
             fixture.weekNumber = row.week_name;
@@ -202,9 +212,11 @@ module.exports = function(restapi, db) {
             fixture.orderOfPlay = row.order_of_play;
             fixture.venue = row.venue_name;
             fixture.group = row.group_name;
-            fixture.playerOne = row.p1_forename + ' ' + row.p1_surname;            
+            fixture.playerOne = row.p1_forename + ' ' + row.p1_surname;
+            fixture.playerOneId = row.player_one_id;
             fixture.playerTwo = row.p2_forename + ' ' + row.p2_surname;
-            fixture.markerOne = row.m1_forename + ' ' + row.m1_surname;            
+            fixture.markerOne = row.m1_forename + ' ' + row.m1_surname;
+            fixture.playerTwoId = row.player_two_id;
             fixture.markerTwo = row.m2_forename + ' ' + row.m2_surname;
             fixture.complete = row.complete;
             json_obj_response.fixtures.push(fixture);
@@ -222,6 +234,7 @@ module.exports = function(restapi, db) {
          db.each("SELECT fixture_tbl.id, week_tbl.name AS week_name, week_tbl.date AS week_date, fixture_tbl.order_of_play, fixture_tbl.complete, " +
          "venue_tbl.name AS venue_name," +
          "group_tbl.name AS group_name," +
+         "fixture_tbl.player_one_id, fixture_tbl.player_two_id," +
          "p1.forename AS p1_forename, p1.surname AS p1_surname, " +
          "p2.forename AS p2_forename, p2.surname AS p2_surname, " +
          "m1.forename AS m1_forename, m1.surname AS m1_surname, " +
@@ -237,7 +250,7 @@ module.exports = function(restapi, db) {
          "WHERE group_tbl.id = " + request.params.group + " " +
          "AND (p1.id = " + request.params.player + " OR p2.id = " + request.params.player + ")",
         function(err, row) {
-            var fixture = { id: '', weekNumber: '', weekDate: '', orderOfPlay: '', venue: '', group: '', playerOne: '', playerTwo: '', markerOne: '', markerTwo: '', complete: ''};
+            var fixture = { id: '', weekNumber: '', weekDate: '', orderOfPlay: '', venue: '', group: '', playerOne: '', playerOneId: '', playerTwo: '', playerTwoId: '', markerOne: '', markerTwo: '', complete: ''};
 
             fixture.id = row.id;
             fixture.weekNumber = row.week_name;
@@ -245,9 +258,11 @@ module.exports = function(restapi, db) {
             fixture.orderOfPlay = row.order_of_play;
             fixture.venue = row.venue_name;
             fixture.group = row.group_name;
-            fixture.playerOne = row.p1_forename + ' ' + row.p1_surname;            
+            fixture.playerOne = row.p1_forename + ' ' + row.p1_surname;
+            fixture.playerOneId = row.player_one_id;
             fixture.playerTwo = row.p2_forename + ' ' + row.p2_surname;
-            fixture.markerOne = row.m1_forename + ' ' + row.m1_surname;            
+            fixture.markerOne = row.m1_forename + ' ' + row.m1_surname;
+            fixture.playerTwoId = row.player_two_id;
             fixture.markerTwo = row.m2_forename + ' ' + row.m2_surname;
             fixture.complete = row.complete;
             json_obj_response.fixtures.push(fixture);
@@ -265,6 +280,7 @@ module.exports = function(restapi, db) {
          db.each("SELECT fixture_tbl.id, week_tbl.name AS week_name, week_tbl.date AS week_date, fixture_tbl.order_of_play, fixture_tbl.complete, " +
          "venue_tbl.name AS venue_name," +
          "group_tbl.name AS group_name," +
+         "fixture_tbl.player_one_id, fixture_tbl.player_two_id," +
          "p1.forename AS p1_forename, p1.surname AS p1_surname, " +
          "p2.forename AS p2_forename, p2.surname AS p2_surname, " +
          "m1.forename AS m1_forename, m1.surname AS m1_surname, " +
@@ -280,7 +296,7 @@ module.exports = function(restapi, db) {
          "WHERE week_tbl.id = " + request.params.week + " " +
          "AND (p1.id = " + request.params.player + " OR p2.id = " + request.params.player + ")",
         function(err, row) {
-            var fixture = { id: '', weekNumber: '', weekDate: '', orderOfPlay: '', venue: '', group: '', playerOne: '', playerTwo: '', markerOne: '', markerTwo: '', complete: ''};
+            var fixture = { id: '', weekNumber: '', weekDate: '', orderOfPlay: '', venue: '', group: '', playerOne: '', playerOneId: '', playerTwo: '', playerTwoId: '', markerOne: '', markerTwo: '', complete: ''};
 
             fixture.id = row.id;
             fixture.weekNumber = row.week_name;
@@ -288,9 +304,11 @@ module.exports = function(restapi, db) {
             fixture.orderOfPlay = row.order_of_play;
             fixture.venue = row.venue_name;
             fixture.group = row.group_name;
-            fixture.playerOne = row.p1_forename + ' ' + row.p1_surname;            
+            fixture.playerOne = row.p1_forename + ' ' + row.p1_surname;
+            fixture.playerOneId = row.player_one_id;
             fixture.playerTwo = row.p2_forename + ' ' + row.p2_surname;
-            fixture.markerOne = row.m1_forename + ' ' + row.m1_surname;            
+            fixture.markerOne = row.m1_forename + ' ' + row.m1_surname;
+            fixture.playerTwoId = row.player_two_id;
             fixture.markerTwo = row.m2_forename + ' ' + row.m2_surname;
             fixture.complete = row.complete;
             json_obj_response.fixtures.push(fixture);
@@ -308,6 +326,7 @@ module.exports = function(restapi, db) {
          db.each("SELECT fixture_tbl.id, week_tbl.name AS week_name, week_tbl.date AS week_date, fixture_tbl.order_of_play, fixture_tbl.complete, " +
          "venue_tbl.name AS venue_name," +
          "group_tbl.name AS group_name," +
+         "fixture_tbl.player_one_id, fixture_tbl.player_two_id," +
          "p1.forename AS p1_forename, p1.surname AS p1_surname, " +
          "p2.forename AS p2_forename, p2.surname AS p2_surname, " +
          "m1.forename AS m1_forename, m1.surname AS m1_surname, " +
@@ -324,7 +343,7 @@ module.exports = function(restapi, db) {
          "AND week_tbl.id = " + request.params.week + " " +
          "AND (p1.id = " + request.params.player + " OR p2.id = " + request.params.player + ")",
         function(err, row) {
-            var fixture = { id: '', weekNumber: '', weekDate: '', orderOfPlay: '', venue: '', group: '', playerOne: '', playerTwo: '', markerOne: '', markerTwo: '', complete: ''};
+            var fixture = { id: '', weekNumber: '', weekDate: '', orderOfPlay: '', venue: '', group: '', playerOne: '', playerOneId: '', playerTwo: '', playerTwoId: '', markerOne: '', markerTwo: '', complete: ''};
 
             fixture.id = row.id;
             fixture.weekNumber = row.week_name;
@@ -332,9 +351,11 @@ module.exports = function(restapi, db) {
             fixture.orderOfPlay = row.order_of_play;
             fixture.venue = row.venue_name;
             fixture.group = row.group_name;
-            fixture.playerOne = row.p1_forename + ' ' + row.p1_surname;            
+            fixture.playerOne = row.p1_forename + ' ' + row.p1_surname;
+            fixture.playerOneId = row.player_one_id;
             fixture.playerTwo = row.p2_forename + ' ' + row.p2_surname;
-            fixture.markerOne = row.m1_forename + ' ' + row.m1_surname;            
+            fixture.markerOne = row.m1_forename + ' ' + row.m1_surname;
+            fixture.playerTwoId = row.player_two_id;
             fixture.markerTwo = row.m2_forename + ' ' + row.m2_surname;
             fixture.complete = row.complete;
             json_obj_response.fixtures.push(fixture);
