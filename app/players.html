@@ -1,17 +1,20 @@
 <div ng-controller="PlayerController as playerCtrl">
     <p>
     <div class="col-sm-2"/>
-        <button class="btn btn-lg btn-primary btn-block" ng-show="playerCtrl.showPrivilegedData()" ng-click="playerCtrl.showAddForm()">Add Player</button>
+        <button class="btn btn-sm btn-primary btn-block" ng-click="playerCtrl.toggleFilters()">{{playerCtrl.showFilters ? 'Hide Filters' : 'Show Filters'}}</button>
+    </div>
+    <div class="col-sm-2"/>
+        <button class="btn btn-sm btn-primary btn-block" ng-show="playerCtrl.showPrivilegedData()" ng-click="playerCtrl.showAddForm()">Add Player</button>
     </div>
     <form id="addForm" class="form-horizontal">
         <div class="form-group">
         </div>
     </form>
-    <form id="filterForm" class="form-horizontal">
+    <form ng-if="playerCtrl.showFilters" id="filterForm" class="form-horizontal fade">
         <div class="form-group">    
         <label for="groupFilter" class="col-sm-3 control-label">Filter players by group</label>
             <div class="col-sm-6">
-            <select id="groupFilter" ng-model="groupfilter" ng-change="playerCtrl.filter()" class="form-control" >
+            <select id="groupFilter" ng-model="obj.groupfilter" ng-change="playerCtrl.filter()" class="form-control" >
                 <option value="all">All</option>
                 <option value="{{group.id}}" ng-repeat="group in playerCtrl.getGroups()">
                    {{group.name}} 

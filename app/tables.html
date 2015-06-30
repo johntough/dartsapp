@@ -1,14 +1,17 @@
 <div ng-controller="TableController as tableCtrl">
     <p>
+    <div class="col-sm-2"/>
+        <button class="btn btn-sm btn-primary btn-block" ng-click="tableCtrl.toggleFilters()">{{tableCtrl.showFilters ? 'Hide Filters' : 'Show Filters'}}</button>
+    </div>
     <form id="addForm" class="form-horizontal">
         <div class="form-group">
         </div>
     </form>
-    <form id="filterForm" class="form-horizontal">
+    <form ng-if="tableCtrl.showFilters" id="filterForm" class="form-horizontal fade">
         <div class="form-group">
         <label for="tableFilter" class="col-sm-3 control-label">Filter tables</label>
             <div class="col-sm-6">
-            <select id="tableFilter" ng-model="tableFilter" ng-change="tableCtrl.filter()" class="form-control">
+            <select id="tableFilter" ng-model="obj.tableFilter" ng-change="tableCtrl.filter()" class="form-control">
                 <option value="all">All</option>
                 <option value="{{group.id}}" ng-repeat="group in tableCtrl.getGroups()">
                    {{group.name}}

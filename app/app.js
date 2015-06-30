@@ -342,6 +342,13 @@
 
     var isDuplicateplayerAttempt = false;
 
+    $scope.obj = {groupfilter: undefined};
+    playerCtrl.showFilters = false;
+
+    playerCtrl.toggleFilters = function() {
+        playerCtrl.showFilters = !playerCtrl.showFilters;
+    },
+
     playerCtrl.getGroups = function() {
         return groupService.getGroups();
     },
@@ -359,12 +366,12 @@
     },
 
     playerCtrl.filter = function() {
-        if ($scope.groupfilter === 'all') {
+        if ($scope.obj.groupfilter === 'all') {
             $http.get(baseUrl + '/players/').success(function(data) {
                 playerService.setPlayers(data.players);
             });
         } else {
-            $http.get(baseUrl + '/players/group/' + $scope.groupfilter).success(function(data) {
+            $http.get(baseUrl + '/players/group/' + $scope.obj.groupfilter).success(function(data) {
                 playerService.setPlayers(data.players);
             });
         }
@@ -1149,6 +1156,17 @@
   function($scope, $http, loginService, fixtureService, groupService, playerService, weekService, dialogs, toastr, toastrConfig) {
     var fixtureCtrl = this;
 
+    $scope.obj = {
+        weekfilter: undefined,
+        groupfilter: undefined,
+        playerfilter: undefined
+    };
+    fixtureCtrl.showFilters = false;
+
+    fixtureCtrl.toggleFilters = function() {
+        fixtureCtrl.showFilters = !fixtureCtrl.showFilters;
+    },
+
     fixtureCtrl.showPrivilegedData = function() {
         return loginService.isAuthorised();
     },
@@ -1174,9 +1192,9 @@
     });
 
     fixtureCtrl.filter = function() {
-        var filterGroups = (!$scope.groupfilter | $scope.groupfilter === 'all') ? false: true;
-        var filterWeeks = (!$scope.weekfilter | $scope.weekfilter === 'all') ? false: true;
-        var filterPlayers = (!$scope.playerfilter | $scope.playerfilter === 'all') ? false: true;
+        var filterGroups = (!$scope.obj.groupfilter | $scope.obj.groupfilter === 'all') ? false: true;
+        var filterWeeks = (!$scope.obj.weekfilter | $scope.obj.weekfilter === 'all') ? false: true;
+        var filterPlayers = (!$scope.obj.playerfilter | $scope.obj.playerfilter === 'all') ? false: true;
 
         // no filters
         if (!filterGroups && !filterWeeks && !filterPlayers) {
@@ -1185,37 +1203,37 @@
             });
         // by group
         } else if (filterGroups && !filterWeeks && !filterPlayers) {
-            $http.get(baseUrl + '/fixtures/group/' + $scope.groupfilter).success(function(data) {
+            $http.get(baseUrl + '/fixtures/group/' + $scope.obj.groupfilter).success(function(data) {
                 fixtureService.setFixtures(data.fixtures);
             });
         // by week
         } else if (!filterGroups && filterWeeks && !filterPlayers) {
-            $http.get(baseUrl + '/fixtures/week/' + $scope.weekfilter).success(function(data) {
+            $http.get(baseUrl + '/fixtures/week/' + $scope.obj.weekfilter).success(function(data) {
                 fixtureService.setFixtures(data.fixtures);
             });
         // by player
         } else if (!filterGroups && !filterWeeks && filterPlayers) {
-            $http.get(baseUrl + '/fixtures/player/' + $scope.playerfilter).success(function(data) {
+            $http.get(baseUrl + '/fixtures/player/' + $scope.obj.playerfilter).success(function(data) {
                 fixtureService.setFixtures(data.fixtures);
             });
         // by group && week
         } else if (filterGroups && filterWeeks && !filterPlayers) {
-            $http.get(baseUrl + '/fixtures/week/' + $scope.weekfilter + '/group/' + $scope.groupfilter).success(function(data) {
+            $http.get(baseUrl + '/fixtures/week/' + $scope.obj.weekfilter + '/group/' + $scope.obj.groupfilter).success(function(data) {
                 fixtureService.setFixtures(data.fixtures);
             });
         // by group && player
         } else if (filterGroups && !filterWeeks && filterPlayers) {
-            $http.get(baseUrl + '/fixtures/group/' + $scope.groupfilter + '/player/' + $scope.playerfilter).success(function(data) {
+            $http.get(baseUrl + '/fixtures/group/' + $scope.obj.groupfilter + '/player/' + $scope.obj.playerfilter).success(function(data) {
                 fixtureService.setFixtures(data.fixtures);
             });
         // by week && player
         } else if (!filterGroups && filterWeeks && filterPlayers) {
-            $http.get(baseUrl + '/fixtures/week/' + $scope.weekfilter + '/player/' + $scope.playerfilter).success(function(data) {
+            $http.get(baseUrl + '/fixtures/week/' + $scope.obj.weekfilter + '/player/' + $scope.obj.playerfilter).success(function(data) {
                 fixtureService.setFixtures(data.fixtures);
             });
         // by group && week && player
         } else if (filterGroups && filterWeeks && filterPlayers) {
-            $http.get(baseUrl + '/fixtures/group/' + $scope.groupfilter + '/week/' + $scope.weekfilter + '/player/' + $scope.playerfilter).success(function(data) {
+            $http.get(baseUrl + '/fixtures/group/' + $scope.obj.groupfilter + '/week/' + $scope.obj.weekfilter + '/player/' + $scope.obj.playerfilter).success(function(data) {
                 fixtureService.setFixtures(data.fixtures);
             });
         }
@@ -1258,6 +1276,17 @@
   function($scope, $http, loginService, dialogs, resultService, weekService, groupService, playerService) {
     var resultCtrl = this;
 
+    $scope.obj = {
+        weekfilter: undefined,
+        groupfilter: undefined,
+        playerfilter: undefined
+    };
+    resultCtrl.showFilters = false;
+
+    resultCtrl.toggleFilters = function() {
+        resultCtrl.showFilters = !resultCtrl.showFilters;
+    },
+
     resultCtrl.showPrivilegedData = function() {
         return loginService.isAuthorised();
     },
@@ -1279,9 +1308,9 @@
     },
 
     resultCtrl.filter = function() {
-        var filterGroups = (!$scope.groupfilter | $scope.groupfilter === 'all') ? false: true;
-        var filterWeeks = (!$scope.weekfilter | $scope.weekfilter === 'all') ? false: true;
-        var filterPlayers = (!$scope.playerfilter | $scope.playerfilter === 'all') ? false: true;
+        var filterGroups = (!$scope.obj.groupfilter | $scope.obj.groupfilter === 'all') ? false: true;
+        var filterWeeks = (!$scope.obj.weekfilter | $scope.obj.weekfilter === 'all') ? false: true;
+        var filterPlayers = (!$scope.obj.playerfilter | $scope.obj.playerfilter === 'all') ? false: true;
 
         // no filters
         if (!filterGroups && !filterWeeks && !filterPlayers) {
@@ -1290,37 +1319,37 @@
             });
         // by group
         } else if (filterGroups && !filterWeeks && !filterPlayers) {
-            $http.get(baseUrl + '/results/group/' + $scope.groupfilter).success(function(data) {
+            $http.get(baseUrl + '/results/group/' + $scope.obj.groupfilter).success(function(data) {
                 resultService.setResults(data.results);
             });
         // by week
         } else if (!filterGroups && filterWeeks && !filterPlayers) {
-            $http.get(baseUrl + '/results/week/' + $scope.weekfilter).success(function(data) {
+            $http.get(baseUrl + '/results/week/' + $scope.obj.weekfilter).success(function(data) {
                 resultService.setResults(data.results);
             });
         // by player
         } else if (!filterGroups && !filterWeeks && filterPlayers) {
-            $http.get(baseUrl + '/results/player/' + $scope.playerfilter).success(function(data) {
+            $http.get(baseUrl + '/results/player/' + $scope.obj.playerfilter).success(function(data) {
                 resultService.setResults(data.results);
             });
         // by group && week
         } else if (filterGroups && filterWeeks && !filterPlayers) {
-            $http.get(baseUrl + '/results/group/' + $scope.groupfilter + '/week/' + $scope.weekfilter).success(function(data) {
+            $http.get(baseUrl + '/results/group/' + $scope.obj.groupfilter + '/week/' + $scope.obj.weekfilter).success(function(data) {
                 resultService.setResults(data.results);
             });
         // by group && player
         } else if (filterGroups && !filterWeeks && filterPlayers) {
-            $http.get(baseUrl + '/results/group/' + $scope.groupfilter + '/player/' + $scope.playerfilter).success(function(data) {
+            $http.get(baseUrl + '/results/group/' + $scope.obj.groupfilter + '/player/' + $scope.obj.playerfilter).success(function(data) {
                 resultService.setResults(data.results);
             });
         // by week && player
         } else if (!filterGroups && filterWeeks && filterPlayers) {
-            $http.get(baseUrl + '/results/week/' + $scope.weekfilter + '/player/' + $scope.playerfilter).success(function(data) {
+            $http.get(baseUrl + '/results/week/' + $scope.obj.weekfilter + '/player/' + $scope.obj.playerfilter).success(function(data) {
                 resultService.setResults(data.results);
             });
         // by group && week && player
         } else if (filterGroups && filterWeeks && filterPlayers) {
-            $http.get(baseUrl + '/results/group/' + $scope.groupfilter + '/week/' + $scope.weekfilter + '/player/' + $scope.playerfilter).success(function(data) {
+            $http.get(baseUrl + '/results/group/' + $scope.obj.groupfilter + '/week/' + $scope.obj.weekfilter + '/player/' + $scope.obj.playerfilter).success(function(data) {
                 resultService.setResults(data.results);
             });
         }
@@ -1395,13 +1424,22 @@
   app.controller('TableController', ['$scope', '$http', 'tableService', 'groupService', function($scope, $http, tableService, groupService) {
     var tableCtrl = this;
 
+    $scope.obj = {
+        groupfilter: undefined
+    };
+    tableCtrl.showFilters = false;
+
+    tableCtrl.toggleFilters = function() {
+        tableCtrl.showFilters = !tableCtrl.showFilters;
+    },
+
     tableCtrl.getGroups = function() {
         return groupService.getGroups();
     },
 
     tableCtrl.filter = function() {
-        if ($scope.tableFilter !== 'all') {
-            $http.get(baseUrl + '/results/group/' + $scope.tableFilter).success(function(data) {
+        if ($scope.obj.tableFilter !== 'all') {
+            $http.get(baseUrl + '/results/group/' + $scope.obj.tableFilter).success(function(data) {
                 tableService.setTables(data.results);
             });
         } else {

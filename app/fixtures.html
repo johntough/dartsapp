@@ -1,17 +1,20 @@
 <div ng-controller="FixtureController as fixtureCtrl">
     <p>
     <div class="col-sm-2"/>
-        <button class="btn btn-lg btn-primary btn-block" ng-show="fixtureCtrl.showPrivilegedData()" ng-click="fixtureCtrl.showAddForm()">Add Fixture</button>
+        <button class="btn btn-sm btn-primary btn-block" ng-click="fixtureCtrl.toggleFilters()">{{fixtureCtrl.showFilters ? 'Hide Filters' : 'Show Filters'}}</button>
+    </div>
+    <div class="col-sm-2"/>
+        <button class="btn btn-sm btn-primary btn-block" ng-show="fixtureCtrl.showPrivilegedData()" ng-click="fixtureCtrl.showAddForm()">Add Fixture</button>
     </div>
     <form id="addForm" class="form-horizontal">
         <div class="form-group">
         </div>
     </form>
-    <form id="filterForm" class="form-horizontal">
+    <form ng-if="fixtureCtrl.showFilters" id="filterForm" class="form-horizontal fade">
         <div class="form-group">
         <label for="weekFilter" class="col-sm-3 control-label">Filter fixtures by week</label>
             <div class="col-sm-6">
-            <select id="weekFilter" ng-model="weekfilter" ng-change="fixtureCtrl.filter()" class="form-control" >
+            <select id="weekFilter" ng-model="obj.weekfilter" ng-change="fixtureCtrl.filter()" class="form-control" >
                 <option value="all">All</option>
                 <option value="{{week.id}}" ng-repeat="week in fixtureCtrl.getWeeks()">
                    {{week.name}} ( {{week.date}} )
@@ -23,7 +26,7 @@
         <div class="form-group">
         <label for="groupFilter" class="col-sm-3 control-label">Filter fixtures by group</label>
             <div class="col-sm-6">
-            <select id="groupFilter" ng-model="groupfilter" ng-change="fixtureCtrl.filter()" class="form-control">
+            <select id="groupFilter" ng-model="obj.groupfilter" ng-change="fixtureCtrl.filter()" class="form-control">
                 <option value="all">All</option>
                 <option value="{{group.id}}" ng-repeat="group in fixtureCtrl.getGroups()">
                    {{group.name}}
@@ -35,7 +38,7 @@
         <div class="form-group">
         <label for="playerFilter" class="col-sm-3 control-label">Filter fixtures by player</label>
             <div class="col-sm-6">
-            <select id="playerFilter" ng-model="playerfilter" ng-change="fixtureCtrl.filter()" class="form-control">
+            <select id="playerFilter" ng-model="obj.playerfilter" ng-change="fixtureCtrl.filter()" class="form-control">
                 <option value="all">All</option>
                 <option value="{{player.id}}" ng-repeat="player in fixtureCtrl.getPlayers()">
                    {{player.forename + ' ' + player.surname}}

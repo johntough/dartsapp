@@ -1,14 +1,17 @@
 <div ng-controller="ResultController as resultCtrl">
     <p>
+    <div class="col-sm-2"/>
+        <button class="btn btn-sm btn-primary btn-block" ng-click="resultCtrl.toggleFilters()">{{resultCtrl.showFilters ? 'Hide Filters' : 'Show Filters'}}</button>
+    </div>
     <form id="addForm" class="form-horizontal">
         <div class="form-group">
         </div>
     </form>
-    <form id="filterForm" class="form-horizontal">
+    <form ng-if="resultCtrl.showFilters" id="filterForm" class="form-horizontal fade">
         <div class="form-group">    
         <label for="weekFilter" class="col-sm-3 control-label">Filter results by week</label>
             <div class="col-sm-6">
-            <select id="weekFilter" ng-model="weekfilter" ng-change="resultCtrl.filter()" class="form-control" >
+            <select id="weekFilter" ng-model="obj.weekfilter" ng-change="resultCtrl.filter()" class="form-control" >
                 <option value="all">All</option>
                 <option value="{{week.id}}" ng-repeat="week in resultCtrl.getWeeks()">
                    {{week.name}} ( {{week.date}} )
@@ -20,7 +23,7 @@
         <div class="form-group">
         <label for="groupFilter" class="col-sm-3 control-label">Filter results by group</label>
             <div class="col-sm-6">
-            <select id="groupFilter" ng-model="groupfilter" ng-change="resultCtrl.filter()" class="form-control">
+            <select id="groupFilter" ng-model="obj.groupfilter" ng-change="resultCtrl.filter()" class="form-control">
                 <option value="all">All</option>
                 <option value="{{group.id}}" ng-repeat="group in resultCtrl.getGroups()">
                    {{group.name}}
@@ -32,7 +35,7 @@
         <div class="form-group">
         <label for="playerFilter" class="col-sm-3 control-label">Filter results by player</label>
             <div class="col-sm-6">
-            <select id="playerFilter" ng-model="playerfilter" ng-change="resultCtrl.filter()" class="form-control">
+            <select id="playerFilter" ng-model="obj.playerfilter" ng-change="resultCtrl.filter()" class="form-control">
                 <option value="all">All</option>
                 <option value="{{player.id}}" ng-repeat="player in resultCtrl.getPlayers()">
                    {{player.forename + ' ' + player.surname}}
