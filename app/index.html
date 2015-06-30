@@ -29,7 +29,9 @@
     </head>
 
     <section ng-controller="NavigationController as navigationCtrl" ng-controller="LoginController as loginCtrl">
-          <ul class="nav nav-pills">
+        <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+          <ul class="nav navbar-nav">
             <li ng-class="{ active:navigationCtrl.isSet('home') }">
               <a href ng-click="navigationCtrl.setTab('home')">Home</a>
             </li>
@@ -61,9 +63,9 @@
               <a href ng-click="navigationCtrl.setTab('login')">Manage Login</a>
             </li>
           </ul>
-
+        </div>
+        </nav> 
           <!--  Description Tab's Content  -->
-          </div>
           <weeks-list ng-show="navigationCtrl.isSet('weeks')"></weeks-list>
           <groups-list ng-show="navigationCtrl.isSet('groups')"></groups-list>
           <venues-list ng-show="navigationCtrl.isSet('venues')"></venues-list>
