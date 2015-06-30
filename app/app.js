@@ -1237,7 +1237,7 @@
     },
 
     fixtureCtrl.completeFixture = function(fixture) {
-        var dialog = dialogs.create('/completefixturesdialog.html', 'CompleteFixtureController', {fixture}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});
+        var dialog = dialogs.create('/completefixturesdialog.html', 'CompleteFixtureController', {fixture: fixture}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});
         dialog.result.then(function() {
             // refresh service internal state for fixtures after updating the fixture complete flag
             $http.put(baseUrl + '/fixture/complete/' + fixture.id).success(function(data) {
