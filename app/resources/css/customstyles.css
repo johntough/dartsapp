@@ -85,3 +85,8 @@ body {
 .fade {
     opacity:1;
 }
+
+.home-item {
+    color: #566473;
+    text-indent: 20px;
+}

@@ -66,6 +66,7 @@
         </div>
         </nav> 
           <!--  Description Tab's Content  -->
+          <home-page ng-show="navigationCtrl.isSet('home')"></home-page>
           <weeks-list ng-show="navigationCtrl.isSet('weeks')"></weeks-list>
           <groups-list ng-show="navigationCtrl.isSet('groups')"></groups-list>
           <venues-list ng-show="navigationCtrl.isSet('venues')"></venues-list>

@@ -440,6 +440,54 @@
     }
   }]);
 
+  app.controller('NewsController', ['$scope', '$http', 'loginService', 'groupService', 'dialogs', 'toastr', 'toastrConfig', function($scope, $http, loginService, groupService, dialogs, toastr, toastrConfig) {
+    var newsCtrl = this;
+    newsCtrl.newsItems = [];
+    newsCtrl.newsItemsLength = 0;
+
+    newsCtrl.setNewsItems = function(newsItems) {
+        var formattedNewsItems = [];
+
+        for (var newsItem in newsItems) {
+            if (newsItems.hasOwnProperty(newsItem)) {
+                newsItems[newsItem].dateFormatted = Date.parse(newsItems[newsItem].date);
+                formattedNewsItems.push(newsItems[newsItem]);
+            }
+        }
+        newsCtrl.newsItems = formattedNewsItems;
+    },
+
+    newsCtrl.showPrivilegedData = function() {
+        return loginService.isAuthorised();
+    },
+
+    newsCtrl.cancelChanges = function () {
+        $scope.selected = {};
+    };
+
+    $http.get(baseUrl + '/news').success(function(data) {
+        newsCtrl.setNewsItems(data.newsItems);
+        newsCtrl.newsItemsLength = data.count;
+    });
+    
+    newsCtrl.showAddForm = function() {
+        var dialog = dialogs.create('/addnewsitemdialog.html', 'AddNewsItemController', {}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});
+        dialog.result.then(function() {
+            // refresh controllers internal state for news items
+            $http.get(baseUrl + '/news').success(function(data) {
+                newsCtrl.setNewsItems(data.newsItems);
+                newsCtrl.newsItemsLength = data.count;
+                toastrConfig.positionClass = 'toast-bottom-right';
+                toastrConfig.timeOut = 2000;
+                toastr.success('News item added!');
+            });
+        },function() {
+            // do nothing as user did not add a news item
+        });
+    }
+  }]);
+
+  
   app.controller('WeekController', ['$scope', '$http', 'loginService', 'weekService', 'dialogs', 'toastr', 'toastrConfig', function($scope, $http, loginService, weekService, dialogs, toastr, toastrConfig) {
     var weekCtrl = this;
     var isDuplicateWeekAttempt = false;
@@ -705,6 +753,32 @@
                 // do nothing
             });
         }
+    }
+  }]);
+
+  app.controller('AddNewsItemController', ['$scope', '$http', '$modalInstance', 'data', function($scope, $http, $modalInstance, data) {
+    var addNewsItemCtrl = this;
+    $scope.newsItem = {title : '', content: ''};
+
+    $scope.cancel = function() {
+      $modalInstance.dismiss('canceled');  
+    };
+  
+    $scope.save = function() {
+      // converting the date into a readable string
+      addNewsItemCtrl.date = new Date().toLocaleDateString(
+          'en-UK',
+          { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'}
+      );
+      addNewsItemCtrl.addNewsItem($scope.newsItem.title, addNewsItemCtrl.date, $scope.newsItem.content);
+      $modalInstance.close();
+    };
+
+    addNewsItemCtrl.addNewsItem = function(title, date, content) {
+        
+        $http.post(baseUrl + '/newsItem/' + title + '/' + date + '/' + content).success(function(data) {
+            // do nothing
+        });
     }
   }]);
 
@@ -1623,6 +1697,13 @@
     return {
       restrict: 'E',
       templateUrl: 'tables.html'
+    };
+  });
+  
+  app.directive('homePage', function() {
+    return {
+      restrict: 'E',
+      templateUrl: 'home.html'
     };
   });
 })();

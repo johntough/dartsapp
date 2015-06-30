@@ -3,6 +3,13 @@ var db = new sqlite3.Database('data/db01');
 
 db.serialize(function() {
 
+    db.run("CREATE TABLE IF NOT EXISTS news_tbl" +
+    "(  id INTEGER PRIMARY KEY NOT NULL," +
+    "   title CHAR(50) NOT NULL," +
+    "   date CHAR(50) NOT NULL," +
+    "   content CHAR(400) NOT NULL" +
+    ")");
+
     db.run("CREATE TABLE IF NOT EXISTS venue_tbl" +
     "(  id INTEGER PRIMARY KEY NOT NULL," +
     "   name CHAR(50) NOT NULL" +
@@ -88,6 +95,7 @@ db.serialize(function() {
 var express = require('express');
 var restapi = express();
 
+require('./news')(restapi, db);
 require('./week')(restapi, db);
 require('./venue')(restapi, db);
 require('./group')(restapi, db);

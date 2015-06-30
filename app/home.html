@@ -1,0 +1,20 @@
+<div ng-controller="NewsController as newsCtrl">
+    <p>
+    <div class="col-sm-2">
+        <button class="btn btn-sm btn-primary btn-block" ng-show="newsCtrl.showPrivilegedData()" ng-click="newsCtrl.showAddForm()">Add News Item</button>
+    </div>
+    <table class="table">
+    </table>
+    <div>
+        <h3 class="home-item">Welcome to the Murrayfield Sports Bar Premier League Darts site</h3>
+    </div>
+
+<h3 class="home-item" ng-show="newsCtrl.newsItemsLength > 0">Latest News</h3>
+
+<div ng-repeat="newsItem in newsCtrl.newsItems | orderBy: '-dateFormatted'">
+    <h4 class="home-item">{{newsItem.title}}</h4>
+    <p class="home-item">{{newsItem.content}}</p>
+    <p class="home-item"><i>Posted on: {{newsItem.date}}</i></p>
+    </br>
+</div>
+</div>
