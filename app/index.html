@@ -20,10 +20,12 @@
         <script type="text/javascript" src="http://rawgit.com/Foxandxss/angular-toastr/master/dist/angular-toastr.tpls.js"></script>
         <!-- favicon -->
         <link rel='shortcut icon' href='/resources/images/favicon.ico' type='image/x-icon'/ >
-  </head>
+    </head>
         <!-- Application files -->
         <script src="polyfill.js"></script>
         <script src="app.js"></script>
+        <!-- Custom CSS -->
+        <link rel="stylesheet" href="resources/css/customstyles.css">
     </head>
 
     <section ng-controller="NavigationController as navigationCtrl" ng-controller="LoginController as loginCtrl">
@@ -73,6 +75,13 @@
           <login-form ng-show="navigationCtrl.isSet('login')"></login-form>
     </section>
 
+    <footer class="footer">
+      <div class="container">         
+              <p class="alignleft">&copy; 2015 John Tough</p>
+              <p class="alignright">john.c.tough@gmail.com</p>
+      </div>
+      </div>
+    </footer>
     <!--  initialising bootstrap tooltips  -->
     <script type="text/javascript">
         $(function () {

@@ -1,0 +1,30 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  color: #FFFFFF;
+  background-color: #566473;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+}
+
+.alignleft {
+    float: left;
+    margin: 20px 0;
+}
+.alignright {
+    float: right;
+    margin: 20px 0;
+}
+
+.nav-pills > li.active > a, .nav-pills > li.active > a:focus, .nav-pills > li.active > a:hover {
+  background-color: #566473;
+}
