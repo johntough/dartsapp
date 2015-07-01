@@ -500,6 +500,13 @@
         return weekService.getWeeks();
     },
 
+    weekCtrl.openDatePicker = function($event) {
+        $event.preventDefault();
+        $event.stopPropagation();
+
+        weekCtrl.datePickerOpened = true;
+    };
+
     $http.get(baseUrl + '/weeks').success(function(data) {
         weekService.setWeeks(data.weeks);
     });
@@ -528,8 +535,15 @@
         });
     },
 
-    weekCtrl.saveChanges = function (id, name) {
-        $http.put(baseUrl + '/week/' + id + '/' + name).success(function(data) {
+    weekCtrl.saveChanges = function (id, name, date) {
+        // converting the date into a readable string
+        if (typeof(date) !== 'string') {
+            date = date.toLocaleDateString(
+                'en-UK',
+                { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}
+            );
+        }
+        $http.put(baseUrl + '/week/' + id + '/' + name + '/' + date).success(function(data) {
             // refresh controllers internal state for weeks
             $http.get(baseUrl + '/weeks').success(function(data) {
                 weekService.setWeeks(data.weeks);

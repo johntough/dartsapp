@@ -4,11 +4,13 @@
         <button class="btn btn-sm btn-primary btn-block" ng-click="weekCtrl.showAddForm()">Add Week</button>
     </div>
     <table class="table">
+        <col width="300">
+        <col width="300">
         <thead>
             <tr>
                 <th>Name</th>
                 <th>Date</th>
-                <th ng-show="weekCtrl.showPrivilegedData()">Edit</th>
+                <th ng-show="weekCtrl.showPrivilegedData()"></th>
             </tr>
         </thead>
         <tbody>
@@ -21,16 +23,29 @@
         <td>{{week.name}}</td>
         <td>{{week.date}}</td>
         <td>
-            <img src="resources/images/edit.png" data-toggle="tooltip" data-placement="bottom" title="Edit Week" height="32" width="32" ng-click="weekCtrl.edit(week)"/>
-            <img src="resources/images/delete.png" data-toggle="tooltip" data-placement="bottom" title="Delete Week" height="32" width="32" ng-click="weekCtrl.deleteRecord(week.id)"/>
+            <h4>
+                <span class="glyphicon glyphicon-wrench" data-toggle="tooltip" data-placement="bottom" title="Edit Week" ng-click="weekCtrl.edit(week)"></span>
+                <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete Week" ng-click="weekCtrl.deleteRecord(week.id)"></span>
+            </h4>
         </td>
     </script>
 
     <script type="text/ng-template" id="week-edit">
-        <td><input type="text" ng-model="selected.name" /></td>
         <td>
-            <img src="resources/images/save.png"  data-toggle="tooltip" data-placement="bottom" title="Save Changes" height="32" width="32" ng-click="weekCtrl.saveChanges(selected.id, selected.name)"/>
-            <img src="resources/images/cancel.png" data-toggle="tooltip" data-placement="bottom" title="Cancel Changes" height="32" width="32" ng-click="weekCtrl.cancelChanges()"/>
+            <input class="form-control" type="text" ng-model="selected.name" size="200"/></td>
+        <td>
+            <p class="input-group">
+                <input type="text" class="form-control" name="weekdate" id="weekdate" readonly='true' datepicker-popup="dd-MMMM-yyyy" ng-model="selected.date" is-open="weekCtrl.datePickerOpened" ng-required="true" close-text="Close" size="200"/>
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="weekCtrl.openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+            </p>
+        </td>
+        <td>
+            <h4>
+                <span class="glyphicon glyphicon-floppy-saved" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="weekCtrl.saveChanges(selected.id, selected.name, selected.date)"></span>
+                <span class="glyphicon glyphicon-floppy-remove" data-toggle="tooltip" data-placement="bottom" title="Cancel Changes" ng-click="weekCtrl.cancelChanges()"></span>
+            </h4>
         </td>
     </script>
 </form>
