@@ -4,10 +4,11 @@
         <button class="btn btn-sm btn-primary btn-block" ng-click="groupCtrl.showAddForm()">Add Group</button>
     </div>
     <table class="table">
+        <col width="400">
         <thead>
             <tr>
                 <th>Name</th>
-                <th ng-show="groupCtrl.showPrivilegedData()">Edit</th>
+                <th ng-show="groupCtrl.showPrivilegedData()"></th>
             </tr>
         </thead>
         <tbody>
@@ -19,16 +20,20 @@
     <script type="text/ng-template" id="group-display">
         <td>{{group.name}}</td>
         <td>
-            <img src="resources/images/edit.png" data-toggle="tooltip" data-placement="bottom" title="Edit Group" height="32" width="32" ng-click="groupCtrl.edit(group)"/>
-            <img src="resources/images/delete.png" data-toggle="tooltip" data-placement="bottom" title="Delete Group" height="32" width="32" ng-click="groupCtrl.deleteRecord(group.id)"/>
+            <h4>
+                <span class="glyphicon glyphicon-wrench" data-toggle="tooltip" data-placement="bottom" title="Edit Group" ng-click="groupCtrl.edit(group)"></span>
+                <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete Group" ng-click="groupCtrl.deleteRecord(group.id)"></span>
+            </h4>
         </td>
     </script>
 
     <script type="text/ng-template" id="group-edit">
-        <td><input type="text" ng-model="selected.name" /></td>
+        <td><input type="text" class="form-control" ng-model="selected.name" /></td>
         <td>
-            <img src="resources/images/save.png"  data-toggle="tooltip" data-placement="bottom" title="Save Changes" height="32" width="32" ng-click="groupCtrl.saveChanges(selected.id, selected.name)"/>
-            <img src="resources/images/cancel.png" data-toggle="tooltip" data-placement="bottom" title="Cancel Changes" height="32" width="32" ng-click="groupCtrl.cancelChanges()"/>
+            <h4>
+                <span class="glyphicon glyphicon-floppy-saved" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="groupCtrl.saveChanges(selected.id, selected.name)"></span>
+                <span class="glyphicon glyphicon-floppy-remove" data-toggle="tooltip" data-placement="bottom" title="Cancel Changes" ng-click="groupCtrl.cancelChanges()"></span>
+            </h4>
         </td>
     </script>
 </div>
