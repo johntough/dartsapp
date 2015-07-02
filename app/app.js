@@ -266,7 +266,7 @@
           return resultservice.results;
       },
 
-      resultservice.setResults = function(results) {
+      resultservice.setResults = function(results, isFiltered) {
           var formattedResults = [];
 
           for (var result in results) {
@@ -276,7 +276,10 @@
               }
           }
           resultservice.results = formattedResults;
-          tableService.setTables(results);
+
+          if (!isFiltered) {
+              tableService.setTables(results);
+          }
       }
   }]);
 
@@ -1177,7 +1180,7 @@
 
         $http.post(baseUrl + '/result/' + data.fixture.id + '/' + $scope.player1LegsWon + '/' + $scope.player2LegsWon).success(function(data) {
             $http.get(baseUrl + '/results').success(function(data) {
-                resultService.setResults(data.results);
+                resultService.setResults(data.results, false);
             });
         });
 
@@ -1417,42 +1420,42 @@
         // no filters
         if (!filterGroups && !filterWeeks && !filterPlayers) {
             $http.get(baseUrl + '/results/').success(function(data) {
-                resultService.setResults(data.results);
+                resultService.setResults(data.results, true);
             });
         // by group
         } else if (filterGroups && !filterWeeks && !filterPlayers) {
             $http.get(baseUrl + '/results/group/' + $scope.obj.groupfilter).success(function(data) {
-                resultService.setResults(data.results);
+                resultService.setResults(data.results, true);
             });
         // by week
         } else if (!filterGroups && filterWeeks && !filterPlayers) {
             $http.get(baseUrl + '/results/week/' + $scope.obj.weekfilter).success(function(data) {
-                resultService.setResults(data.results);
+                resultService.setResults(data.results, true);
             });
         // by player
         } else if (!filterGroups && !filterWeeks && filterPlayers) {
             $http.get(baseUrl + '/results/player/' + $scope.obj.playerfilter).success(function(data) {
-                resultService.setResults(data.results);
+                resultService.setResults(data.results, true);
             });
         // by group && week
         } else if (filterGroups && filterWeeks && !filterPlayers) {
             $http.get(baseUrl + '/results/group/' + $scope.obj.groupfilter + '/week/' + $scope.obj.weekfilter).success(function(data) {
-                resultService.setResults(data.results);
+                resultService.setResults(data.results, true);
             });
         // by group && player
         } else if (filterGroups && !filterWeeks && filterPlayers) {
             $http.get(baseUrl + '/results/group/' + $scope.obj.groupfilter + '/player/' + $scope.obj.playerfilter).success(function(data) {
-                resultService.setResults(data.results);
+                resultService.setResults(data.results, true);
             });
         // by week && player
         } else if (!filterGroups && filterWeeks && filterPlayers) {
             $http.get(baseUrl + '/results/week/' + $scope.obj.weekfilter + '/player/' + $scope.obj.playerfilter).success(function(data) {
-                resultService.setResults(data.results);
+                resultService.setResults(data.results, true);
             });
         // by group && week && player
         } else if (filterGroups && filterWeeks && filterPlayers) {
             $http.get(baseUrl + '/results/group/' + $scope.obj.groupfilter + '/week/' + $scope.obj.weekfilter + '/player/' + $scope.obj.playerfilter).success(function(data) {
-                resultService.setResults(data.results);
+                resultService.setResults(data.results, true);
             });
         }
     },
@@ -1492,7 +1495,7 @@
             $http.delete(baseUrl + '/result/' + id).success(function(data) {
                 // refresh controllers internal state for results
                 $http.get(baseUrl + '/results').success(function(data) {
-                    resultService.setResults(data.results);
+                    resultService.setResults(data.results, false);
                 });
             });
         }, function(btn){
@@ -1504,7 +1507,7 @@
         $http.put(baseUrl + '/result/' + id + '/' + p1legs + '/' + p2legs).success(function(data) {
             // refresh controllers internal state for results
             $http.get(baseUrl + '/results').success(function(data) {
-                resultService.setResults(data.results);
+                resultService.setResults(data.results, false);
             });
         });
         resultCtrl.cancelChanges();
@@ -1519,7 +1522,7 @@
     };
 
     $http.get(baseUrl + '/results').success(function(data) {
-        resultService.setResults(data.results);
+        resultService.setResults(data.results, false);
     });
   }]);
 
@@ -1538,6 +1541,10 @@
     tableCtrl.getGroups = function() {
         return groupService.getGroups();
     },
+
+    $http.get(baseUrl + '/results').success(function(data) {
+        tableService.setTables(data.results);
+    });
 
     tableCtrl.filter = function() {
         if ($scope.obj.tableFilter !== 'all') {
