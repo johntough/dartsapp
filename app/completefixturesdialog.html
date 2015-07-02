@@ -37,8 +37,8 @@
             </div>
             <div class="col-md-1">
                 <h4>
-                    <span class="glyphicon glyphicon-floppy-saved" ng-click="addPlayer1Finish()" data-toggle="tooltip" data-placement="bottom" title="Add Checkout" ng-style="{true: {color: 'green'}, false: {color: 'red'}}[isValidCheckout(player1Checkout)]"></span>
-                    <span class="glyphicon glyphicon-floppy-remove" ng-click="removePlayer1Finish()" data-toggle="tooltip" data-placement="bottom" title="Remove Checkout" ng-style="{true: {color: 'green'}, false: {color: 'red'}}[player1HighFinishes !== '']"></span>
+                    <span class="glyphicon glyphicon-floppy-saved" ng-click="addPlayer1Finish()" data-toggle="tooltip" data-placement="bottom" title="Add Checkout" ng-style="{true: {color: '#333333'}, false: {color: '#D3D3D3'}}[isValidCheckout(player1Checkout)]"></span>
+                    <span class="glyphicon glyphicon-floppy-remove" ng-click="removePlayer1Finish()" data-toggle="tooltip" data-placement="bottom" title="Remove Checkout" ng-style="{true: {color: '#333333'}, false: {color: '#D3D3D3'}}[player1HighFinishes !== '']"></span>
                 </h4>
             </div>
             <label ng-model="player1HighFinishes" style="color: #959595" class="col-md-3 control-label">{{player1HighFinishes}}</label>
@@ -51,8 +51,8 @@
             </div>
             <div class="col-md-1">
                 <h4>
-                    <span class="glyphicon glyphicon-floppy-saved" ng-click="addPlayer1Leg()" data-toggle="tooltip" data-placement="bottom" title="Add Leg" ng-style="{true: {color: 'green'}, false: {color: 'red'}}[isValidLeg(player1BestLeg)]"></span>
-                    <span class="glyphicon glyphicon-floppy-remove" ng-click="removePlayer1Leg()" data-toggle="tooltip" data-placement="bottom" title="Remove Leg" ng-style="{true: {color: 'green'}, false: {color: 'red'}}[player1BestLegs !== '']"></span>
+                    <span class="glyphicon glyphicon-floppy-saved" ng-click="addPlayer1Leg()" data-toggle="tooltip" data-placement="bottom" title="Add Leg" ng-style="{true: {color: '#333333'}, false: {color: '#D3D3D3'}}[isValidLeg(player1BestLeg)]"></span>
+                    <span class="glyphicon glyphicon-floppy-remove" ng-click="removePlayer1Leg()" data-toggle="tooltip" data-placement="bottom" title="Remove Leg" ng-style="{true: {color: '#333333'}, false: {color: '#D3D3D3'}}[player1BestLegs !== '']"></span>
                 </h4>
             </div>
             <label ng-model="player1BestLegs" style="color: #959595" class="col-md-3 control-label">{{player1BestLegs}}</label>
@@ -85,8 +85,8 @@
             </div>
             <div class="col-md-1">
                 <h4>
-                    <span class="glyphicon glyphicon-floppy-saved" ng-click="addPlayer2Finish()" data-toggle="tooltip" data-placement="bottom" title="Add Checkout" ng-style="{true: {color: 'green'}, false: {color: 'red'}}[isValidCheckout(player2Checkout)]"></span>
-                    <span class="glyphicon glyphicon-floppy-remove" ng-click="removePlayer2Finish()" data-toggle="tooltip" data-placement="bottom" title="Remove Checkout" ng-style="{true: {color: 'green'}, false: {color: 'red'}}[player2HighFinishes !== '']"></span>
+                    <span class="glyphicon glyphicon-floppy-saved" ng-click="addPlayer2Finish()" data-toggle="tooltip" data-placement="bottom" title="Add Checkout" ng-style="{true: {color: '#333333'}, false: {color: '#D3D3D3'}}[isValidCheckout(player2Checkout)]"></span>
+                    <span class="glyphicon glyphicon-floppy-remove" ng-click="removePlayer2Finish()" data-toggle="tooltip" data-placement="bottom" title="Remove Checkout" ng-style="{true: {color: '#333333'}, false: {color: '#D3D3D3'}}[player2HighFinishes !== '']"></span>
                 </h4>
             </div>
             <label ng-model="player2HighFinishes" style="color: #959595" class="col-md-3 control-label">{{player2HighFinishes}}</label>
@@ -98,8 +98,8 @@
             </div>
             <div class="col-md-1">
                 <h4>
-                    <span class="glyphicon glyphicon-floppy-saved" ng-click="addPlayer2Leg()" data-toggle="tooltip" data-placement="bottom" title="Add Leg" ng-style="{true: {color: 'green'}, false: {color: 'red'}}[isValidLeg(player2BestLeg)]"></span>
-                    <span class="glyphicon glyphicon-floppy-remove" ng-click="removePlayer2Leg()" data-toggle="tooltip" data-placement="bottom" title="Remove Leg" ng-style="{true: {color: 'green'}, false: {color: 'red'}}[player2BestLegs !== '']"></span>
+                    <span class="glyphicon glyphicon-floppy-saved" ng-click="addPlayer2Leg()" data-toggle="tooltip" data-placement="bottom" title="Add Leg" ng-style="{true: {color: '#333333'}, false: {color: '#D3D3D3'}}[isValidLeg(player2BestLeg)]"></span>
+                    <span class="glyphicon glyphicon-floppy-remove" ng-click="removePlayer2Leg()" data-toggle="tooltip" data-placement="bottom" title="Remove Leg" ng-style="{true: {color: '#333333'}, false: {color: '#D3D3D3'}}[player2BestLegs !== '']"></span>
                 </h4>
             </div>
             <label ng-model="player2BestLegs" style="color: #959595" class="col-md-3 control-label">{{player2BestLegs}}</label>
@@ -109,5 +109,5 @@
  </div>
  <div class="modal-footer">
      <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
-     <button type="button" class="btn btn-primary" ng-click="save()" ng-disabled="(completeFixtureDialog.$dirty && completeFixtureDialog.$invalid) || completeFixtureDialog.$pristine">Record Result</button>
+     <button type="button" class="btn btn-primary" ng-click="save()" ng-disabled="(completeFixtureDialog.$dirty && completeFixtureDialog.$invalid) || completeFixtureDialog.$pristine || !isValidResult()">Record Result</button>
  </div>

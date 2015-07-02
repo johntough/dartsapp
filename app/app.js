@@ -1024,6 +1024,20 @@
         167, 170
     ];
 
+    $scope.isValidResult = function() {
+        var isValidResult = false;
+
+        // check for win (7 v < 6)
+        if (($scope.player1LegsWon === 7 && $scope.player2LegsWon < 6) || ($scope.player2LegsWon === 7 && $scope.player1LegsWon < 6)) {
+            isValidResult = true;
+        // check for draw (6 v 6)
+        } else if ($scope.player1LegsWon === 6 && $scope.player2LegsWon === 6) {
+            isValidResult = true;
+        }
+
+        return isValidResult;
+    },
+
     $scope.isValidLeg = function(value) {
         var isValid = true;
         if (!Number.isInteger(value) || value === '' || value < 9 || value > 18) {
