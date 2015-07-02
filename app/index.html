@@ -35,6 +35,9 @@
             <li ng-class="{ active:navigationCtrl.isSet('home') }">
               <a href ng-click="navigationCtrl.setTab('home')">Home</a>
             </li>
+            <li ng-class="{ active:navigationCtrl.isSet('news') }">
+              <a href ng-click="navigationCtrl.setTab('news')">News</a>
+            </li>
             <li ng-show="navigationCtrl.showPrivilegedData()" ng-class="{ active:navigationCtrl.isSet('weeks') }">
               <a href ng-click="navigationCtrl.setTab('weeks')">Weeks</a>
             </li>
@@ -67,6 +70,7 @@
         </nav> 
           <!--  Description Tab's Content  -->
           <home-page ng-show="navigationCtrl.isSet('home')"></home-page>
+          <news-page ng-show="navigationCtrl.isSet('news')"></news-page>
           <weeks-list ng-show="navigationCtrl.isSet('weeks')"></weeks-list>
           <groups-list ng-show="navigationCtrl.isSet('groups')"></groups-list>
           <venues-list ng-show="navigationCtrl.isSet('venues')"></venues-list>

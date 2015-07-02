@@ -1765,4 +1765,11 @@
       templateUrl: 'home.html'
     };
   });
+ 
+  app.directive('newsPage', function() {
+    return {
+      restrict: 'E',
+      templateUrl: 'news.html'
+    };
+  });
 })();

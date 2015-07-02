@@ -1,0 +1,16 @@
+<div ng-controller="NewsController as newsCtrl">
+    <p>
+    <div class="col-sm-2">
+        <button class="btn btn-sm btn-primary btn-block" ng-show="newsCtrl.showPrivilegedData()" ng-click="newsCtrl.showAddForm()">Add News Item</button>
+    </div>
+    <table class="table">
+    </table>
+    <h1 class="apply-indent"><small>Latest News</small></h1>
+
+<div ng-repeat="newsItem in newsCtrl.newsItems | orderBy: '-dateFormatted'">
+    <h4 class="apply-indent">{{newsItem.title}}</h4>
+    <p class="apply-indent">{{newsItem.content}}</p>
+    <p class="apply-indent"><i>Posted on: {{newsItem.date}}</i></p>
+    </br>
+</div>
+</div>
