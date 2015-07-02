@@ -1571,6 +1571,30 @@
         achievementCtrl.tab = setTab;
     };
 
+    achievementCtrl.highFinishCheckboxChange = function(isChecked) {
+        if (isChecked) {
+            $http.get(baseUrl + '/highfinishes').success(function(data) {
+                highFinishService.setFinishes(data.highfinishes);
+            });
+        } else {
+            $http.get(baseUrl + '/highfinishes/duplicatesremoved').success(function(data) {
+                highFinishService.setFinishes(data.highfinishes);
+            });
+        }
+    },
+
+    achievementCtrl.bestLegCheckboxChange = function(isChecked) {
+        if (isChecked) {
+            $http.get(baseUrl + '/bestlegs').success(function(data) {
+                bestLegService.setLegs(data.bestlegs);
+            });
+        } else {
+            $http.get(baseUrl + '/bestlegs/duplicatesremoved').success(function(data) {
+                bestLegService.setLegs(data.bestlegs);
+            });
+        }
+    },
+
     achievementCtrl.isMost180s = function(numberOf180s) {
         var isMost180s = true;
 
@@ -1625,10 +1649,10 @@
     $http.get(baseUrl + '/180s').success(function(data) {
         player180Service.set180s(data.player180s);
     });
-    $http.get(baseUrl + '/highfinishes').success(function(data) {
+    $http.get(baseUrl + '/highfinishes/duplicatesremoved').success(function(data) {
         highFinishService.setFinishes(data.highfinishes);
     });
-    $http.get(baseUrl + '/bestlegs').success(function(data) {
+    $http.get(baseUrl + '/bestlegs/duplicatesremoved').success(function(data) {
         bestLegService.setLegs(data.bestlegs);
     });
   }]);

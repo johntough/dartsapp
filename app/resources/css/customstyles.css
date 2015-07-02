@@ -90,3 +90,7 @@ body {
     color: #566473;
     text-indent: 20px;
 }
+
+.apply-indent {
+    padding-left: 10px;
+}

@@ -26,9 +26,15 @@
                 </tr>
             </tbody>
         </table>
+        </br>
     </div>
 
     <div ng-show="achievementCtrl.isSet('highfinishes')">
+        <div class="checkbox apply-indent">
+            <label>
+                <input type="checkbox" ng-model="achievementCtrl.highfinishcheckbox" ng-change="achievementCtrl.highFinishCheckboxChange(achievementCtrl.highfinishcheckbox)"> Show all recorded high checkouts
+            </label>
+        </div>
         <table class="table">
             <thead>
                 <tr>
@@ -43,9 +49,15 @@
                 </tr>
             </tbody>
         </table>
+        </br>
     </div>
 
     <div ng-show="achievementCtrl.isSet('bestlegs')">
+        <div class="checkbox apply-indent">
+            <label>
+                <input type="checkbox" ng-model="achievementCtrl.bestlegcheckbox" ng-change="achievementCtrl.bestLegCheckboxChange(achievementCtrl.bestlegcheckbox)"> Show all recorded best legs
+            </label>
+        </div>
         <table class="table">
             <thead>
                 <tr>
@@ -60,5 +72,6 @@
                 </tr>
             </tbody>
         </table>
+        </br>
     </div>
 </div>
