@@ -36,4 +36,36 @@ module.exports = function(restapi, db) {
             response.end();
         });
     });
+
+    restapi.put('/newsItem/:id/:title/:content', function(request, response) {
+        var news_id = request.params.id;
+        var updated_news_title = request.params.title;
+        var updated_news_content = request.params.content;
+
+        db.run("UPDATE news_tbl SET title = (?), content = (?) WHERE id = (?)", updated_news_title, updated_news_content, news_id, function(err, row) {
+            if (err) {
+                console.log(err);
+                response.status(500);
+            }
+            else {
+                response.status(204);
+            }
+            response.end();
+        });
+    });
+
+    restapi.delete('/newsItem/:id', function(request, response) {
+        var news_id = request.params.id;
+
+        db.run("DELETE FROM news_tbl WHERE id = (?)", news_id, function(err, row) {
+            if (err) {
+                console.log(err);
+                response.status(500);
+            }
+            else {
+                response.status(204);
+            }
+            response.end();
+        });
+    });
 }

@@ -464,15 +464,39 @@
         return loginService.isAuthorised();
     },
 
+    // gets the template to ng-include for a news item
+    newsCtrl.getTemplate = function (newsItem) {
+        if ($scope.selected && newsItem.id === $scope.selected.id) {
+            return 'news-item-edit';
+        } else {
+            return 'news-item-display';
+        }
+    };
+
+    newsCtrl.edit = function(newsItem) {
+        $scope.selected = angular.copy(newsItem);
+    },
+
     newsCtrl.cancelChanges = function () {
         $scope.selected = {};
-    };
+    },
+
+    newsCtrl.saveChanges = function (id, title, content) {
+        $http.put(baseUrl + '/newsItem/' + id + '/' + title + '/' + content).success(function(data) {
+            // refresh controllers internal state for news items
+            $http.get(baseUrl + '/news').success(function(data) {
+                newsCtrl.setNewsItems(data.newsItems);
+                newsCtrl.newsItemsLength = data.count;
+            });
+        });
+        newsCtrl.cancelChanges();
+    },
 
     $http.get(baseUrl + '/news').success(function(data) {
         newsCtrl.setNewsItems(data.newsItems);
         newsCtrl.newsItemsLength = data.count;
     });
-    
+
     newsCtrl.showAddForm = function() {
         var dialog = dialogs.create('/addnewsitemdialog.html', 'AddNewsItemController', {}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});
         dialog.result.then(function() {
@@ -486,6 +510,21 @@
             });
         },function() {
             // do nothing as user did not add a news item
+        });
+    },
+
+    newsCtrl.deleteRecord = function(id) {
+        var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the news item?');
+        dialog.result.then(function(btn) {
+            $http.delete(baseUrl + '/newsItem/' + id).success(function(data) {
+                // refresh controllers internal state for news items
+                $http.get(baseUrl + '/news').success(function(data) {
+                    newsCtrl.setNewsItems(data.newsItems);
+                    newsCtrl.newsItemsLength = data.count;
+                });
+            });
+        }, function(btn){
+            // do nothing - user chose not to delete the news item
         });
     }
   }]);
@@ -508,7 +547,7 @@
         $event.stopPropagation();
 
         weekCtrl.datePickerOpened = true;
-    };
+    },
 
     $http.get(baseUrl + '/weeks').success(function(data) {
         weekService.setWeeks(data.weeks);
@@ -521,7 +560,7 @@
         } else {
             return 'week-display';
         }
-    };
+    },
 
     weekCtrl.deleteRecord  = function(id) {
 
@@ -553,15 +592,15 @@
             });
         });
         weekCtrl.cancelChanges();
-    };
+    },
 
     weekCtrl.edit = function (week) {
         $scope.selected = angular.copy(week);
-    };
+    },
 
     weekCtrl.cancelChanges = function () {
         $scope.selected = {};
-    };
+    },
     
     weekCtrl.showAddForm = function() {
         var dialog = dialogs.create('/addweeksdialog.html', 'AddWeekController', {}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});

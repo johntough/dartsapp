@@ -7,10 +7,38 @@
     </table>
     <h1 class="apply-indent"><small>Latest News</small></h1>
 
-<div ng-repeat="newsItem in newsCtrl.newsItems | orderBy: '-dateFormatted'">
-    <h4 class="apply-indent">{{newsItem.title}}</h4>
-    <p class="apply-indent">{{newsItem.content}}</p>
-    <p class="apply-indent"><i>Posted on: {{newsItem.date}}</i></p>
-    </br>
-</div>
+    <div ng-repeat="newsItem in newsCtrl.newsItems | orderBy: '-dateFormatted'" ng-include="newsCtrl.getTemplate(newsItem)">
+
+    </div>
+
+    <script type="text/ng-template" id="news-item-display">
+        <h4 class="apply-indent">{{newsItem.title}}</h4>
+        <p class="apply-indent">{{newsItem.content}}</p>
+        <p class="apply-indent"><i>Posted on: {{newsItem.date}}</i></p>
+        <h4 class="apply-indent" ng-show="newsCtrl.showPrivilegedData()">
+            <span class="glyphicon glyphicon-wrench" data-toggle="tooltip" data-placement="bottom" title="Edit News Item" ng-click="newsCtrl.edit(newsItem)"></span>
+            <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete News Item" ng-click="newsCtrl.deleteRecord(newsItem.id)"></span>
+        </h4>
+        </br>
+    </script>
+
+    <script type="text/ng-template" id="news-item-edit">
+    <form id="editForm" class="form-horizontal">
+        <div class="form-group apply-indent">
+            <div class="col-sm-6">
+                <input type="text" class="form-control" ng-model="selected.title" />
+            </div>
+        </div>
+        <div class="form-group apply-indent">
+            <div class="col-sm-6">
+                <textarea type="text" max-length="400" rows="8" cols="50" class="form-control" ng-model="selected.content" required></textarea>
+            </div>
+        </div>
+    </form>
+        <p class="apply-indent"><i>Posted on: {{newsItem.date}}</i></p>
+        <h4 class="apply-indent">
+            <span class="glyphicon glyphicon-floppy-saved" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="newsCtrl.saveChanges(selected.id, selected.title, selected.content)"></span>
+            <span class="glyphicon glyphicon-floppy-remove" data-toggle="tooltip" data-placement="bottom" title="Cancel Changes" ng-click="newsCtrl.cancelChanges()"></span>
+        </h4>
+    </script>
 </div>
