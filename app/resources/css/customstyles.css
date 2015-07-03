@@ -94,6 +94,8 @@ body {
     background-image: url("../images/dartboard.jpg");
     background-position: right;
     background-repeat: no-repeat;
+    background-size: 800px 561px;
+    width: 100%;
 }
 
 .home-heading {
