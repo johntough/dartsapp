@@ -404,15 +404,24 @@
         });
     },
 
-    playerCtrl.saveChanges = function (id, forename, surname, email, phone) {
+    playerCtrl.isValidEdit = function() {
+        if ($scope.selected.forename && $scope.selected.surname) {
+            return true;
+        } else {
+            return false;
+        }
+    },
 
-        $http.put(baseUrl + '/player/' + id + '/' + forename + '/' + surname + '/' + email + '/' + phone).success(function(data) {
-            // refresh controllers internal state for players
-            $http.get(baseUrl + '/players').success(function(data) {
-                playerService.setPlayers(data.players);
+    playerCtrl.saveChanges = function (id, forename, surname, email, phone) {
+        if (playerCtrl.isValidEdit()) {
+            $http.put(baseUrl + '/player/' + id + '/' + forename + '/' + surname + '/' + email + '/' + phone).success(function(data) {
+                // refresh controllers internal state for players
+                $http.get(baseUrl + '/players').success(function(data) {
+                    playerService.setPlayers(data.players);
+                });
             });
-        });
-        playerCtrl.cancelChanges();
+            playerCtrl.cancelChanges();
+        }
     };
 
     playerCtrl.edit = function (player) {
@@ -473,6 +482,14 @@
         }
     };
 
+    newsCtrl.isValidEdit = function() {
+        if ($scope.selected.title && $scope.selected.content) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+
     newsCtrl.edit = function(newsItem) {
         $scope.selected = angular.copy(newsItem);
     },
@@ -482,14 +499,16 @@
     },
 
     newsCtrl.saveChanges = function (id, title, content) {
-        $http.put(baseUrl + '/newsItem/' + id + '/' + title + '/' + content).success(function(data) {
-            // refresh controllers internal state for news items
-            $http.get(baseUrl + '/news').success(function(data) {
-                newsCtrl.setNewsItems(data.newsItems);
-                newsCtrl.newsItemsLength = data.count;
+        if (newsCtrl.isValidEdit()) {
+            $http.put(baseUrl + '/newsItem/' + id + '/' + title + '/' + content).success(function(data) {
+                // refresh controllers internal state for news items
+                $http.get(baseUrl + '/news').success(function(data) {
+                    newsCtrl.setNewsItems(data.newsItems);
+                    newsCtrl.newsItemsLength = data.count;
+                });
             });
-        });
-        newsCtrl.cancelChanges();
+            newsCtrl.cancelChanges();
+        }
     },
 
     $http.get(baseUrl + '/news').success(function(data) {
@@ -578,20 +597,30 @@
     },
 
     weekCtrl.saveChanges = function (id, name, date) {
-        // converting the date into a readable string
-        if (typeof(date) !== 'string') {
-            date = date.toLocaleDateString(
-                'en-UK',
-                { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}
-            );
-        }
-        $http.put(baseUrl + '/week/' + id + '/' + name + '/' + date).success(function(data) {
-            // refresh controllers internal state for weeks
-            $http.get(baseUrl + '/weeks').success(function(data) {
-                weekService.setWeeks(data.weeks);
+        if (weekCtrl.isValidEdit()) {
+            // converting the date into a readable string
+            if (typeof(date) !== 'string') {
+                date = date.toLocaleDateString(
+                    'en-UK',
+                    { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}
+                );
+            }
+            $http.put(baseUrl + '/week/' + id + '/' + name + '/' + date).success(function(data) {
+                // refresh controllers internal state for weeks
+                $http.get(baseUrl + '/weeks').success(function(data) {
+                    weekService.setWeeks(data.weeks);
+                });
             });
-        });
-        weekCtrl.cancelChanges();
+            weekCtrl.cancelChanges();
+        }
+    },
+
+    weekCtrl.isValidEdit = function() {
+        if ($scope.selected.name && $scope.selected.date) {
+            return true;
+        } else {
+            return false;
+        }
     },
 
     weekCtrl.edit = function (week) {
@@ -655,23 +684,33 @@
         });
     },
 
+    groupCtrl.isValidEdit = function() {
+        if ($scope.selected.name) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+
     groupCtrl.saveChanges = function (id, name) {
-        $http.put(baseUrl + '/group/' + id + '/' + name).success(function(data) {
-            // refresh controllers internal state for groups
-            $http.get(baseUrl + '/groups').success(function(data) {
-                groupService.setGroups(data.groups);
+        if (groupCtrl.isValidEdit()) {
+            $http.put(baseUrl + '/group/' + id + '/' + name).success(function(data) {
+                // refresh controllers internal state for groups
+                $http.get(baseUrl + '/groups').success(function(data) {
+                    groupService.setGroups(data.groups);
+                });
             });
-        });
-        groupCtrl.cancelChanges();
-    };
+            groupCtrl.cancelChanges();
+        }
+    },
 
     groupCtrl.edit = function (group) {
         $scope.selected = angular.copy(group);
-    };
+    },
 
     groupCtrl.cancelChanges = function () {
         $scope.selected = {};
-    };
+    },
 
     $http.get(baseUrl + '/groups').success(function(data) {
         groupService.setGroups(data.groups);
@@ -728,14 +767,24 @@
         });
     },
 
+    venueCtrl.isValidEdit = function() {
+        if ($scope.selected.name) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+
     venueCtrl.saveChanges = function (id, name) {
-        $http.put(baseUrl + '/venue/' + id + '/' + name).success(function(data) {
-            // refresh controllers internal state for venues
-            $http.get(baseUrl + '/venues').success(function(data) {
-                venueService.setVenues(data.venues);
+        if (venueCtrl.isValidEdit()) {
+            $http.put(baseUrl + '/venue/' + id + '/' + name).success(function(data) {
+                // refresh controllers internal state for venues
+                $http.get(baseUrl + '/venues').success(function(data) {
+                    venueService.setVenues(data.venues);
+                });
             });
-        });
-        venueCtrl.cancelChanges();
+            venueCtrl.cancelChanges();
+        }
     };
 
     venueCtrl.edit = function (group) {
@@ -1468,14 +1517,32 @@
         $scope.selected = {};
     },
 
+    resultCtrl.isValidEdit = function() {
+        var isValidEdit = false;
+
+        // check for win (7 v < 6)
+        if (($scope.selected.playerOneLegsWon === 7 && $scope.selected.playerTwoLegsWon < 6) ||
+           ($scope.selected.playerTwoLegsWon === 7 && $scope.selected.playerOneLegsWon < 6)
+        ) {
+            isValidEdit = true;
+        // check for draw (6 v 6)
+        } else if ($scope.selected.playerOneLegsWon === 6 && $scope.selected.playerTwoLegsWon === 6) {
+            isValidEdit = true;
+        }
+
+        return isValidEdit;
+    },
+
     resultCtrl.saveChanges = function (id, playerOneLegsWon, playerTwoLegsWon) {
-        $http.put(baseUrl + '/result/' + id + '/' + playerOneLegsWon + '/' + playerTwoLegsWon).success(function(data) {
-            // refresh controllers internal state for results
-            $http.get(baseUrl + '/results/').success(function(data) {
-                resultService.setResults(data.results, true);
+        if (resultCtrl.isValidEdit()) {
+            $http.put(baseUrl + '/result/' + id + '/' + playerOneLegsWon + '/' + playerTwoLegsWon).success(function(data) {
+                // refresh controllers internal state for results
+                $http.get(baseUrl + '/results/').success(function(data) {
+                    resultService.setResults(data.results, false);
+                });
             });
-        });
-        resultCtrl.cancelChanges();
+            resultCtrl.cancelChanges();
+        }
     },
 
     resultCtrl.deleteRecord = function(id) {
@@ -1484,7 +1551,7 @@
             $http.delete(baseUrl + '/result/' + id).success(function(data) {
                 // refresh controllers internal state for results
                 $http.get(baseUrl + '/results/').success(function(data) {
-                    resultService.setResults(data.results, true);
+                    resultService.setResults(data.results, false);
                 });
             });
         }, function(btn){

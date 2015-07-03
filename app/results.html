@@ -93,7 +93,7 @@
         </td>
         <td>
             <h4>
-                <span class="glyphicon glyphicon-floppy-saved" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="resultCtrl.saveChanges(selected.id, selected.playerOneLegsWon, selected.playerTwoLegsWon)"></span>
+                <span class="glyphicon glyphicon-floppy-saved" ng-style="{true: {color: '#333333'}, false: {color: '#D3D3D3'}}[resultCtrl.isValidEdit()]" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="resultCtrl.saveChanges(selected.id, selected.playerOneLegsWon, selected.playerTwoLegsWon)"></span>
                 <span class="glyphicon glyphicon-floppy-remove" data-toggle="tooltip" data-placement="bottom" title="Cancel Changes" ng-click="resultCtrl.cancelChanges()"></span>
             </h4>
         </td>

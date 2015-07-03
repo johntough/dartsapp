@@ -32,7 +32,7 @@
         <td><input type="text" class="form-control" ng-model="selected.name" /></td>
         <td>
             <h4>
-                <span class="glyphicon glyphicon-floppy-saved" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="groupCtrl.saveChanges(selected.id, selected.name)"></span>
+                <span class="glyphicon glyphicon-floppy-saved" ng-style="{true: {color: '#333333'}, false: {color: '#D3D3D3'}}[groupCtrl.isValidEdit()]" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="groupCtrl.saveChanges(selected.id, selected.name)"></span>
                 <span class="glyphicon glyphicon-floppy-remove" data-toggle="tooltip" data-placement="bottom" title="Cancel Changes" ng-click="groupCtrl.cancelChanges()"></span>
             </h4>
         </td>

@@ -37,7 +37,7 @@
     </form>
         <p class="apply-indent"><i>Posted on: {{newsItem.date}}</i></p>
         <h4 class="apply-indent">
-            <span class="glyphicon glyphicon-floppy-saved" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="newsCtrl.saveChanges(selected.id, selected.title, selected.content)"></span>
+            <span class="glyphicon glyphicon-floppy-saved" ng-style="{true: {color: '#333333'}, false: {color: '#D3D3D3'}}[newsCtrl.isValidEdit()]" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="newsCtrl.saveChanges(selected.id, selected.title, selected.content)"></span>
             <span class="glyphicon glyphicon-floppy-remove" data-toggle="tooltip" data-placement="bottom" title="Cancel Changes" ng-click="newsCtrl.cancelChanges()"></span>
         </h4>
     </script>

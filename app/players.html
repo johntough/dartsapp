@@ -65,7 +65,7 @@
         <td><input type="text" class="form-control" ng-model="selected.phoneNumber" /></td>
         <td>
             <h4>
-                <span class="glyphicon glyphicon-floppy-saved" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="playerCtrl.saveChanges(selected.id, selected.forename, selected.surname, selected.emailAddress, selected.phoneNumber)"></span>
+                <span class="glyphicon glyphicon-floppy-saved" ng-style="{true: {color: '#333333'}, false: {color: '#D3D3D3'}}[playerCtrl.isValidEdit()]" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="playerCtrl.saveChanges(selected.id, selected.forename, selected.surname, selected.emailAddress, selected.phoneNumber)"></span>
                 <span class="glyphicon glyphicon-floppy-remove" data-toggle="tooltip" data-placement="bottom" title="Cancel Changes" ng-click="playerCtrl.cancelChanges()"></span>
             </h4>
         </td>
