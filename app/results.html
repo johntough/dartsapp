@@ -54,18 +54,48 @@
                 <th>Player 1 Legs</th>
                 <th>Player 2</th>
                 <th>Player 2 Legs</th>
+                <th ng-show="resultCtrl.showPrivilegedData()"></th>
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="result in resultCtrl.getResults() | orderBy:['-weekDateFormatted', 'group']">
-                <td>{{result.weekNumber}} ( {{result.weekDate}} )</td>
-                <td>{{result.group}}</td>
-                <td ng-class="resultCtrl.getClass('1', result)">{{result.playerOne}}</td>
-                <td ng-class="resultCtrl.getClass('1', result)">{{result.playerOneLegsWon}}</td>
-                <td ng-class="resultCtrl.getClass('2', result)">{{result.playerTwo}}</td>
-                <td ng-class="resultCtrl.getClass('2', result)">{{result.playerTwoLegsWon}}</td>
+            <tr ng-repeat="result in resultCtrl.getResults() | orderBy:['-weekDateFormatted', 'group']" ng-include="resultCtrl.getTemplate(result)">
             </tr>
         </tbody>
     </table>
     </br>
+
+    <script type="text/ng-template" id="result-display">
+        <td>{{result.weekNumber}} ( {{result.weekDate}} )</td>
+        <td>{{result.group}}</td>
+        <td ng-class="resultCtrl.getClass('1', result)">{{result.playerOne}}</td>
+        <td ng-class="resultCtrl.getClass('1', result)">{{result.playerOneLegsWon}}</td>
+        <td ng-class="resultCtrl.getClass('2', result)">{{result.playerTwo}}</td>
+        <td ng-class="resultCtrl.getClass('2', result)">{{result.playerTwoLegsWon}}</td>
+        <td ng-show="resultCtrl.showPrivilegedData()">
+            <h4>
+                <span class="glyphicon glyphicon-wrench" data-toggle="tooltip" data-placement="bottom" title="Edit Result" ng-click="resultCtrl.edit(result)"></span>
+                <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete Result" ng-click="resultCtrl.deleteRecord(result.id)"></span>
+            </h4>
+        </td>
+    </script>
+
+    <script type="text/ng-template" id="result-edit">
+        <td>{{result.weekNumber}} ( {{result.weekDate}} )</td>
+        <td>{{result.group}}</td>
+        <td>{{result.playerOne}}</td>
+        <!-- TODO: switch text input for drop-down -->
+        <td>
+            <select class="form-control" id="player1LegsWon" form="completeFixtureDialog" ng-model="selected.playerOneLegsWon" ng-options="legswon for legswon in [0, 1, 2, 3, 4, 5, 6, 7]" required></select>
+        </td>
+        <td>{{result.playerTwo}}</td>
+        <td>
+            <select class="form-control" id="player1LegsWon" form="completeFixtureDialog" ng-model="selected.playerTwoLegsWon" ng-options="legswon for legswon in [0, 1, 2, 3, 4, 5, 6, 7]" required></select>
+        </td>
+        <td>
+            <h4>
+                <span class="glyphicon glyphicon-floppy-saved" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="resultCtrl.saveChanges(selected.id, selected.playerOneLegsWon, selected.playerTwoLegsWon)"></span>
+                <span class="glyphicon glyphicon-floppy-remove" data-toggle="tooltip" data-placement="bottom" title="Cancel Changes" ng-click="resultCtrl.cancelChanges()"></span>
+            </h4>
+        </td>
+    </script>
 </div>

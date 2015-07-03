@@ -306,6 +306,23 @@ module.exports = function(restapi, db) {
         });
     });
 
+    restapi.put('/result/:id/:p1legs/:p2legs', function(request, response) {
+        var result_id = request.params.id;
+        var updated_player_1_legs = request.params.p1legs;
+        var updated_player_2_legs = request.params.p2legs;
+
+        db.run("UPDATE result_tbl SET player_one_legs_won = (?), player_two_legs_won = (?) WHERE id = (?)", updated_player_1_legs, updated_player_2_legs, result_id, function(err, row) {
+            if (err) {
+                console.log(err);
+                response.status(500);
+            }
+            else {
+                response.status(204);
+            }
+            response.end();
+        });
+    });
+
     restapi.delete('/result/:id', function(request, response) {
         var result_id = request.params.id;
 

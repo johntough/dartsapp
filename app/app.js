@@ -1451,6 +1451,47 @@
         return playerService.getPlayers();
     },
 
+    // gets the template to ng-include for result table row
+    resultCtrl.getTemplate = function (result) {
+        if ($scope.selected && result.id === $scope.selected.id) {
+            return 'result-edit';
+        } else {
+            return 'result-display';
+        }
+    };
+
+    resultCtrl.edit = function(result) {
+        $scope.selected = angular.copy(result);
+    },
+
+    resultCtrl.cancelChanges = function () {
+        $scope.selected = {};
+    },
+
+    resultCtrl.saveChanges = function (id, playerOneLegsWon, playerTwoLegsWon) {
+        $http.put(baseUrl + '/result/' + id + '/' + playerOneLegsWon + '/' + playerTwoLegsWon).success(function(data) {
+            // refresh controllers internal state for results
+            $http.get(baseUrl + '/results/').success(function(data) {
+                resultService.setResults(data.results, true);
+            });
+        });
+        resultCtrl.cancelChanges();
+    },
+
+    resultCtrl.deleteRecord = function(id) {
+        var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the result?');
+        dialog.result.then(function(btn) {
+            $http.delete(baseUrl + '/result/' + id).success(function(data) {
+                // refresh controllers internal state for results
+                $http.get(baseUrl + '/results/').success(function(data) {
+                    resultService.setResults(data.results, true);
+                });
+            });
+        }, function(btn){
+            // do nothing - user chose not to delete the result
+        });
+    }
+
     resultCtrl.filter = function() {
         var filterGroups = (!$scope.obj.groupfilter | $scope.obj.groupfilter === 'all') ? false: true;
         var filterWeeks = (!$scope.obj.weekfilter | $scope.obj.weekfilter === 'all') ? false: true;
@@ -1517,48 +1558,6 @@
         }
         return cellClass;
     },
-
-    // gets the template to ng-include for a table row / item
-    resultCtrl.getTemplate = function (venue) {
-        if ($scope.selected && venue.id === $scope.selected.id) { 
-            return 'result-edit';
-        } else {
-            return 'result-display';
-        }
-    };
-
-    resultCtrl.deleteRecord  = function(id) {
-
-        var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the result?');
-        dialog.result.then(function(btn) {
-            $http.delete(baseUrl + '/result/' + id).success(function(data) {
-                // refresh controllers internal state for results
-                $http.get(baseUrl + '/results').success(function(data) {
-                    resultService.setResults(data.results, false);
-                });
-            });
-        }, function(btn){
-            // do nothing - user chose not to delete the result
-        });
-    },
-
-    resultCtrl.saveChanges = function (id, p1legs, p2legs) {
-        $http.put(baseUrl + '/result/' + id + '/' + p1legs + '/' + p2legs).success(function(data) {
-            // refresh controllers internal state for results
-            $http.get(baseUrl + '/results').success(function(data) {
-                resultService.setResults(data.results, false);
-            });
-        });
-        resultCtrl.cancelChanges();
-    };
-
-    resultCtrl.edit = function (result) {
-        $scope.selected = angular.copy(result);
-    };
-
-    resultCtrl.cancelChanges = function () {
-        $scope.selected = {};
-    };
 
     $http.get(baseUrl + '/results').success(function(data) {
         resultService.setResults(data.results, false);
