@@ -572,7 +572,7 @@
         weekService.setWeeks(data.weeks);
     });
 
-        // gets the template to ng-include for a table row / item
+    // gets the template to ng-include for a table row / item
     weekCtrl.getTemplate = function (week) {
         if ($scope.selected && week.id === $scope.selected.id) { 
             return 'week-edit';
@@ -1345,8 +1345,8 @@
     }
   }]);
 
-  app.controller('FixtureController', ['$scope', '$http', 'loginService', 'fixtureService', 'groupService', 'playerService', 'weekService', 'dialogs', 'toastr', 'toastrConfig',
-  function($scope, $http, loginService, fixtureService, groupService, playerService, weekService, dialogs, toastr, toastrConfig) {
+  app.controller('FixtureController', ['$scope', '$http', 'loginService', 'fixtureService', 'groupService', 'playerService', 'weekService', 'venueService', 'dialogs', 'toastr', 'toastrConfig',
+  function($scope, $http, loginService, fixtureService, groupService, playerService, weekService, venueService, dialogs, toastr, toastrConfig) {
     var fixtureCtrl = this;
 
     $scope.obj = {
@@ -1372,6 +1372,10 @@
         return groupService.getGroups();
     },
 
+    fixtureCtrl.getVenues = function() {
+        return venueService.getVenues();
+    },
+
     fixtureCtrl.getPlayers = function() {
         return playerService.getPlayers();
     },
@@ -1383,6 +1387,100 @@
     $http.get(baseUrl + '/fixtures').success(function(data) {
         fixtureService.setFixtures(data.fixtures);
     });
+
+    // gets the template to ng-include for a table row / item
+    fixtureCtrl.getTemplate = function (fixture) {
+        if ($scope.selected && fixture.id === $scope.selected.id) { 
+            return 'fixture-edit';
+        } else {
+            return 'fixture-display';
+        }
+    },
+
+    fixtureCtrl.deleteRecord  = function(id) {
+
+        var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the fixture?');
+        dialog.result.then(function(btn) {
+            $http.delete(baseUrl + '/fixture/' + id).success(function(data) {
+                // refresh controllers internal state for fixtures
+                $http.get(baseUrl + '/fixtures').success(function(data) {
+                    fixtureService.setFixtures(data.fixtures);
+                });
+            });
+        }, function(btn){
+            // do nothing - user chose not to delete the fixture
+        });
+    },
+
+    fixtureCtrl.saveChanges = function (id, week, order, venue, player1, player2, marker1, marker2) {
+        if (fixtureCtrl.isValidEdit()) {
+            $http.put(baseUrl + '/fixture/' + id + '/' + week + '/' + order + '/' + venue + '/' + player1 + '/' + player2 + '/' + marker1 + '/' + marker2).success(function(data) {
+                // refresh controllers internal state for fixtures
+                $http.get(baseUrl + '/fixtures').success(function(data) {
+                    fixtureService.setFixtures(data.fixtures);
+                });
+            });
+            fixtureCtrl.cancelChanges();
+        }
+    },
+
+    fixtureCtrl.isValidEdit = function() {
+        if ($scope.selected.week && $scope.selected.venue) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+    fixtureCtrl.edit = function (fixture) {
+        $scope.selected = angular.copy(fixture);
+
+        $scope.selected.weeks = weekService.getWeeks();
+        $scope.selected.venues = venueService.getVenues();
+
+        for (var week in $scope.selected.weeks) {
+            if ($scope.selected.weeks.hasOwnProperty(week)) {
+                if ($scope.selected.weekId === $scope.selected.weeks[week].id) {
+                    $scope.selected.week = $scope.selected.weeks[week];
+                    break;
+                }
+            }
+        }
+
+        for (var venue in $scope.selected.venues) {
+            if ($scope.selected.venues.hasOwnProperty(venue)) {
+                if ($scope.selected.venueId === $scope.selected.venues[venue].id) {
+                    $scope.selected.venueObj = $scope.selected.venues[venue];
+                    break;
+                }
+            }
+        }
+
+        $http.get(baseUrl + '/players/group/' + $scope.selected.groupId).success(function(data) {
+            $scope.selected.players = data.players;
+
+            for (var player in $scope.selected.players) {
+                if ($scope.selected.players.hasOwnProperty(player)) {
+                    if ($scope.selected.playerOneId === $scope.selected.players[player].id) {
+                        $scope.selected.player1 = $scope.selected.players[player];
+                    }  
+                    else if ($scope.selected.playerTwoId === $scope.selected.players[player].id) {
+                        $scope.selected.player2 = $scope.selected.players[player];
+                    }
+                    else if ($scope.selected.markerOneId === $scope.selected.players[player].id) {
+                        $scope.selected.marker1 = $scope.selected.players[player];
+                    }
+                    else if ($scope.selected.markerTwoId === $scope.selected.players[player].id) {
+                        $scope.selected.marker2 = $scope.selected.players[player];
+                    }
+                }
+            }
+        });
+    },
+
+    fixtureCtrl.cancelChanges = function () {
+        $scope.selected = {};
+    },
 
     fixtureCtrl.filter = function() {
         var filterGroups = (!$scope.obj.groupfilter | $scope.obj.groupfilter === 'all') ? false: true;
