@@ -1420,6 +1420,101 @@
     };
   }]);
 
+  app.controller('AddHighFinishController', ['$scope', '$http', '$modalInstance', 'data', 'highFinishService', 'dialogs',
+  function($scope, $http, $modalInstance, data, highFinishService, dialogs) {
+
+    var addHighFinishCtrl = this;
+    $scope.players = [];
+    $scope.fixtures = [];
+    $scope.allowAdd = false;
+    $scope.highFinishes = [];
+
+    $scope.validCheckouts = [100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117,
+        118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139,
+        140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 160, 161, 164,
+        167, 170
+    ];
+
+    $http.get(baseUrl + '/players').success(function(data) {
+        $scope.players = data.players;
+    });
+
+    $scope.isValidCheckout = function(value) {
+        var isValid = true;
+
+        if (!Number.isInteger(value)) {
+            isValid = false;
+        }
+              
+        return isValid;
+    },
+
+    $scope.playerUpdated = function(playerId) {
+        $scope.allowAdd = false;
+
+        $http.get(baseUrl + '/fixtures/player/' + playerId + '/completed').success(function(data) {
+            $scope.fixtures = [];
+
+            for (var fixture in data.fixtures) {
+                if (data.fixtures.hasOwnProperty(fixture)) {
+                    $scope.fixtures.push(data.fixtures[fixture]);
+                }
+            }
+        });
+    },
+
+    $scope.fixtureSelected = function(id, date, player1, player2) {
+        $scope.allowAdd = true;
+    },
+
+    $scope.addHighFinish = function() {
+        if ($scope.isValidCheckout($scope.checkout)) {
+            var finishObject = {
+                playerId: $scope.player.id,
+                player: $scope.player.forename + " " + $scope.player.surname,
+                checkout: $scope.checkout,
+                fixtureId: $scope.fixture.id,
+                fixture: $scope.fixture.weekName + " ( " + $scope.fixture.date + " )" + " - " + $scope.fixture.player1 + " v " + $scope.fixture.player2
+            };
+
+            $scope.highFinishes.push(finishObject);
+            $scope.checkout = '';
+        }
+    },
+
+    $scope.remove = function(highFinishParam) {
+        for (var highFinish in $scope.highFinishes) {
+            if ($scope.highFinishes.hasOwnProperty(highFinish)) {
+                if ($scope.highFinishes[highFinish] === highFinishParam) {
+                    $scope.highFinishes.splice(highFinish, 1);
+                    break;
+                }
+            }
+        }
+    },
+
+    $scope.cancel = function() {
+      $modalInstance.dismiss('canceled');  
+    },
+
+    $scope.save = function() {
+        for (var highFinish in $scope.highFinishes) {
+            if ($scope.highFinishes.hasOwnProperty(highFinish)) {
+                var currentHighFinish = $scope.highFinishes[highFinish];
+
+                $http.post(baseUrl + '/highfinish/' + currentHighFinish.checkout + '/' + currentHighFinish.fixtureId + '/' + currentHighFinish.playerId).success(function(data) {
+                    // refresh controllers internal state for high finishes
+                    $http.get(baseUrl + '/highfinishes/duplicatesremoved').success(function(data) {
+                        highFinishService.setFinishes(data.highfinishes);
+                    });
+                });
+            }
+        }
+
+        $modalInstance.close();
+    };
+  }]);
+
   app.controller('FixtureController', ['$scope', '$http', 'loginService', 'fixtureService', 'groupService', 'playerService', 'weekService', 'venueService', 'dialogs', 'toastr', 'toastrConfig',
   function($scope, $http, loginService, fixtureService, groupService, playerService, weekService, venueService, dialogs, toastr, toastrConfig) {
     var fixtureCtrl = this;
@@ -1959,7 +2054,12 @@
     },
 
     achievementCtrl.addHighFinish = function() {
-        console.log('addHighFinish');
+        var dialog = dialogs.create('/addhighfinishdialog.html', 'AddHighFinishController', {}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});
+        dialog.result.then(function() {
+            // refresh controllers internal state for high finishes
+        },function() {
+            // do nothing as user did not delete high finish
+        });
     },
 
     achievementCtrl.editHighFinish = function() {
@@ -1967,8 +2067,6 @@
     },
 
     achievementCtrl.deleteHighFinish = function() {
-        console.log('deleteHighFinish');
-
         var dialog = dialogs.create('/deletehighfinishdialog.html', 'DeleteHighFinishController', {}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});
         dialog.result.then(function() {
             // refresh controllers internal state for high finishes

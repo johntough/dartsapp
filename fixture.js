@@ -372,6 +372,35 @@ module.exports = function(restapi, db) {
         });
     });
 
+    restapi.get('/fixtures/player/:player/completed', function(request, response) {
+
+        var json_obj_response = { fixtures: [], count: 0};
+
+         db.each("SELECT fixture_tbl.id, week_tbl.name AS week_name, week_tbl.date AS week_date, " +
+         "p1.forename AS p1_forename, p1.surname AS p1_surname, " +
+         "p2.forename AS p2_forename, p2.surname AS p2_surname " +
+         "FROM fixture_tbl " +
+         "JOIN week_tbl ON week_tbl.id = fixture_tbl.week_id " +
+         "JOIN player_tbl AS p1 ON p1.id = fixture_tbl.player_one_id " +
+         "JOIN player_tbl AS p2 ON p2.id = fixture_tbl.player_two_id " +
+         "WHERE (p1.id = " + request.params.player + " OR p2.id = " + request.params.player + ") " +
+         "AND fixture_tbl.complete = 1",
+        function(err, row) {
+            var fixture = { id: '', weekName: '', date: '', player1: '', player2: ''};
+
+            fixture.id = row.id;
+            fixture.weekName = row.week_name;
+            fixture.date = row.week_date;
+            fixture.player1 = row.p1_forename + " " + row.p1_surname;
+            fixture.player2 = row.p2_forename + " " + row.p2_surname;
+            json_obj_response.fixtures.push(fixture);
+        }, 
+        function complete(err, found) {
+            json_obj_response.count = json_obj_response.fixtures.length;
+            response.json(json_obj_response);
+        });
+    });
+
     restapi.post('/fixture/:week/:order/:venue/:group/:player1/:player2/:marker1/:marker2', function(request, response) {
         var new_week = request.params.week;
         var new_order_of_play = request.params.order;

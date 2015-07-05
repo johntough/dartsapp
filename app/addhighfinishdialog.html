@@ -1,0 +1,62 @@
+<div class="modal-header">
+    <h4 class="modal-title">
+    <span class="glyphicon glyphicon-plus">
+    </span> Add High Finishes</h4>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal" name="addHighFinishDialog" novalidate role="form">
+        <div class="form-group">
+            <label for="player" class="col-sm-3 control-label">Player</label>
+            <div class="col-sm-6">
+                <select class="form-control" id="player" ng-change="playerUpdated(player.id)" form="addHighFinishDialog" ng-model="player" ng-options='(player.forename + " " + player.surname) for player in players' required></select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="fixture" class="col-sm-3 control-label">Fixture</label>
+            <div class="col-sm-6">
+                <select class="form-control" id="fixture" ng-change="fixtureSelected(fixture.id, fixture.date, fixture.player1, fixture.player2)" form="addHighFinishDialog" ng-model="fixture" ng-options='(fixture.weekName + " ( " + fixture.date + " ) - " +  fixture.player1 + " v " + fixture.player2) for fixture in fixtures' required></select>
+            </div>
+        </div>
+
+        <div class="form-group" ng-show="allowAdd">
+            <label for="checkouts" class="col-sm-3 control-label">High Finishes</label>
+            <div class="col-sm-6">
+                <select class="form-control" id="checkouts" form="addHighFinishDialog" ng-model="checkout" ng-options="checkout for checkout in validCheckouts"></select>
+            </div>
+
+            <div class="col-md-1">
+                <h4>
+                    <span class="glyphicon glyphicon-floppy-saved" ng-click="addHighFinish()" data-toggle="tooltip" data-placement="bottom" title="Add Checkout" ng-style="{true: {color: '#333333'}, false: {color: '#D3D3D3'}}[isValidCheckout(checkout)]"></span>
+                </h4>
+            </div>
+        </div>
+    </form>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Player</th>
+                <th>Checkout</th>
+                <th>Fixture</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="highfinish in highFinishes">
+                <td>{{highfinish.player}}</td>
+                <td>{{highfinish.checkout}}</td>
+                <td>{{highfinish.fixture}}</td>
+                <td>
+                    <h4>
+                        <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Remove" ng-click="remove(highfinish)"/>
+                    </h4>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+ </div>
+ <div class="modal-footer">
+     <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+     <button type="button" class="btn btn-primary" ng-click="save()" ng-disabled="(addHighFinishDialog.$dirty && addHighFinishDialog.$invalid) || addHighFinishDialog.$pristine || highFinishes.length < 1">Save</button>
+ </div>
