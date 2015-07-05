@@ -39,13 +39,14 @@
 
     <div ng-show="achievementCtrl.isSet('highfinishes')">
         <div ng-show="achievementCtrl.showPrivilegedData()">
-            <h3 class="apply-indent"><font color="#777777">Modify High Finishes</font></h3>
+            <h3 class="apply-indent"><font color="#777777">Modify High Checkouts</font></h3>
             <h4 class="apply-indent">
                 <span class="glyphicon glyphicon-plus" data-toggle="tooltip" data-placement="bottom" title="Add High Finish" ng-click="achievementCtrl.addHighFinish()"></span>
                 <span class="glyphicon glyphicon-wrench" data-toggle="tooltip" data-placement="bottom" title="Edit High Finish" ng-click="achievementCtrl.editHighFinish()"></span>
                 <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete High Finish" ng-click="achievementCtrl.deleteHighFinish()"></span>
             </h4>
         </div>
+        </br>
         <div class="checkbox apply-indent">
             <label>
                 <input type="checkbox" ng-model="achievementCtrl.highfinishcheckbox" ng-change="achievementCtrl.highFinishCheckboxChange(achievementCtrl.highfinishcheckbox)"> Show all recorded high checkouts

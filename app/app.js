@@ -1345,6 +1345,81 @@
     }
   }]);
 
+  app.controller('DeleteHighFinishController', ['$scope', '$http', '$modalInstance', 'data', 'highFinishService', 'dialogs',
+  function($scope, $http, $modalInstance, data, highFinishService, dialogs) {
+
+    var deleteHighFinishCtrl = this;
+    $scope.players = [];
+    $scope.highfinishes = [];
+
+    $http.get(baseUrl + '/highfinishes/players').success(function(data) {
+        $scope.players = data.players;
+    });
+
+    $scope.updateDialog = function(playerId) {
+        $http.get(baseUrl + '/highfinishes/player/' + playerId).success(function(data) {
+            $scope.highfinishes = [];
+
+            for (var highFinish in data.highfinishes) {
+                if (data.highfinishes.hasOwnProperty(highFinish)) {
+                    data.highfinishes[highFinish].onRemoveQueue = false;
+                    data.highfinishes[highFinish].dateFormatted = Date.parse(data.highfinishes[highFinish].date);
+                    $scope.highfinishes.push(data.highfinishes[highFinish]);
+                }
+            }
+        });
+    },
+
+    $scope.isRemoveQueueEmpty = function() {
+        var isRemoveQueueEmpty = true;
+
+        for (var highFinish in $scope.highfinishes) {
+            if ($scope.highfinishes.hasOwnProperty(highFinish)) {
+                if ($scope.highfinishes[highFinish].onRemoveQueue) {
+                   isRemoveQueueEmpty = false
+                   break;
+                }
+            }
+        }
+
+        return isRemoveQueueEmpty;
+    },
+
+    $scope.toggleItem = function(highFinish) {
+        highFinish.onRemoveQueue = !highFinish.onRemoveQueue;
+    },
+
+    $scope.cancel = function() {
+      $modalInstance.dismiss('canceled');  
+    },
+
+    $scope.applyChanges = function() {
+        var removeQueue = [];
+
+        // build queue
+        for (var highFinish in $scope.highfinishes) {
+            if ($scope.highfinishes.hasOwnProperty(highFinish)) {
+                if ($scope.highfinishes[highFinish].onRemoveQueue) {
+                    removeQueue.push($scope.highfinishes[highFinish].id);
+                }
+            }
+        }
+
+        for (var item in removeQueue) {
+            if (removeQueue.hasOwnProperty(item)) {
+                $http.delete(baseUrl + '/highfinish/' + removeQueue[item]).success(function(data) {
+                    // refresh controllers internal state for high finishes
+                    $http.get(baseUrl + '/highfinishes/duplicatesremoved').success(function(data) {
+                        highFinishService.setFinishes(data.highfinishes);
+                    });
+                });
+            }
+        }
+
+        $modalInstance.close();
+    };
+  }]);
+
   app.controller('FixtureController', ['$scope', '$http', 'loginService', 'fixtureService', 'groupService', 'playerService', 'weekService', 'venueService', 'dialogs', 'toastr', 'toastrConfig',
   function($scope, $http, loginService, fixtureService, groupService, playerService, weekService, venueService, dialogs, toastr, toastrConfig) {
     var fixtureCtrl = this;
@@ -1799,11 +1874,11 @@
 
     achievementCtrl.isSet = function(checkTab) {
         return achievementCtrl.tab === checkTab;
-    };
+    },
 
     achievementCtrl.setTab = function(setTab) {
         achievementCtrl.tab = setTab;
-    };
+    },
 
     achievementCtrl.highFinishCheckboxChange = function(isChecked) {
         if (isChecked) {
@@ -1841,7 +1916,7 @@
             }
         }
         return isMost180s;
-    };
+    },
 
     achievementCtrl.isBestLeg = function(numberOfDarts) {
         var isBestLeg = true;
@@ -1893,6 +1968,13 @@
 
     achievementCtrl.deleteHighFinish = function() {
         console.log('deleteHighFinish');
+
+        var dialog = dialogs.create('/deletehighfinishdialog.html', 'DeleteHighFinishController', {}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});
+        dialog.result.then(function() {
+            // refresh controllers internal state for high finishes
+        },function() {
+            // do nothing as user did not delete high finish
+        });
     },
 
     achievementCtrl.addBestLeg = function() {

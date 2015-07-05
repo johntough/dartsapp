@@ -1,0 +1,48 @@
+<div class="modal-header">
+    <h4 class="modal-title">
+    <span class="glyphicon glyphicon-trash">
+    </span> Delete High Finishes</h4>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal" name="deleteHighFinishDialog" novalidate role="form">
+        <div class="form-group">
+            <label for="player" class="col-sm-3 control-label">Player</label>
+            <div class="col-sm-6">
+            <select class="form-control" id="player" ng-change="updateDialog(player.id)" form="deleteHighFinishDialog" ng-model="player" ng-options='(player.forename + " " + player.surname) for player in players' required></select>
+        </div>
+        </div>
+    </form>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Checkout</th>
+                <th>Date</th>
+                <th>Opponent</th>
+                <th ng-show="!highfinish.onRemoveQueue"></th>
+                <th ng-show="highfinish.onRemoveQueue"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="highfinish in highfinishes | orderBy:'dateFormatted'">
+                <td ng-style="{true: {color: 'red'}, false: {color: 'black'}}[highfinish.onRemoveQueue]">{{highfinish.checkout}}</td>
+                <td ng-style="{true: {color: 'red'}, false: {color: 'black'}}[highfinish.onRemoveQueue]">{{highfinish.date}}</td>
+                <td ng-style="{true: {color: 'red'}, false: {color: 'black'}}[highfinish.onRemoveQueue]">{{highfinish.player2}}</td>
+                <td ng-show="!highfinish.onRemoveQueue">
+                    <h4>
+                        <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete Checkout" ng-click="toggleItem(highfinish)"/>
+                    </h4>
+                </td>
+                <td ng-show="highfinish.onRemoveQueue">
+                    <h4>
+                         <span class="glyphicon glyphicon-remove" data-toggle="tooltip" data-placement="bottom" title="Undo Delete" ng-click="toggleItem(highfinish)"/>
+                    </h4>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+ </div>
+ <div class="modal-footer">
+     <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+     <button type="button" class="btn btn-primary" ng-click="applyChanges()" ng-disabled="(deleteHighFinishDialog.$dirty && deleteHighFinishDialog.$invalid) || deleteHighFinishDialog.$pristine || isRemoveQueueEmpty()">Apply Changes</button>
+ </div>
