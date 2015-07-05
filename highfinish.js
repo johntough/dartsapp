@@ -55,6 +55,36 @@ module.exports = function(restapi, db) {
         });
     });
 
+    restapi.get('/highfinishes/:player', function(request, response) {
+        var player_id = request.params.player;
+
+        var json_obj_response = { highfinishes: [], count: 0};
+
+         db.each("SELECT high_finish_tbl.id, high_finish_tbl.checkout, " +
+         "w.name AS week_name, " +
+         "p.forename AS p_forename, p.surname AS p_surname " +
+         "FROM high_finish_tbl " +
+         "JOIN player_tbl AS p ON p.id = high_finish_tbl.player_id " +
+         "JOIN fixture_tbl AS f ON f.id = high_finish_tbl.fixture_id " +
+         "JOIN week_tbl AS w ON w.id = f.week_id " +
+         "WHERE high_finish_tbl.player_id = " + player_id,
+        function(err, row) {
+            var highfinish = { id: '', checkout: 0, player: '', week: ''};
+
+            if (row.id) {
+                highfinish.id = row.id;
+                highfinish.checkout = row.checkout;
+                highfinish.week = row.week_name;
+                highfinish.player = row.p_forename + ' ' + row.p_surname;
+                json_obj_response.highfinishes.push(highfinish);
+            }
+        }, 
+        function complete(err, found) {
+            json_obj_response.count = json_obj_response.highfinishes.length;
+            response.json(json_obj_response);
+        });
+    });
+
     restapi.post('/highfinish/:checkout/:fixture/:player', function(request, response) {
         var new_checkout = request.params.checkout;
         var new_fixture = request.params.fixture;

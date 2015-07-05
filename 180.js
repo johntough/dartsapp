@@ -25,6 +25,32 @@ module.exports = function(restapi, db) {
         });
     });
 
+    restapi.get('/180s/:player', function(request, response) {
+        var player_id = request.params.player;
+
+        var json_obj_response = { player180s: [], count: 0};
+
+         db.each("SELECT player_180_tbl.id, SUM(player_180_tbl.no_of_180s) AS total_no_of_180s, " +
+         "p.forename AS p_forename, p.surname AS p_surname " +
+         "FROM player_180_tbl " +
+         "JOIN player_tbl AS p ON p.id = player_180_tbl.player_id " +
+         "WHERE player_180_tbl.player_id = " + player_id,
+        function(err, row) {
+            var player180 = { id: '', noOf180s: 0, player: ''};
+
+            if (row.id) {
+                player180.id = row.id;
+                player180.noOf180s = row.total_no_of_180s;
+                player180.player = row.p_forename + ' ' + row.p_surname;
+                json_obj_response.player180s.push(player180);
+            }
+        },
+        function complete(err, found) {
+            json_obj_response.count = json_obj_response.player180s.length;
+            response.json(json_obj_response);
+        });
+    });
+
     restapi.post('/180/:number180s/:fixture/:player', function(request, response) {
         var new_number180s = request.params.number180s;
         var new_fixture = request.params.fixture;

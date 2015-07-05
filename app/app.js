@@ -1855,7 +1855,7 @@
             }
         }
         return isBestLeg;
-    };
+    },
 
     achievementCtrl.isHighestFinish = function(checkout) {
         var isHighestFinish = true;
@@ -1869,16 +1869,43 @@
             }
         }
         return isHighestFinish;
-    };
+    },
 
-    // gets the template to ng-include for a table row / item
-    achievementCtrl.getTemplate = function (venue) {
-        if ($scope.selected && venue.id === $scope.selected.id) { 
-            return 'achievement-edit';
-        } else {
-            return 'achievement-display';
-        }
-    };
+    achievementCtrl.add180s = function() {
+        console.log('add180s');
+    },
+
+    achievementCtrl.edit180s = function() {
+        console.log('edit180s');
+    },
+
+    achievementCtrl.delete180s = function() {
+        console.log('delete180s');
+    },
+
+    achievementCtrl.addHighFinish = function() {
+        console.log('addHighFinish');
+    },
+
+    achievementCtrl.editHighFinish = function() {
+        console.log('editHighFinish');
+    },
+
+    achievementCtrl.deleteHighFinish = function() {
+        console.log('deleteHighFinish');
+    },
+
+    achievementCtrl.addBestLeg = function() {
+        console.log('addBestLeg');
+    },
+
+    achievementCtrl.editBestLeg = function() {
+        console.log('editBestLeg');
+    },
+
+    achievementCtrl.deleteBestLeg = function() {
+        console.log('deleteBestLeg');
+    },
 
     $http.get(baseUrl + '/180s').success(function(data) {
         player180Service.set180s(data.player180s);
