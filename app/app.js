@@ -1425,7 +1425,17 @@
     },
 
     fixtureCtrl.isValidEdit = function() {
-        if ($scope.selected.week && $scope.selected.venue) {
+        if ($scope.selected.player1 === $scope.selected.player2) {
+            return false;
+        }
+        else if ($scope.selected.player1 === $scope.selected.marker1 ||
+            $scope.selected.player1 === $scope.selected.marker2 ||
+            $scope.selected.player2 === $scope.selected.marker1 ||
+            $scope.selected.player2 === $scope.selected.marker2
+        ) {
+            return false;
+        }
+        if (Number.isInteger($scope.selected.orderOfPlay)) {
             return true;
         } else {
             return false;
