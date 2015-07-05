@@ -59,37 +59,12 @@
                 <th>Player 2</th>
                 <th>Marker 1</th>
                 <th>Marker 2</th>
-                <th ng-show="fixtureCtrl.showPrivilegedData()"></th>
                 <th></th>
-                <th ng-show="fixtureCtrl.showPrivilegedData()"></th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             <tr ng-repeat="fixture in fixtureCtrl.getFixtures() | orderBy:['-weekDateFormatted', 'group', 'orderOfPlay']" ng-include="fixtureCtrl.getTemplate(fixture)">
-            <!--    <td>{{fixture.weekNumber}} ( {{fixture.weekDate}} )</td>
-                <td>{{fixture.group}}</td>
-                <td>{{fixture.venue}}</td>
-                <td>{{fixture.orderOfPlay}}</td>
-                <td>{{fixture.playerOne}}</td>
-                <td>{{fixture.playerTwo}}</td>
-                <td>{{fixture.markerOne}}</td>
-                <td>{{fixture.markerTwo}}</td>
-                <td ng-show="fixtureCtrl.showPrivilegedData()">
-                    <h4>
-                        <span ng-click="fixtureCtrl.completeFixture(fixture)" data-toggle="tooltip" data-placement="bottom" title="Record Result" ng-class="fixture.complete ? '' : 'glyphicon glyphicon-play-circle'">
-                    </h4>
-                </td>
-                <td>
-                    <h4>
-                        <span ng-class="fixture.complete ? 'glyphicon glyphicon-ok' : ''" data-toggle="tooltip" data-placement="bottom" title="Result Recorded" style="color:green">
-                    </h4>
-                </td>
-                <td ng-show="fixtureCtrl.showPrivilegedData()">
-                    <h4>
-                        <span class="glyphicon glyphicon-wrench" data-toggle="tooltip" data-placement="bottom" title="Edit Fixture" ng-click="fixtureCtrl.edit(fixture)"></span>
-                        <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete Fixture" ng-click="fixtureCtrl.deleteRecord(fixture.id)"></span>
-                    </h4>
-                </td>-->
             </tr>
         </tbody>
     </table>
@@ -104,19 +79,15 @@
         <td>{{fixture.playerTwo}}</td>
         <td>{{fixture.markerOne}}</td>
         <td>{{fixture.markerTwo}}</td>
-        <td ng-show="fixtureCtrl.showPrivilegedData()">
-            <h4>
-                <span ng-click="fixtureCtrl.completeFixture(fixture)" data-toggle="tooltip" data-placement="bottom" title="Record Result" ng-class="fixture.complete ? '' : 'glyphicon glyphicon-play-circle'">
-            </h4>
-        </td>
         <td>
             <h4>
-                <span ng-class="fixture.complete ? 'glyphicon glyphicon-ok' : ''" data-toggle="tooltip" data-placement="bottom" title="Result Recorded" style="color:green">
+                <span class="glyphicon glyphicon-play-circle" ng-show="fixtureCtrl.showPrivilegedData() && !fixture.complete" ng-click="fixtureCtrl.completeFixture(fixture)" data-toggle="tooltip" data-placement="bottom" title="Record Result"></span>
+                <span class="glyphicon glyphicon-ok" ng-show="fixture.complete" data-toggle="tooltip" data-placement="bottom" title="Result Recorded" style="color:green"></span>
             </h4>
         </td>
         <td ng-show="fixtureCtrl.showPrivilegedData()">
             <h4>
-                <span class="glyphicon glyphicon-wrench" data-toggle="tooltip" data-placement="bottom" title="Edit Fixture" ng-click="fixtureCtrl.edit(fixture)"></span>
+                <span class="glyphicon glyphicon-wrench" ng-hide="fixture.complete" data-toggle="tooltip" data-placement="bottom" title="Edit Fixture" ng-click="fixtureCtrl.edit(fixture)"></span>
                 <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete Fixture" ng-click="fixtureCtrl.deleteRecord(fixture.id)"></span>
             </h4>
         </td>
@@ -148,6 +119,10 @@
         <td>
             <h4>
                 <span class="glyphicon glyphicon-floppy-saved" ng-style="{true: {color: '#333333'}, false: {color: '#D3D3D3'}}[fixtureCtrl.isValidEdit()]" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="fixtureCtrl.saveChanges(selected.id, selected.week.id, selected.orderOfPlay, selected.venueObj.id, selected.player1.id, selected.player2.id, selected.marker1.id, selected.marker2.id)"></span>
+            </h4>
+        </td>
+        <td>
+            <h4>
                 <span class="glyphicon glyphicon-floppy-remove" data-toggle="tooltip" data-placement="bottom" title="Cancel Changes" ng-click="fixtureCtrl.cancelChanges()"></span>
             </h4>
         </td>
