@@ -33,7 +33,7 @@
         <div class="container">
           <ul class="nav navbar-nav">
             <li ng-class="{ active:navigationCtrl.isSet('home') }">
-              <a href ng-click="navigationCtrl.setTab('home')">Home</a>
+              <a href ng-click="navigationCtrl.setTab('home')"><span class="glyphicon glyphicon-home"></span> Home</a>
             </li>
             <li ng-class="{ active:navigationCtrl.isSet('news') }">
               <a href ng-click="navigationCtrl.setTab('news')">News</a>
@@ -63,11 +63,11 @@
               <a href ng-click="navigationCtrl.setTab('achievements')">Achievements</a>
             </li>
             <li ng-class="{ active:navigationCtrl.isSet('login') }">
-              <a href ng-click="navigationCtrl.setTab('login')">Manage Login</a>
+              <a href ng-click="navigationCtrl.setTab('login')"><span class="glyphicon glyphicon-lock"></span> Manage Login</a>
             </li>
           </ul>
         </div>
-        </nav> 
+        </nav>
           <!--  Description Tab's Content  -->
           <home-page ng-show="navigationCtrl.isSet('home')"></home-page>
           <news-page ng-show="navigationCtrl.isSet('news')"></news-page>
