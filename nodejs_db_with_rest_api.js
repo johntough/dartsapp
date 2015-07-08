@@ -5,8 +5,7 @@ db.serialize(function() {
 
     db.run("CREATE TABLE IF NOT EXISTS contacts_tbl" +
     "(  id INTEGER PRIMARY KEY NOT NULL," +
-    "   forename CHAR(50) NOT NULL," +
-    "   surname CHAR(50) NOT NULL," +
+    "   name CHAR(50) NOT NULL," +
     "   phone_number CHAR(11) NOT NULL," +
     "   email_address CHAR(50) NOT NULL" +
     ")");

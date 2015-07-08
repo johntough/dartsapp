@@ -1,14 +1,48 @@
-<div class="home-page">
-    <p>
-    <div class="col-sm-2">
-        <button class="btn btn-sm btn-primary btn-block" ng-show="newsCtrl.showPrivilegedData()" ng-click="newsCtrl.showAddForm()">Add News Item</button>
-    </div>
-    <table class="table">
-    </table>
+<div class="home-page" ng-controller="ContactController as contactCtrl">
 
     <div>
         <h1 class="home-heading">Murrayfield <br> Sports Bar</h1>
         <h3 class="home-sub-heading">Premier League Darts</h3>
+        <div ng-show="contactCtrl.contactDetailsExist()">
+            <div ng-repeat="contact in contactCtrl.contacts" ng-include="contactCtrl.getTemplate(contact)"></div>
+        </div>
+        <div ng-show="!contactCtrl.contactDetailsExist() && contactCtrl.showPrivilegedData()">
+            <h5 class="home-sub-heading"> <span class="glyphicon glyphicon-plus" ng-click="contactCtrl.showAddForm()" ng-style="{cursor:'pointer'}"></span> Add League Contact Details</h5>
+        <div>
     </div>
     <div class="home-item"></div>
+
+    <script type="text/ng-template" id="contact-display">
+        <h5 class="home-sub-heading">Event Organiser: {{contact.name}}</h5>
+        <h5 class="home-sub-heading"><span class="glyphicon glyphicon-envelope"></span> {{contact.email}}</h5>
+        <h5 class="home-sub-heading"><span class="glyphicon glyphicon-phone"></span> {{contact.phone}}</h5>
+        <h4 class="home-sub-heading" ng-show="contactCtrl.showPrivilegedData()">
+            <span class="glyphicon glyphicon-pencil" data-toggle="tooltip" data-placement="bottom" title="Edit Contact Details" ng-click="contactCtrl.edit(contact)"></span>
+            <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete Contact Details" ng-click="contactCtrl.deleteRecord(contact.id)"></span>
+        </h4>
+    </script>
+
+    <script type="text/ng-template" id="contact-edit">
+    <form id="editForm" class="form-horizontal">
+        <div class="form-group apply-indent">
+            <div class="col-sm-3 home-sub-heading">
+                <input type="text" class="form-control" ng-model="selected.name" required></input>
+            </div>
+        </div>
+        <div class="form-group apply-indent">
+            <div class="col-sm-3 home-sub-heading">
+                <input type="text" class="form-control" ng-model="selected.email" required></input>
+            </div>
+        </div>
+        <div class="form-group apply-indent">
+            <div class="col-sm-3 home-sub-heading">
+                <input type="text" class="form-control" ng-model="selected.phone" required></input>
+            </div>
+        </div>
+    </form>
+        <h4 class="home-sub-heading">
+            <span class="glyphicon glyphicon-floppy-saved" ng-style="{true: {color: '#333333'}, false: {color: '#D3D3D3'}}[contactCtrl.isValidEdit()]" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="contactCtrl.saveChanges(selected.id, selected.name, selected.email, selected.phone)"></span>
+            <span class="glyphicon glyphicon-floppy-remove" data-toggle="tooltip" data-placement="bottom" ng-style="{color: '#333333'}" title="Cancel Changes" ng-click="contactCtrl.cancelChanges()"></span>
+        </h4>
+    </script>
 </div>

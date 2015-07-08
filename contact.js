@@ -8,7 +8,7 @@ module.exports = function(restapi, db) {
         db.each("SELECT * FROM contacts_tbl", function(err, row) {
             var contact = { id: '', name: '', email: '', phone: ''};
             contact.id = row.id;
-            contact.name = row.forename + ' ' + row.surname;
+            contact.name = row.name;
             contact.email = row.email_address;
             contact.phone = row.phone_number;
             json_obj_response.contacts.push(contact);
@@ -20,13 +20,12 @@ module.exports = function(restapi, db) {
         });
     });
 
-    restapi.post('/contact/:forename/:surname/:email/:phone', function(request, response) {
-        var new_forename = request.params.forename;
-        var new_surname = request.params.surname;
+    restapi.post('/contact/:name/:email/:phone', function(request, response) {
+        var new_name = request.params.name;
         var new_email = request.params.email;
         var new_phone = request.params.phone;
 
-        db.run("INSERT INTO contacts_tbl (forename, surname, email_address, phone_number) VALUES (?, ?, ?, ?)", new_forename, new_surname, new_email, new_phone, function(err, row) {
+        db.run("INSERT INTO contacts_tbl (name, email_address, phone_number) VALUES (?, ?, ?)", new_name, new_email, new_phone, function(err, row) {
             if (err) {
                 console.log(err);
                 response.status(500);
@@ -38,14 +37,13 @@ module.exports = function(restapi, db) {
         });
     });
 
-    restapi.put('/contact/:id/:forename/:surname/:email/:phone', function(request, response) {
+    restapi.put('/contact/:id/:name/:email/:phone', function(request, response) {
         var contact_id = request.params.id;
-        var updated_forename = request.params.forename;
-        var updated_surname = request.params.surname;
+        var updated_name = request.params.name;
         var updated_email = request.params.email;
         var updated_phone = request.params.phone;
 
-        db.run("UPDATE contacts_tbl SET forename = (?), surname = (?), email_address = (?), phone_number = (?) WHERE id = (?)", updated_forename, updated_surname, updated_email, updated_phone, contact_id, function(err, row) {
+        db.run("UPDATE contacts_tbl SET name = (?), email_address = (?), phone_number = (?) WHERE id = (?)", updated_name, updated_email, updated_phone, contact_id, function(err, row) {
             if (err) {
                 console.log(err);
                 response.status(500);
@@ -57,10 +55,10 @@ module.exports = function(restapi, db) {
         });
     });
 
-    restapi.delete('/newsItem/:id', function(request, response) {
-        var news_id = request.params.id;
+    restapi.delete('/contact/:id', function(request, response) {
+        var contact_id = request.params.id;
 
-        db.run("DELETE FROM news_tbl WHERE id = (?)", news_id, function(err, row) {
+        db.run("DELETE FROM contacts_tbl WHERE id = (?)", contact_id, function(err, row) {
             if (err) {
                 console.log(err);
                 response.status(500);

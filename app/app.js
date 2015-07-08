@@ -452,7 +452,7 @@
     }
   }]);
 
-  app.controller('NewsController', ['$scope', '$http', 'loginService', 'groupService', 'dialogs', 'toastr', 'toastrConfig', function($scope, $http, loginService, groupService, dialogs, toastr, toastrConfig) {
+  app.controller('NewsController', ['$scope', '$http', 'loginService', 'dialogs', 'toastr', 'toastrConfig', function($scope, $http, loginService, dialogs, toastr, toastrConfig) {
     var newsCtrl = this;
     newsCtrl.newsItems = [];
     newsCtrl.newsItemsLength = 0;
@@ -548,6 +548,93 @@
     }
   }]);
 
+  app.controller('ContactController', ['$scope', '$http', 'loginService', 'dialogs', 'toastr', 'toastrConfig', function($scope, $http, loginService, dialogs, toastr, toastrConfig) {
+    var contactCtrl = this;
+    contactCtrl.contacts = [];
+    contactCtrl.contactsLength = 0;
+
+    contactCtrl.showPrivilegedData = function() {
+        return loginService.isAuthorised();
+    },
+
+    // gets the template to ng-include for a news item
+    contactCtrl.getTemplate = function (contact) {
+        if ($scope.selected && contact.id === $scope.selected.id) {
+            return 'contact-edit';
+        } else {
+            return 'contact-display';
+        }
+    };
+
+    contactCtrl.contactDetailsExist = function() {
+        return (contactCtrl.contactsLength > 0) ? true : false;
+    },
+
+    contactCtrl.isValidEdit = function() {
+        if ($scope.selected.name && $scope.selected.email && $scope.selected.phone) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+    contactCtrl.edit = function(contact) {
+        $scope.selected = angular.copy(contact);
+    },
+
+    contactCtrl.cancelChanges = function () {
+        $scope.selected = {};
+    },
+
+    contactCtrl.saveChanges = function (id, name, email, phone) {
+        if (contactCtrl.isValidEdit()) {
+            $http.put(baseUrl + '/contact/' + id + '/' + name + '/' + email + '/' + phone).success(function(data) {
+                // refresh controllers internal state for contact details
+                $http.get(baseUrl + '/contacts').success(function(data) {
+                    contactCtrl.contacts = data.contacts;
+                    contactCtrl.contactsLength = data.count;
+                });
+            });
+            contactCtrl.cancelChanges();
+        }
+    },
+
+    $http.get(baseUrl + '/contacts').success(function(data) {
+        contactCtrl.contacts = data.contacts;
+        contactCtrl.contactsLength = data.count;
+    });
+
+    contactCtrl.showAddForm = function() {
+        var dialog = dialogs.create('/addcontactdetailsdialog.html', 'AddContactDetailsController', {}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});
+        dialog.result.then(function() {
+            // refresh controllers internal state for contact details
+            $http.get(baseUrl + '/contacts').success(function(data) {
+                contactCtrl.contacts = data.contacts;
+                contactCtrl.contactsLength = data.count;
+                toastrConfig.positionClass = 'toast-bottom-right';
+                toastrConfig.timeOut = 2000;
+                toastr.success('Contact added!');
+            });
+        },function() {
+            // do nothing as user did not add contact details
+        });
+    },
+
+    contactCtrl.deleteRecord = function(id) {
+        var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the contact details?');
+        dialog.result.then(function(btn) {
+            $http.delete(baseUrl + '/contact/' + id).success(function(data) {
+                // refresh controllers internal state for contact details
+                $http.get(baseUrl + '/news').success(function(data) {
+                    contactCtrl.contacts = data.contacts;
+                    contactCtrl.contactsLength = data.count;
+                });
+            });
+        }, function(btn){
+            // do nothing - user chose not to delete contact details
+        });
+    }
+  }]);
   
   app.controller('WeekController', ['$scope', '$http', 'loginService', 'weekService', 'dialogs', 'toastr', 'toastrConfig', function($scope, $http, loginService, weekService, dialogs, toastr, toastrConfig) {
     var weekCtrl = this;
@@ -887,6 +974,21 @@
     }
   }]);
 
+    app.controller('AddContactDetailsController', ['$scope', '$http', '$modalInstance', 'data', function($scope, $http, $modalInstance, data) {
+    var addContactDetailsCtrl = this;
+
+    $scope.cancel = function() {
+      $modalInstance.dismiss('canceled');  
+    };
+  
+    $scope.save = function() {
+        $http.post(baseUrl + '/contact/' + $scope.contact.name + '/' + $scope.contact.email + '/' + $scope.contact.phone).success(function(data) {
+            // do nothing
+        });
+        $modalInstance.close();
+    };
+  }]);
+ 
   app.controller('AddGroupController', ['$scope', '$http', '$modalInstance', 'data', 'groupService', 'dialogs', function($scope, $http, $modalInstance, data, groupService, dialogs) {
     var addGroupCtrl = this;
     $scope.group = {name : ''};
