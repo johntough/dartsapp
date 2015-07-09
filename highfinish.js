@@ -132,9 +132,9 @@ module.exports = function(restapi, db) {
     });
 
    restapi.delete('/highfinish/:id', function(request, response) {
-        var venue_id = request.params.id;
+        var highfinish_id = request.params.id;
 
-        db.run("DELETE FROM high_finish_tbl WHERE id = (?)", venue_id, function(err, row) {
+        db.run("DELETE FROM high_finish_tbl WHERE id = (?)", highfinish_id, function(err, row) {
             if (err) {
                 console.log(err);
                 response.status(500);

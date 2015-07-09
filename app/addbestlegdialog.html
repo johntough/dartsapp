@@ -1,0 +1,62 @@
+<div class="modal-header">
+    <h4 class="modal-title">
+    <span class="glyphicon glyphicon-plus">
+    </span> Add Best Leg</h4>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal" name="addBestLegDialog" novalidate role="form">
+        <div class="form-group">
+            <label for="player" class="col-sm-3 control-label">Player</label>
+            <div class="col-sm-6">
+                <select class="form-control" id="player" ng-change="playerUpdated(player.id)" form="addBestLegDialog" ng-model="player" ng-options='(player.forename + " " + player.surname) for player in players' required></select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="fixture" class="col-sm-3 control-label">Fixture</label>
+            <div class="col-sm-6">
+                <select class="form-control" id="fixture" ng-change="fixtureSelected(fixture.id, fixture.date, fixture.player1, fixture.player2)" form="addBestLegDialog" ng-model="fixture" ng-options='(fixture.weekName + " ( " + fixture.date + " ) - " +  fixture.player1 + " v " + fixture.player2) for fixture in fixtures' required></select>
+            </div>
+        </div>
+
+        <div class="form-group" ng-show="allowAdd">
+            <label for="numberOfDarts" class="col-sm-3 control-label">Number of Darts</label>
+            <div class="col-sm-6">
+                <select class="form-control" id="numberOfDarts" form="addBestLegDialog" ng-model="numberOfDarts" ng-options="numberOfDarts for numberOfDarts in validNumberOfDarts"></select>
+            </div>
+
+            <div class="col-md-1">
+                <h4>
+                    <span class="glyphicon glyphicon-floppy-saved" ng-click="addLeg()" data-toggle="tooltip" data-placement="bottom" title="Add Leg" ng-style="{true: {color: '#333333'}, false: {color: '#D3D3D3'}}[isValidNumberOfDarts(numberOfDarts)]"></span>
+                </h4>
+            </div>
+        </div>
+    </form>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Player</th>
+                <th>Number of Darts</th>
+                <th>Fixture</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="bestleg in bestlegs">
+                <td>{{bestleg.player}}</td>
+                <td>{{bestleg.numberOfDarts}}</td>
+                <td>{{bestleg.fixture}}</td>
+                <td>
+                    <h4>
+                        <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Remove" ng-click="remove(bestleg)"/>
+                    </h4>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+ </div>
+ <div class="modal-footer">
+     <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+     <button type="button" class="btn btn-primary" ng-click="save()" ng-disabled="(addBestLegDialog.$dirty && addBestLegDialog.$invalid) || addBestLegDialog.$pristine || bestlegs.length < 1">Save</button>
+ </div>

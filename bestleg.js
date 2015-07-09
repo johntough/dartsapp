@@ -130,4 +130,19 @@ module.exports = function(restapi, db) {
             response.end();
         });
     });
+
+   restapi.delete('/bestleg/:id', function(request, response) {
+        var bestleg_id = request.params.id;
+
+        db.run("DELETE FROM best_leg_tbl WHERE id = (?)", bestleg_id, function(err, row) {
+            if (err) {
+                console.log(err);
+                response.status(500);
+            }
+            else {
+                response.status(204);
+            }
+            response.end();
+        });
+    });
 }

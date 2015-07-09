@@ -1617,6 +1617,172 @@
     };
   }]);
 
+app.controller('DeleteBestLegController', ['$scope', '$http', '$modalInstance', 'data', 'bestLegService', 'dialogs',
+  function($scope, $http, $modalInstance, data, bestLegService, dialogs) {
+
+    var deleteBestLegCtrl = this;
+    $scope.players = [];
+    $scope.bestlegs = [];
+
+    $http.get(baseUrl + '/bestlegs/players').success(function(data) {
+        $scope.players = data.players;
+    });
+
+    $scope.updateDialog = function(playerId) {
+        $http.get(baseUrl + '/bestlegs/player/' + playerId).success(function(data) {
+            $scope.bestlegs = [];
+
+            for (var bestleg in data.bestlegs) {
+                if (data.bestlegs.hasOwnProperty(bestleg)) {
+                    data.bestlegs[bestleg].onRemoveQueue = false;
+                    data.bestlegs[bestleg].dateFormatted = Date.parse(data.bestlegs[bestleg].date);
+                    $scope.bestlegs.push(data.bestlegs[bestleg]);
+                }
+            }
+        });
+    },
+
+    $scope.isRemoveQueueEmpty = function() {
+        var isRemoveQueueEmpty = true;
+
+        for (var bestleg in $scope.bestlegs) {
+            if ($scope.bestlegs.hasOwnProperty(bestleg)) {
+                if ($scope.bestlegs[bestleg].onRemoveQueue) {
+                   isRemoveQueueEmpty = false
+                   break;
+                }
+            }
+        }
+
+        return isRemoveQueueEmpty;
+    },
+
+    $scope.toggleItem = function(bestleg) {
+        bestleg.onRemoveQueue = !bestleg.onRemoveQueue;
+    },
+
+    $scope.cancel = function() {
+      $modalInstance.dismiss('canceled');  
+    },
+
+    $scope.applyChanges = function() {
+        var removeQueue = [];
+
+        // build queue
+        for (var bestleg in $scope.bestlegs) {
+            if ($scope.bestlegs.hasOwnProperty(bestleg)) {
+                if ($scope.bestlegs[bestleg].onRemoveQueue) {
+                    removeQueue.push($scope.bestlegs[bestleg].id);
+                }
+            }
+        }
+
+        for (var item in removeQueue) {
+            if (removeQueue.hasOwnProperty(item)) {
+                $http.delete(baseUrl + '/bestleg/' + removeQueue[item]).success(function(data) {
+                    // refresh controllers internal state for best legs
+                    $http.get(baseUrl + '/bestlegs/duplicatesremoved').success(function(data) {
+                        bestLegService.setLegs(data.bestlegs);
+                    });
+                });
+            }
+        }
+
+        $modalInstance.close();
+    };
+  }]);
+
+  app.controller('AddBestLegController', ['$scope', '$http', '$modalInstance', 'data', 'bestLegService', 'dialogs',
+  function($scope, $http, $modalInstance, data, bestLegService, dialogs) {
+
+    var addBestLegCtrl = this;
+    $scope.players = [];
+    $scope.fixtures = [];
+    $scope.allowAdd = false;
+    $scope.bestlegs = [];
+
+    $scope.validNumberOfDarts = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+
+    $http.get(baseUrl + '/players').success(function(data) {
+        $scope.players = data.players;
+    });
+
+    $scope.isValidNumberOfDarts = function(value) {
+        var isValid = true;
+
+        if (!Number.isInteger(value)) {
+            isValid = false;
+        }
+              
+        return isValid;
+    },
+
+    $scope.playerUpdated = function(playerId) {
+        $scope.allowAdd = false;
+
+        $http.get(baseUrl + '/fixtures/player/' + playerId + '/completed').success(function(data) {
+            $scope.fixtures = [];
+
+            for (var fixture in data.fixtures) {
+                if (data.fixtures.hasOwnProperty(fixture)) {
+                    $scope.fixtures.push(data.fixtures[fixture]);
+                }
+            }
+        });
+    },
+
+    $scope.fixtureSelected = function(id, date, player1, player2) {
+        $scope.allowAdd = true;
+    },
+
+    $scope.addLeg = function() {
+        if ($scope.isValidNumberOfDarts($scope.numberOfDarts)) {
+            var bestLegObject = {
+                playerId: $scope.player.id,
+                player: $scope.player.forename + " " + $scope.player.surname,
+                numberOfDarts: $scope.numberOfDarts,
+                fixtureId: $scope.fixture.id,
+                fixture: $scope.fixture.weekName + " ( " + $scope.fixture.date + " )" + " - " + $scope.fixture.player1 + " v " + $scope.fixture.player2
+            };
+
+            $scope.bestlegs.push(bestLegObject);
+            $scope.numberOfDarts = '';
+        }
+    },
+
+    $scope.remove = function(bestLegParam) {
+        for (var bestleg in $scope.bestlegs) {
+            if ($scope.bestlegs.hasOwnProperty(bestleg)) {
+                if ($scope.bestlegs[bestleg] === bestLegParam) {
+                    $scope.bestlegs.splice(bestleg, 1);
+                    break;
+                }
+            }
+        }
+    },
+
+    $scope.cancel = function() {
+      $modalInstance.dismiss('canceled');  
+    },
+
+    $scope.save = function() {
+        for (var bestleg in $scope.bestlegs) {
+            if ($scope.bestlegs.hasOwnProperty(bestleg)) {
+                var currentBestLeg = $scope.bestlegs[bestleg];
+
+                $http.post(baseUrl + '/bestleg/' + currentBestLeg.numberOfDarts + '/' + currentBestLeg.fixtureId + '/' + currentBestLeg.playerId).success(function(data) {
+                    // refresh controllers internal state for best legs
+                    $http.get(baseUrl + '/bestlegs/duplicatesremoved').success(function(data) {
+                        bestLegService.setLegs(data.bestlegs);
+                    });
+                });
+            }
+        }
+
+        $modalInstance.close();
+    };
+  }]);
+
   app.controller('FixtureController', ['$scope', '$http', 'loginService', 'fixtureService', 'groupService', 'playerService', 'weekService', 'venueService', 'dialogs', 'toastr', 'toastrConfig',
   function($scope, $http, loginService, fixtureService, groupService, playerService, weekService, venueService, dialogs, toastr, toastrConfig) {
     var fixtureCtrl = this;
@@ -2160,7 +2326,7 @@
         dialog.result.then(function() {
             // refresh controllers internal state for high finishes
         },function() {
-            // do nothing as user did not delete high finish
+            // do nothing as user did not update high finish
         });
     },
 
@@ -2178,7 +2344,12 @@
     },
 
     achievementCtrl.addBestLeg = function() {
-        console.log('addBestLeg');
+        var dialog = dialogs.create('/addbestlegdialog.html', 'AddBestLegController', {}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});
+        dialog.result.then(function() {
+            // refresh controllers internal state for best legs
+        },function() {
+            // do nothing as user did not update best legs
+        });
     },
 
     achievementCtrl.editBestLeg = function() {
@@ -2186,7 +2357,12 @@
     },
 
     achievementCtrl.deleteBestLeg = function() {
-        console.log('deleteBestLeg');
+        var dialog = dialogs.create('/deletebestlegdialog.html', 'DeleteBestLegController', {}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});
+        dialog.result.then(function() {
+            // refresh controllers internal state for best legs
+        },function() {
+            // do nothing as user did not update best legs
+        });
     },
 
     $http.get(baseUrl + '/180s').success(function(data) {

@@ -1,0 +1,48 @@
+<div class="modal-header">
+    <h4 class="modal-title">
+    <span class="glyphicon glyphicon-trash">
+    </span> Delete Best Legs</h4>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal" name="deleteBestLegDialog" novalidate role="form">
+        <div class="form-group">
+            <label for="player" class="col-sm-3 control-label">Player</label>
+            <div class="col-sm-6">
+            <select class="form-control" id="player" ng-change="updateDialog(player.id)" form="deleteBestLegDialog" ng-model="player" ng-options='(player.forename + " " + player.surname) for player in players' required></select>
+        </div>
+        </div>
+    </form>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Number of Darts</th>
+                <th>Date</th>
+                <th>Opponent</th>
+                <th ng-show="!bestleg.onRemoveQueue"></th>
+                <th ng-show="bestleg.onRemoveQueue"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="bestleg in bestlegs | orderBy:'dateFormatted'">
+                <td ng-style="{true: {color: 'red'}, false: {color: 'black'}}[bestleg.onRemoveQueue]">{{bestleg.numberOfDarts}}</td>
+                <td ng-style="{true: {color: 'red'}, false: {color: 'black'}}[bestleg.onRemoveQueue]">{{bestleg.date}}</td>
+                <td ng-style="{true: {color: 'red'}, false: {color: 'black'}}[bestleg.onRemoveQueue]">{{bestleg.player2}}</td>
+                <td ng-show="!bestleg.onRemoveQueue">
+                    <h4>
+                        <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete Leg" ng-click="toggleItem(bestleg)"/>
+                    </h4>
+                </td>
+                <td ng-show="bestleg.onRemoveQueue">
+                    <h4>
+                         <span class="glyphicon glyphicon-remove" data-toggle="tooltip" data-placement="bottom" title="Undo Delete" ng-click="toggleItem(bestleg)"/>
+                    </h4>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+ </div>
+ <div class="modal-footer">
+     <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+     <button type="button" class="btn btn-primary" ng-click="applyChanges()" ng-disabled="(deleteBestLegDialog.$dirty && deleteBestLegDialog.$invalid) || deleteBestLegDialog.$pristine || isRemoveQueueEmpty()">Apply Changes</button>
+ </div>

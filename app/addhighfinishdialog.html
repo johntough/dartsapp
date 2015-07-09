@@ -1,7 +1,7 @@
 <div class="modal-header">
     <h4 class="modal-title">
     <span class="glyphicon glyphicon-plus">
-    </span> Add High Finishes</h4>
+    </span> Add Checkouts</h4>
 </div>
 <div class="modal-body">
     <form class="form-horizontal" name="addHighFinishDialog" novalidate role="form">
@@ -20,7 +20,7 @@
         </div>
 
         <div class="form-group" ng-show="allowAdd">
-            <label for="checkouts" class="col-sm-3 control-label">High Finishes</label>
+            <label for="checkouts" class="col-sm-3 control-label">Checkout</label>
             <div class="col-sm-6">
                 <select class="form-control" id="checkouts" form="addHighFinishDialog" ng-model="checkout" ng-options="checkout for checkout in validCheckouts"></select>
             </div>
