@@ -131,6 +131,22 @@ module.exports = function(restapi, db) {
         });
     });
 
+    restapi.put('/bestleg/:id/:numberofdarts', function(request, response) {
+        var bestleg_id = request.params.id;
+        var updated_best_leg = request.params.numberofdarts;
+
+        db.run("UPDATE best_leg_tbl SET number_of_darts = (?) WHERE id = (?)", updated_best_leg, bestleg_id, function(err, row) {
+            if (err) {
+                console.log(err);
+                response.status(500);
+            }
+            else {
+                response.status(204);
+            }
+            response.end();
+        });
+    });
+
    restapi.delete('/bestleg/:id', function(request, response) {
         var bestleg_id = request.params.id;
 

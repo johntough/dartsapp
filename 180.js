@@ -101,6 +101,22 @@ module.exports = function(restapi, db) {
         });
     });
 
+    restapi.put('/180/:id/:number180s', function(request, response) {
+        var player_180_id = request.params.id;
+        var updated_number180s = request.params.number180s;
+
+        db.run("UPDATE player_180_tbl SET no_of_180s = (?) WHERE id = (?)", updated_number180s, player_180_id, function(err, row) {
+            if (err) {
+                console.log(err);
+                response.status(500);
+            }
+            else {
+                response.status(204);
+            }
+            response.end();
+        });
+    });
+
    restapi.delete('/180/:id', function(request, response) {
         var player_180_id = request.params.id;
 

@@ -131,6 +131,22 @@ module.exports = function(restapi, db) {
         });
     });
 
+    restapi.put('/highfinish/:id/:checkout', function(request, response) {
+        var highfinish_id = request.params.id;
+        var updated_checkout = request.params.checkout;
+
+        db.run("UPDATE high_finish_tbl SET checkout = (?) WHERE id = (?)", updated_checkout, highfinish_id, function(err, row) {
+            if (err) {
+                console.log(err);
+                response.status(500);
+            }
+            else {
+                response.status(204);
+            }
+            response.end();
+        });
+    });
+
    restapi.delete('/highfinish/:id', function(request, response) {
         var highfinish_id = request.params.id;
 
