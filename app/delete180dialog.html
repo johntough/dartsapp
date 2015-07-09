@@ -1,0 +1,48 @@
+<div class="modal-header">
+    <h4 class="modal-title">
+    <span class="glyphicon glyphicon-trash">
+    </span> Delete 180s</h4>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal" name="delete180sDialog" novalidate role="form">
+        <div class="form-group">
+            <label for="player" class="col-sm-3 control-label">Player</label>
+            <div class="col-sm-6">
+            <select class="form-control" id="player" ng-change="updateDialog(player.id)" form="delete180sDialog" ng-model="player" ng-options='(player.forename + " " + player.surname) for player in players' required></select>
+        </div>
+        </div>
+    </form>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Number of 180s</th>
+                <th>Date</th>
+                <th>Opponent</th>
+                <th ng-show="!player180.onRemoveQueue"></th>
+                <th ng-show="player180.onRemoveQueue"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="player180 in numberOf180s | orderBy:'dateFormatted'">
+                <td ng-style="{true: {color: 'red'}, false: {color: 'black'}}[player180.onRemoveQueue]">{{player180.noOf180s}}</td>
+                <td ng-style="{true: {color: 'red'}, false: {color: 'black'}}[player180.onRemoveQueue]">{{player180.date}}</td>
+                <td ng-style="{true: {color: 'red'}, false: {color: 'black'}}[player180.onRemoveQueue]">{{player180.player2}}</td>
+                <td ng-show="!player180.onRemoveQueue">
+                    <h4>
+                        <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete 180s" ng-click="toggleItem(player180)"/>
+                    </h4>
+                </td>
+                <td ng-show="player180.onRemoveQueue">
+                    <h4>
+                         <span class="glyphicon glyphicon-remove" data-toggle="tooltip" data-placement="bottom" title="Undo Delete" ng-click="toggleItem(player180)"/>
+                    </h4>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+ </div>
+ <div class="modal-footer">
+     <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+     <button type="button" class="btn btn-primary" ng-click="applyChanges()" ng-disabled="(delete180sDialog.$dirty && delete180sDialog.$invalid) || delete180sDialog.$pristine || isRemoveQueueEmpty()">Apply Changes</button>
+ </div>

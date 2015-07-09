@@ -1617,7 +1617,7 @@
     };
   }]);
 
-app.controller('DeleteBestLegController', ['$scope', '$http', '$modalInstance', 'data', 'bestLegService', 'dialogs',
+  app.controller('DeleteBestLegController', ['$scope', '$http', '$modalInstance', 'data', 'bestLegService', 'dialogs',
   function($scope, $http, $modalInstance, data, bestLegService, dialogs) {
 
     var deleteBestLegCtrl = this;
@@ -1774,6 +1774,172 @@ app.controller('DeleteBestLegController', ['$scope', '$http', '$modalInstance', 
                     // refresh controllers internal state for best legs
                     $http.get(baseUrl + '/bestlegs/duplicatesremoved').success(function(data) {
                         bestLegService.setLegs(data.bestlegs);
+                    });
+                });
+            }
+        }
+
+        $modalInstance.close();
+    };
+  }]);
+
+  app.controller('Delete180Controller', ['$scope', '$http', '$modalInstance', 'data', 'player180Service', 'dialogs',
+  function($scope, $http, $modalInstance, data, player180Service, dialogs) {
+
+    var delete180Ctrl = this;
+    $scope.players = [];
+    $scope.numberOf180s = [];
+
+    $http.get(baseUrl + '/180s/players').success(function(data) {
+        $scope.players = data.players;
+    });
+
+    $scope.updateDialog = function(playerId) {
+        $http.get(baseUrl + '/180s/player/' + playerId).success(function(data) {
+            $scope.numberOf180s = [];
+
+            for (var numberOf180sItem in data.player180s) {
+                if (data.player180s.hasOwnProperty(numberOf180sItem)) {
+                    data.player180s[numberOf180sItem].onRemoveQueue = false;
+                    data.player180s[numberOf180sItem].dateFormatted = Date.parse(data.player180s[numberOf180sItem].date);
+                    $scope.numberOf180s.push(data.player180s[numberOf180sItem]);
+                }
+            }
+        });
+    },
+
+    $scope.isRemoveQueueEmpty = function() {
+        var isRemoveQueueEmpty = true;
+
+        for (var numberOf180sItem in $scope.numberOf180s) {
+            if ($scope.numberOf180s.hasOwnProperty(numberOf180sItem)) {
+                if ($scope.numberOf180s[numberOf180sItem].onRemoveQueue) {
+                   isRemoveQueueEmpty = false
+                   break;
+                }
+            }
+        }
+
+        return isRemoveQueueEmpty;
+    },
+
+    $scope.toggleItem = function(numberOf180sItem) {
+        numberOf180sItem.onRemoveQueue = !numberOf180sItem.onRemoveQueue;
+    },
+
+    $scope.cancel = function() {
+      $modalInstance.dismiss('canceled');  
+    },
+
+    $scope.applyChanges = function() {
+        var removeQueue = [];
+
+        // build queue
+        for (var numberOf180sItem in $scope.numberOf180s) {
+            if ($scope.numberOf180s.hasOwnProperty(numberOf180sItem)) {
+                if ($scope.numberOf180s[numberOf180sItem].onRemoveQueue) {
+                    removeQueue.push($scope.numberOf180s[numberOf180sItem].id);
+                }
+            }
+        }
+
+        for (var item in removeQueue) {
+            if (removeQueue.hasOwnProperty(item)) {
+                $http.delete(baseUrl + '/180/' + removeQueue[item]).success(function(data) {
+                    // refresh controllers internal state for 180s
+                    $http.get(baseUrl + '/180s').success(function(data) {
+                        player180Service.set180s(data.player180s);
+                    });
+                });
+            }
+        }
+
+        $modalInstance.close();
+    };
+  }]);
+
+  app.controller('Add180Controller', ['$scope', '$http', '$modalInstance', 'data', 'player180Service', 'dialogs',
+  function($scope, $http, $modalInstance, data, player180Service, dialogs) {
+
+    var add180Ctrl = this;
+    $scope.players = [];
+    $scope.fixtures = [];
+    $scope.allowAdd = false;
+    $scope.numberOf180s = [];
+
+    $scope.validNumberOf180s = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+    $http.get(baseUrl + '/players').success(function(data) {
+        $scope.players = data.players;
+    });
+
+    $scope.isValidNumberOf180s = function(value) {
+        var isValid = true;
+
+        if (!Number.isInteger(value)) {
+            isValid = false;
+        }
+              
+        return isValid;
+    },
+
+    $scope.playerUpdated = function(playerId) {
+        $scope.allowAdd = false;
+
+        $http.get(baseUrl + '/fixtures/player/' + playerId + '/completed').success(function(data) {
+            $scope.fixtures = [];
+
+            for (var fixture in data.fixtures) {
+                if (data.fixtures.hasOwnProperty(fixture)) {
+                    $scope.fixtures.push(data.fixtures[fixture]);
+                }
+            }
+        });
+    },
+
+    $scope.fixtureSelected = function(id, date, player1, player2) {
+        $scope.allowAdd = true;
+    },
+
+    $scope.addLeg = function() {
+        if ($scope.isValidNumberOf180s($scope.numberOf180sItem)) {
+            var player180Object = {
+                playerId: $scope.player.id,
+                player: $scope.player.forename + " " + $scope.player.surname,
+                numberOf180s: $scope.numberOf180sItem,
+                fixtureId: $scope.fixture.id,
+                fixture: $scope.fixture.weekName + " ( " + $scope.fixture.date + " )" + " - " + $scope.fixture.player1 + " v " + $scope.fixture.player2
+            };
+
+            $scope.numberOf180s.push(player180Object);
+            $scope.numberOf180sItem = '';
+        }
+    },
+
+    $scope.remove = function(numberOf180sParam) {
+        for (var numberOf180sItem in $scope.numberOf180s) {
+            if ($scope.numberOf180s.hasOwnProperty(numberOf180sItem)) {
+                if ($scope.numberOf180s[numberOf180sItem] === numberOf180sParam) {
+                    $scope.numberOf180s.splice(numberOf180sItem, 1);
+                    break;
+                }
+            }
+        }
+    },
+
+    $scope.cancel = function() {
+      $modalInstance.dismiss('canceled');  
+    },
+
+    $scope.save = function() {
+        for (var numberOf180sItem in $scope.numberOf180s) {
+            if ($scope.numberOf180s.hasOwnProperty(numberOf180sItem)) {
+                var currentNumberOf180s = $scope.numberOf180s[numberOf180sItem];
+
+                $http.post(baseUrl + '/180/' + currentNumberOf180s.numberOf180s + '/' + currentNumberOf180s.fixtureId + '/' + currentNumberOf180s.playerId).success(function(data) {
+                    // refresh controllers internal state for 180s
+                    $http.get(baseUrl + '/180s').success(function(data) {
+                        player180Service.set180s(data.player180s);
                     });
                 });
             }
@@ -2310,7 +2476,12 @@ app.controller('DeleteBestLegController', ['$scope', '$http', '$modalInstance', 
     },
 
     achievementCtrl.add180s = function() {
-        console.log('add180s');
+        var dialog = dialogs.create('/add180dialog.html', 'Add180Controller', {}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});
+        dialog.result.then(function() {
+            // refresh controllers internal state for 180s
+        },function() {
+            // do nothing as user did not update 180s
+        });
     },
 
     achievementCtrl.edit180s = function() {
@@ -2318,7 +2489,12 @@ app.controller('DeleteBestLegController', ['$scope', '$http', '$modalInstance', 
     },
 
     achievementCtrl.delete180s = function() {
-        console.log('delete180s');
+        var dialog = dialogs.create('/delete180dialog.html', 'Delete180Controller', {}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});
+        dialog.result.then(function() {
+            // refresh controllers internal state for high 180s
+        },function() {
+            // do nothing as user did not delete high 180s
+        });
     },
 
     achievementCtrl.addHighFinish = function() {

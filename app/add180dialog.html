@@ -1,0 +1,62 @@
+<div class="modal-header">
+    <h4 class="modal-title">
+    <span class="glyphicon glyphicon-plus">
+    </span> Add 180s</h4>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal" name="add180sDialog" novalidate role="form">
+        <div class="form-group">
+            <label for="player" class="col-sm-3 control-label">Player</label>
+            <div class="col-sm-6">
+                <select class="form-control" id="player" ng-change="playerUpdated(player.id)" form="add180sDialog" ng-model="player" ng-options='(player.forename + " " + player.surname) for player in players' required></select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="fixture" class="col-sm-3 control-label">Fixture</label>
+            <div class="col-sm-6">
+                <select class="form-control" id="fixture" ng-change="fixtureSelected(fixture.id, fixture.date, fixture.player1, fixture.player2)" form="add180sDialog" ng-model="fixture" ng-options='(fixture.weekName + " ( " + fixture.date + " ) - " +  fixture.player1 + " v " + fixture.player2) for fixture in fixtures' required></select>
+            </div>
+        </div>
+
+        <div class="form-group" ng-show="allowAdd">
+            <label for="numberOf180s" class="col-sm-3 control-label">Number of 180s</label>
+            <div class="col-sm-6">
+                <select class="form-control" id="numberOf180s" form="add180sDialog" ng-model="numberOf180sItem" ng-options="numberOf180s for numberOf180s in validNumberOf180s"></select>
+            </div>
+
+            <div class="col-md-1">
+                <h4>
+                    <span class="glyphicon glyphicon-floppy-saved" ng-click="addLeg()" data-toggle="tooltip" data-placement="bottom" title="Add 180s" ng-style="{true: {color: '#333333'}, false: {color: '#D3D3D3'}}[isValidNumberOf180s(numberOf180sItem)]"></span>
+                </h4>
+            </div>
+        </div>
+    </form>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Player</th>
+                <th>Number of 180s</th>
+                <th>Fixture</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="numberOf180sItem in numberOf180s">
+                <td>{{numberOf180sItem.player}}</td>
+                <td>{{numberOf180sItem.numberOf180s}}</td>
+                <td>{{numberOf180sItem.fixture}}</td>
+                <td>
+                    <h4>
+                        <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Remove" ng-click="remove(numberOf180sItem)"/>
+                    </h4>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+ </div>
+ <div class="modal-footer">
+     <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+     <button type="button" class="btn btn-primary" ng-click="save()" ng-disabled="(add180sDialog.$dirty && add180sDialog.$invalid) || add180sDialog.$pristine || numberOf180s.length < 1">Save</button>
+ </div>

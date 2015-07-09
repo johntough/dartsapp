@@ -100,4 +100,19 @@ module.exports = function(restapi, db) {
             response.end();
         });
     });
+
+   restapi.delete('/180/:id', function(request, response) {
+        var player_180_id = request.params.id;
+
+        db.run("DELETE FROM player_180_tbl WHERE id = (?)", player_180_id, function(err, row) {
+            if (err) {
+                console.log(err);
+                response.status(500);
+            }
+            else {
+                response.status(204);
+            }
+            response.end();
+        });
+    });
 }
