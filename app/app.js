@@ -625,7 +625,7 @@
         dialog.result.then(function(btn) {
             $http.delete(baseUrl + '/contact/' + id).success(function(data) {
                 // refresh controllers internal state for contact details
-                $http.get(baseUrl + '/news').success(function(data) {
+                $http.get(baseUrl + '/contacts').success(function(data) {
                     contactCtrl.contacts = data.contacts;
                     contactCtrl.contactsLength = data.count;
                 });
