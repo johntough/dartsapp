@@ -1617,6 +1617,146 @@
     };
   }]);
 
+  app.controller('EditHighFinishController', ['$scope', '$http', '$modalInstance', 'data', 'highFinishService', 'dialogs',
+  function($scope, $http, $modalInstance, data, highFinishService, dialogs) {
+
+    var editHighFinishCtrl = this;
+    $scope.players = [];
+    $scope.highfinishes = [];
+
+    $scope.validCheckouts = [100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117,
+        118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139,
+        140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 160, 161, 164,
+        167, 170
+    ];
+
+    $scope.isValidEdit = function() {
+        var isValid = true;
+
+        if (!Number.isInteger($scope.selected.checkout)) {
+            return false;
+        }
+
+        for (var highfinish in $scope.highfinishes) {
+            if ($scope.highfinishes.hasOwnProperty(highfinish)) {
+                // find matching id and check the checkout value has changed
+                if (($scope.highfinishes[highfinish].id === $scope.selected.id) &&
+                   ($scope.highfinishes[highfinish].originalCheckout === $scope.selected.checkout)
+                ) {
+                    return false;
+                }
+            }
+        }
+
+        return isValid;
+    },
+
+    $http.get(baseUrl + '/highfinishes/players').success(function(data) {
+        $scope.players = data.players;
+    });
+
+    // gets the template to ng-include for a table row / item
+    $scope.getTemplate = function (bestleg) {
+        if ($scope.selected && bestleg.id === $scope.selected.id) { 
+            return 'highfinish-edit';
+        } else {
+            return 'highfinish-display';
+        }
+    };
+
+    $scope.edit = function (highfinish) {
+        $scope.selected = angular.copy(highfinish);
+    };
+
+    $scope.cancelChanges = function () {
+        $scope.selected = {};
+    };
+
+    $scope.updateDialog = function(playerId) {
+        $http.get(baseUrl + '/highfinishes/player/' + playerId).success(function(data) {
+            $scope.highfinishes = [];
+
+            for (var highfinish in data.highfinishes) {
+                if (data.highfinishes.hasOwnProperty(highfinish)) {
+                    data.highfinishes[highfinish].onEditQueue = false;
+                    data.highfinishes[highfinish].dateFormatted = Date.parse(data.highfinishes[highfinish].date);
+                    // adding additional property to track original checkout so that model can be updated with new value
+                    data.highfinishes[highfinish].originalCheckout = data.highfinishes[highfinish].checkout;
+                    $scope.highfinishes.push(data.highfinishes[highfinish]);
+                }
+            }
+        });
+    },
+
+    $scope.isEditQueueEmpty = function() {
+        var isEditQueueEmpty = true;
+
+        for (var highfinish in $scope.highfinishes) {
+            if ($scope.highfinishes.hasOwnProperty(highfinish)) {
+                if ($scope.highfinishes[highfinish].onEditQueue) {
+                   isEditQueueEmpty = false
+                   break;
+                }
+            }
+        }
+
+        return isEditQueueEmpty;
+    },
+
+    $scope.saveChanges = function(id, checkout) {
+        if ($scope.isValidEdit()) {
+            for (var highfinish in $scope.highfinishes) {
+                if ($scope.highfinishes.hasOwnProperty(highfinish)) {
+                    if ($scope.highfinishes[highfinish].id === id) {
+                        $scope.highfinishes[highfinish].onEditQueue = true;
+                        $scope.highfinishes[highfinish].checkout = checkout;
+                        $scope.selected = {};
+                        break;
+                    }
+                }
+            }
+        }
+    },
+
+    $scope.undo = function(highfinish) {
+        highfinish.onEditQueue = false;
+        highfinish.checkout = highfinish.originalCheckout;
+    },
+
+    $scope.cancel = function() {
+      $modalInstance.dismiss('canceled');  
+    },
+
+    $scope.applyChanges = function() {
+        var editQueue = [];
+
+        // build queue
+        for (var highfinish in $scope.highfinishes) {
+            if ($scope.highfinishes.hasOwnProperty(highfinish)) {
+                if ($scope.highfinishes[highfinish].onEditQueue) {
+                    editQueue.push({
+                        id: $scope.highfinishes[highfinish].id,
+                        checkout: $scope.highfinishes[highfinish].checkout
+                    });
+                }
+            }
+        }
+
+        for (var item in editQueue) {
+            if (editQueue.hasOwnProperty(item)) {
+                $http.put(baseUrl + '/highfinish/' + editQueue[item].id + '/' + editQueue[item].checkout).success(function(data) {
+                    // refresh controllers internal state for best legs
+                    $http.get(baseUrl + '/highfinishes/duplicatesremoved').success(function(data) {
+                        highFinishService.setFinishes(data.highfinishes);
+                    });
+                });
+            }
+        }
+
+        $modalInstance.close();
+    };
+  }]);
+
   app.controller('DeleteBestLegController', ['$scope', '$http', '$modalInstance', 'data', 'bestLegService', 'dialogs',
   function($scope, $http, $modalInstance, data, bestLegService, dialogs) {
 
@@ -2643,7 +2783,12 @@
     },
 
     achievementCtrl.editHighFinish = function() {
-        console.log('editHighFinish');
+        var dialog = dialogs.create('/edithighfinishdialog.html', 'EditHighFinishController', {}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});
+        dialog.result.then(function() {
+            // refresh controllers internal state for high finishes
+        },function() {
+            // do nothing as user did not update high finishes
+        });
     },
 
     achievementCtrl.deleteHighFinish = function() {

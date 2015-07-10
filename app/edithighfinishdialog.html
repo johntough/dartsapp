@@ -1,0 +1,63 @@
+<div class="modal-header">
+    <h4 class="modal-title">
+    <span class="glyphicon glyphicon-edit">
+    </span> Edit Checkouts</h4>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal" name="editCheckoutDialog" novalidate role="form">
+        <div class="form-group">
+            <label for="player" class="col-sm-3 control-label">Player</label>
+            <div class="col-sm-6">
+            <select class="form-control" id="player" ng-change="updateDialog(player.id)" form="editCheckoutDialog" ng-model="player" ng-options='(player.forename + " " + player.surname) for player in players' required></select>
+        </div>
+        </div>
+    </form>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Checkout</th>
+                <th>Date</th>
+                <th>Opponent</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="highfinish in highfinishes | orderBy:'dateFormatted'" ng-include="getTemplate(highfinish)">
+            </tr>
+        </tbody>
+    </table>
+
+    <script type="text/ng-template" id="highfinish-display">
+        <td ng-style="{true: {color: 'green'}, false: {color: 'black'}}[highfinish.onEditQueue]">{{highfinish.checkout}}</td>
+        <td ng-style="{true: {color: 'green'}, false: {color: 'black'}}[highfinish.onEditQueue]">{{highfinish.date}}</td>
+        <td ng-style="{true: {color: 'green'}, false: {color: 'black'}}[highfinish.onEditQueue]">{{highfinish.player2}}</td>
+        <td ng-show="!highfinish.onEditQueue">
+            <h4>
+                <span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="Edit Checkout" ng-click="edit(highfinish)"/>
+            </h4>
+        </td>
+        <td ng-show="highfinish.onEditQueue">
+            <h4>
+                <span class="glyphicon glyphicon-remove" data-toggle="tooltip" data-placement="bottom" title="Undo Changes" ng-click="undo(highfinish)"/>
+            </h4>
+        </td>
+    </script>
+
+    <script type="text/ng-template" id="highfinish-edit">
+        <td>
+            <select class="form-control" id="upDatedCheckout" form="editCheckoutDialog" ng-model="selected.checkout" ng-options="checkout for checkout in validCheckouts" required></select>
+        </td>
+        <td>{{highfinish.date}}</td>
+        <td>{{highfinish.player2}}</td>
+        <td>
+            <h4>
+                <span class="glyphicon glyphicon-floppy-saved" ng-style="{true: {color: '#333333'}, false: {color: '#D3D3D3'}}[isValidEdit()]" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="saveChanges(selected.id, selected.checkout)"></span>
+                <span class="glyphicon glyphicon-floppy-remove" data-toggle="tooltip" data-placement="bottom" title="Cancel Changes" ng-click="cancelChanges()"></span>
+            </h4>
+        </td>
+    </script>
+ </div>
+ <div class="modal-footer">
+     <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+     <button type="button" class="btn btn-primary" ng-click="applyChanges()" ng-disabled="(editCheckoutDialog.$dirty && editCheckoutDialog.$invalid) || editCheckoutDialog.$pristine || isEditQueueEmpty()">Apply Changes</button>
+ </div>
