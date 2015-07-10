@@ -14,7 +14,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="week in weekCtrl.getWeeks()" ng-include="weekCtrl.getTemplate(week)">
+            <tr ng-repeat="week in weekCtrl.getWeeks() | orderBy: 'weekDateFormatted'" ng-include="weekCtrl.getTemplate(week)">
             </tr>
         </tbody>
     </table>

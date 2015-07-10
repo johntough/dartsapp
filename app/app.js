@@ -55,7 +55,15 @@
       },
 
       weekservice.setWeeks = function(weeks) {
-          weekservice.weeks = weeks;
+          var formattedWeeks = [];
+
+          for (var week in weeks) {
+              if (weeks.hasOwnProperty(week)) {
+                  weeks[week].weekDateFormatted = Date.parse(weeks[week].date);
+                  formattedWeeks.push(weeks[week]);
+              }
+          }
+          weekservice.weeks = formattedWeeks;
       }
   });
 
