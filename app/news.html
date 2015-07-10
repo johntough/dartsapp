@@ -16,8 +16,8 @@
         <p class="apply-indent">{{newsItem.content}}</p>
         <p class="apply-indent"><i>Posted on: {{newsItem.date}}</i></p>
         <h4 class="apply-indent" ng-show="newsCtrl.showPrivilegedData()">
-            <span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="Edit News Item" ng-click="newsCtrl.edit(newsItem)"></span>
-            <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete News Item" ng-click="newsCtrl.deleteRecord(newsItem.id)"></span>
+            <span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="Edit News Item" ng-click="newsCtrl.edit(newsItem)" ng-style="{cursor:'pointer'}"></span>
+            <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete News Item" ng-click="newsCtrl.deleteRecord(newsItem.id)" ng-style="{cursor:'pointer'}"></span>
         </h4>
         </br>
     </script>
@@ -37,8 +37,8 @@
     </form>
         <p class="apply-indent"><i>Posted on: {{newsItem.date}}</i></p>
         <h4 class="apply-indent">
-            <span class="glyphicon glyphicon-floppy-saved" ng-style="{true: {color: '#333333'}, false: {color: '#D3D3D3'}}[newsCtrl.isValidEdit()]" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="newsCtrl.saveChanges(selected.id, selected.title, selected.content)"></span>
-            <span class="glyphicon glyphicon-floppy-remove" data-toggle="tooltip" data-placement="bottom" title="Cancel Changes" ng-click="newsCtrl.cancelChanges()"></span>
+            <span class="glyphicon glyphicon-floppy-saved" ng-style="{true: {color: '#333333', cursor:'pointer'}, false: {color: '#D3D3D3', cursor:'not-allowed'}}[newsCtrl.isValidEdit()]" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="newsCtrl.saveChanges(selected.id, selected.title, selected.content)"></span>
+            <span class="glyphicon glyphicon-floppy-remove" data-toggle="tooltip" data-placement="bottom" title="Cancel Changes" ng-style="{cursor:'pointer'}" ng-click="newsCtrl.cancelChanges()"></span>
         </h4>
     </script>
 </div>

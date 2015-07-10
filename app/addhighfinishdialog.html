@@ -27,7 +27,7 @@
 
             <div class="col-md-1">
                 <h4>
-                    <span class="glyphicon glyphicon-floppy-saved" ng-click="addHighFinish()" data-toggle="tooltip" data-placement="bottom" title="Add Checkout" ng-style="{true: {color: '#333333'}, false: {color: '#D3D3D3'}}[isValidCheckout(checkout)]"></span>
+                    <span class="glyphicon glyphicon-floppy-saved" ng-click="addHighFinish()" data-toggle="tooltip" data-placement="bottom" title="Add Checkout" ng-style="{true: {color: '#333333', cursor:'pointer'}, false: {color: '#D3D3D3', cursor: 'not-allowed'}}[isValidCheckout(checkout)]"></span>
                 </h4>
             </div>
         </div>
@@ -49,7 +49,7 @@
                 <td>{{highfinish.fixture}}</td>
                 <td>
                     <h4>
-                        <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Remove" ng-click="remove(highfinish)"/>
+                        <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Remove" ng-click="remove(highfinish)" ng-style="{cursor:'pointer'}"/>
                     </h4>
                 </td>
             </tr>

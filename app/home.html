@@ -17,8 +17,8 @@
         <h5 class="home-sub-heading"><span class="glyphicon glyphicon-envelope"></span> {{contact.email}}</h5>
         <h5 class="home-sub-heading"><span class="glyphicon glyphicon-phone"></span> {{contact.phone}}</h5>
         <h4 class="home-sub-heading" ng-show="contactCtrl.showPrivilegedData()">
-            <span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="Edit Contact Details" ng-click="contactCtrl.edit(contact)"></span>
-            <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete Contact Details" ng-click="contactCtrl.deleteRecord(contact.id)"></span>
+            <span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="Edit Contact Details" ng-click="contactCtrl.edit(contact)" ng-style="{cursor:'pointer'}"></span>
+            <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete Contact Details" ng-click="contactCtrl.deleteRecord(contact.id)" ng-style="{cursor:'pointer'}"></span>
         </h4>
     </script>
 
@@ -41,8 +41,9 @@
         </div>
     </form>
         <h4 class="home-sub-heading">
-            <span class="glyphicon glyphicon-floppy-saved" ng-style="{true: {color: '#333333'}, false: {color: '#D3D3D3'}}[contactCtrl.isValidEdit()]" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="contactCtrl.saveChanges(selected.id, selected.name, selected.email, selected.phone)"></span>
-            <span class="glyphicon glyphicon-floppy-remove" data-toggle="tooltip" data-placement="bottom" ng-style="{color: '#333333'}" title="Cancel Changes" ng-click="contactCtrl.cancelChanges()"></span>
+            <span class="glyphicon glyphicon-floppy-saved" ng-style="{true: {color: '#333333', cursor:'pointer'}, false: {color: '#D3D3D3', cursor:'not-allowed'}}[contactCtrl.isValidEdit()]" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="contactCtrl.saveChanges(selected.id, selected.name, selected.email, selected.phone)"></span>
+            <span class="glyphicon glyphicon-floppy-remove" data-toggle="tooltip" data-placement="bottom" ng-style="{color: '#333333', cursor:'pointer'}" title="Cancel Changes" ng-click="contactCtrl.cancelChanges()"></span>
         </h4>
+        <br>
     </script>
 </div>

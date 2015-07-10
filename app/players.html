@@ -52,8 +52,8 @@
         <td ng-show="playerCtrl.showPrivilegedData()">{{player.phoneNumber}}</td>
         <td ng-show="playerCtrl.showPrivilegedData()">
             <h4>
-                <span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="Edit Player Details" ng-click="playerCtrl.edit(player)"></span>
-                <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete Player" ng-click="playerCtrl.deleteRecord(player.id)"></span>
+                <span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="Edit Player Details" ng-click="playerCtrl.edit(player)" ng-style="{cursor:'pointer'}"></span>
+                <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete Player" ng-click="playerCtrl.deleteRecord(player.id)" ng-style="{cursor:'pointer'}"></span>
             </h4>
         </td>
     </script>
@@ -65,8 +65,8 @@
         <td><input type="text" class="form-control" ng-model="selected.phoneNumber" /></td>
         <td>
             <h4>
-                <span class="glyphicon glyphicon-floppy-saved" ng-style="{true: {color: '#333333'}, false: {color: '#D3D3D3'}}[playerCtrl.isValidEdit()]" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="playerCtrl.saveChanges(selected.id, selected.forename, selected.surname, selected.emailAddress, selected.phoneNumber)"></span>
-                <span class="glyphicon glyphicon-floppy-remove" data-toggle="tooltip" data-placement="bottom" title="Cancel Changes" ng-click="playerCtrl.cancelChanges()"></span>
+                <span class="glyphicon glyphicon-floppy-saved" ng-style="{true: {color: '#333333', cursor:'pointer'}, false: {color: '#D3D3D3', cursor:'not-allowed'}}[playerCtrl.isValidEdit()]" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="playerCtrl.saveChanges(selected.id, selected.forename, selected.surname, selected.emailAddress, selected.phoneNumber)"></span>
+                <span class="glyphicon glyphicon-floppy-remove" data-toggle="tooltip" data-placement="bottom" title="Cancel Changes" ng-style="{cursor:'pointer'}" ng-click="playerCtrl.cancelChanges()"></span>
             </h4>
         </td>
     </script>

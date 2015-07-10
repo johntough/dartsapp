@@ -73,8 +73,8 @@
         <td ng-class="resultCtrl.getClass('2', result)">{{result.playerTwoLegsWon}}</td>
         <td ng-show="resultCtrl.showPrivilegedData()">
             <h4>
-                <span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="Edit Result" ng-click="resultCtrl.edit(result)"></span>
-                <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete Result" ng-click="resultCtrl.deleteRecord(result.id)"></span>
+                <span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="Edit Result" ng-click="resultCtrl.edit(result)" ng-style="{cursor:'pointer'}"></span>
+                <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete Result" ng-click="resultCtrl.deleteRecord(result.id)" ng-style="{cursor:'pointer'}"></span>
             </h4>
         </td>
     </script>
@@ -92,8 +92,8 @@
         </td>
         <td>
             <h4>
-                <span class="glyphicon glyphicon-floppy-saved" ng-style="{true: {color: '#333333'}, false: {color: '#D3D3D3'}}[resultCtrl.isValidEdit()]" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="resultCtrl.saveChanges(selected.id, selected.playerOneLegsWon, selected.playerTwoLegsWon)"></span>
-                <span class="glyphicon glyphicon-floppy-remove" data-toggle="tooltip" data-placement="bottom" title="Cancel Changes" ng-click="resultCtrl.cancelChanges()"></span>
+                <span class="glyphicon glyphicon-floppy-saved" ng-style="{true: {color: '#333333', cursor: 'pointer'}, false: {color: '#D3D3D3', cursor: 'not-allowed'}}[resultCtrl.isValidEdit()]" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="resultCtrl.saveChanges(selected.id, selected.playerOneLegsWon, selected.playerTwoLegsWon)"></span>
+                <span class="glyphicon glyphicon-floppy-remove" data-toggle="tooltip" data-placement="bottom" title="Cancel Changes" ng-style="{cursor:'pointer'}" ng-click="resultCtrl.cancelChanges()"></span>
             </h4>
         </td>
     </script>

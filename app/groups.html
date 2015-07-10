@@ -22,8 +22,8 @@
         <td>{{group.name}}</td>
         <td>
             <h4>
-                <span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="Edit Group" ng-click="groupCtrl.edit(group)"></span>
-                <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete Group" ng-click="groupCtrl.deleteRecord(group.id)"></span>
+                <span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="Edit Group" ng-click="groupCtrl.edit(group)" ng-style="{cursor:'pointer'}"></span>
+                <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete Group" ng-click="groupCtrl.deleteRecord(group.id)" ng-style="{cursor:'pointer'}"></span>
             </h4>
         </td>
     </script>
@@ -32,8 +32,8 @@
         <td><input type="text" class="form-control" ng-model="selected.name" /></td>
         <td>
             <h4>
-                <span class="glyphicon glyphicon-floppy-saved" ng-style="{true: {color: '#333333'}, false: {color: '#D3D3D3'}}[groupCtrl.isValidEdit()]" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="groupCtrl.saveChanges(selected.id, selected.name)"></span>
-                <span class="glyphicon glyphicon-floppy-remove" data-toggle="tooltip" data-placement="bottom" title="Cancel Changes" ng-click="groupCtrl.cancelChanges()"></span>
+                <span class="glyphicon glyphicon-floppy-saved" ng-style="{true: {color: '#333333', cursor: 'pointer'}, false: {color: '#D3D3D3', cursor: 'not-allowed'}}[groupCtrl.isValidEdit()]" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="groupCtrl.saveChanges(selected.id, selected.name)"></span>
+                <span class="glyphicon glyphicon-floppy-remove" data-toggle="tooltip" data-placement="bottom" title="Cancel Changes" ng-style="{cursor:'pointer'}" ng-click="groupCtrl.cancelChanges()"></span>
             </h4>
         </td>
     </script>

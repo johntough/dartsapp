@@ -27,7 +27,7 @@
 
             <div class="col-md-1">
                 <h4>
-                    <span class="glyphicon glyphicon-floppy-saved" ng-click="addLeg()" data-toggle="tooltip" data-placement="bottom" title="Add 180s" ng-style="{true: {color: '#333333'}, false: {color: '#D3D3D3'}}[isValidNumberOf180s(numberOf180sItem)]"></span>
+                    <span class="glyphicon glyphicon-floppy-saved" ng-click="addLeg()" data-toggle="tooltip" data-placement="bottom" title="Add 180s" ng-style="{true: {color: '#333333', cursor: 'pointer'}, false: {color: '#D3D3D3', cursor: 'not-allowed'}}[isValidNumberOf180s(numberOf180sItem)]"></span>
                 </h4>
             </div>
         </div>
@@ -49,7 +49,7 @@
                 <td>{{numberOf180sItem.fixture}}</td>
                 <td>
                     <h4>
-                        <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Remove" ng-click="remove(numberOf180sItem)"/>
+                        <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Remove" ng-click="remove(numberOf180sItem)" ng-style="{cursor:'pointer'}"/>
                     </h4>
                 </td>
             </tr>

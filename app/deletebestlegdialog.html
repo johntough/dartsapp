@@ -30,12 +30,12 @@
                 <td ng-style="{true: {color: 'red'}, false: {color: 'black'}}[bestleg.onRemoveQueue]">{{bestleg.player2}}</td>
                 <td ng-show="!bestleg.onRemoveQueue">
                     <h4>
-                        <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete Leg" ng-click="toggleItem(bestleg)"/>
+                        <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete Leg" ng-click="toggleItem(bestleg)" ng-style="{cursor:'pointer'}"/>
                     </h4>
                 </td>
                 <td ng-show="bestleg.onRemoveQueue">
                     <h4>
-                         <span class="glyphicon glyphicon-remove" data-toggle="tooltip" data-placement="bottom" title="Undo Delete" ng-click="toggleItem(bestleg)"/>
+                         <span class="glyphicon glyphicon-remove" data-toggle="tooltip" data-placement="bottom" title="Undo Delete" ng-click="toggleItem(bestleg)" ng-style="{cursor:'pointer'}"/>
                     </h4>
                 </td>
             </tr>

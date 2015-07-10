@@ -33,12 +33,12 @@
         <td ng-style="{true: {color: 'green'}, false: {color: 'black'}}[bestleg.onEditQueue]">{{bestleg.player2}}</td>
         <td ng-show="!bestleg.onEditQueue">
             <h4>
-                <span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="Edit Leg" ng-click="edit(bestleg)"/>
+                <span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="Edit Leg" ng-click="edit(bestleg)" ng-style="{cursor:'pointer'}"/>
             </h4>
         </td>
         <td ng-show="bestleg.onEditQueue">
             <h4>
-                <span class="glyphicon glyphicon-remove" data-toggle="tooltip" data-placement="bottom" title="Undo Changes" ng-click="undo(bestleg)"/>
+                <span class="glyphicon glyphicon-remove" data-toggle="tooltip" data-placement="bottom" title="Undo Changes" ng-click="undo(bestleg)" ng-style="{cursor:'pointer'}"/>
             </h4>
         </td>
     </script>
@@ -51,8 +51,8 @@
         <td>{{selected.player2}}</td>
         <td>
             <h4>
-                <span class="glyphicon glyphicon-floppy-saved" ng-style="{true: {color: '#333333'}, false: {color: '#D3D3D3'}}[isValidEdit()]" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="saveChanges(selected.id, selected.numberOfDarts)"></span>
-                <span class="glyphicon glyphicon-floppy-remove" data-toggle="tooltip" data-placement="bottom" title="Cancel Changes" ng-click="cancelChanges()"></span>
+                <span class="glyphicon glyphicon-floppy-saved" ng-style="{true: {color: '#333333', cursor: 'pointer'}, false: {color: '#D3D3D3', cursor: 'not-allowed'}}[isValidEdit()]" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="saveChanges(selected.id, selected.numberOfDarts)"></span>
+                <span class="glyphicon glyphicon-floppy-remove" data-toggle="tooltip" data-placement="bottom" title="Cancel Changes" ng-click="cancelChanges()" ng-style="{cursor:'pointer'}"></span>
             </h4>
         </td>
     </script>

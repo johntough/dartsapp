@@ -30,12 +30,12 @@
                 <td ng-style="{true: {color: 'red'}, false: {color: 'black'}}[highfinish.onRemoveQueue]">{{highfinish.player2}}</td>
                 <td ng-show="!highfinish.onRemoveQueue">
                     <h4>
-                        <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete Checkout" ng-click="toggleItem(highfinish)"/>
+                        <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete Checkout" ng-click="toggleItem(highfinish)" ng-style="{cursor:'pointer'}"/>
                     </h4>
                 </td>
                 <td ng-show="highfinish.onRemoveQueue">
                     <h4>
-                         <span class="glyphicon glyphicon-remove" data-toggle="tooltip" data-placement="bottom" title="Undo Delete" ng-click="toggleItem(highfinish)"/>
+                         <span class="glyphicon glyphicon-remove" data-toggle="tooltip" data-placement="bottom" title="Undo Delete" ng-click="toggleItem(highfinish)" ng-style="{cursor:'pointer'}"/>
                     </h4>
                 </td>
             </tr>
