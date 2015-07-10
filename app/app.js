@@ -2225,6 +2225,142 @@
     };
   }]);
 
+  app.controller('Edit180Controller', ['$scope', '$http', '$modalInstance', 'data', 'player180Service', 'dialogs',
+  function($scope, $http, $modalInstance, data, player180Service, dialogs) {
+
+    var edit180Ctrl = this;
+    $scope.players = [];
+    $scope.player180s = [];
+
+    $scope.validNumberOf180s = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+    $scope.isValidEdit = function() {
+        var isValid = true;
+
+        if (!Number.isInteger($scope.selected.noOf180s)) {
+            return false;
+        }
+
+        for (var player180 in $scope.player180s) {
+            if ($scope.player180s.hasOwnProperty(player180)) {
+                // find matching id and check the 180 value has changed
+                if (($scope.player180s[player180].id === $scope.selected.id) &&
+                   ($scope.player180s[player180].originalNoOf180s === $scope.selected.noOf180s)
+                ) {
+                    return false;
+                }
+            }
+        }
+
+        return isValid;
+    },
+
+    $http.get(baseUrl + '/180s/players').success(function(data) {
+        $scope.players = data.players;
+    });
+
+    // gets the template to ng-include for a table row / item
+    $scope.getTemplate = function (player180) {
+        if ($scope.selected && player180.id === $scope.selected.id) { 
+            return 'player180-edit';
+        } else {
+            return 'player180-display';
+        }
+    };
+
+    $scope.edit = function (player180) {
+        $scope.selected = angular.copy(player180);
+    };
+
+    $scope.cancelChanges = function () {
+        $scope.selected = {};
+    };
+
+    $scope.updateDialog = function(playerId) {
+        $http.get(baseUrl + '/180s/player/' + playerId).success(function(data) {
+            $scope.player180s = [];
+
+            for (var player180 in data.player180s) {
+                if (data.player180s.hasOwnProperty(player180)) {
+                    data.player180s[player180].onEditQueue = false;
+                    data.player180s[player180].dateFormatted = Date.parse(data.player180s[player180].date);
+                    // adding additional property to track original 180 value so that model can be updated with new value
+                    data.player180s[player180].originalNoOf180s = data.player180s[player180].noOf180s;
+                    $scope.player180s.push(data.player180s[player180]);
+                }
+            }
+        });
+    },
+
+    $scope.isEditQueueEmpty = function() {
+        var isEditQueueEmpty = true;
+
+        for (var player180 in $scope.player180s) {
+            if ($scope.player180s.hasOwnProperty(player180)) {
+                if ($scope.player180s[player180].onEditQueue) {
+                   isEditQueueEmpty = false
+                   break;
+                }
+            }
+        }
+
+        return isEditQueueEmpty;
+    },
+
+    $scope.saveChanges = function(id, noOf180s) {
+        if ($scope.isValidEdit()) {
+            for (var player180 in $scope.player180s) {
+                if ($scope.player180s.hasOwnProperty(player180)) {
+                    if ($scope.player180s[player180].id === id) {
+                        $scope.player180s[player180].onEditQueue = true;
+                        $scope.player180s[player180].noOf180s = noOf180s;
+                        $scope.selected = {};
+                        break;
+                    }
+                }
+            }
+        }
+    },
+
+    $scope.undo = function(player180) {
+        player180.onEditQueue = false;
+        player180.noOf180s = player180.originalNoOf180s;
+    },
+
+    $scope.cancel = function() {
+      $modalInstance.dismiss('canceled');  
+    },
+
+    $scope.applyChanges = function() {
+        var editQueue = [];
+
+        // build queue
+        for (var player180 in $scope.player180s) {
+            if ($scope.player180s.hasOwnProperty(player180)) {
+                if ($scope.player180s[player180].onEditQueue) {
+                    editQueue.push({
+                        id: $scope.player180s[player180].id,
+                        noOf180s: $scope.player180s[player180].noOf180s
+                    });
+                }
+            }
+        }
+
+        for (var item in editQueue) {
+            if (editQueue.hasOwnProperty(item)) {
+                $http.put(baseUrl + '/180/' + editQueue[item].id + '/' + editQueue[item].noOf180s).success(function(data) {
+                    // refresh controllers internal state for 180s
+                    $http.get(baseUrl + '/180s').success(function(data) {
+                        player180Service.set180s(data.player180s);
+                    });
+                });
+            }
+        }
+
+        $modalInstance.close();
+    };
+  }]);
+
   app.controller('FixtureController', ['$scope', '$http', 'loginService', 'fixtureService', 'groupService', 'playerService', 'weekService', 'venueService', 'dialogs', 'toastr', 'toastrConfig',
   function($scope, $http, loginService, fixtureService, groupService, playerService, weekService, venueService, dialogs, toastr, toastrConfig) {
     var fixtureCtrl = this;
@@ -2761,7 +2897,12 @@
     },
 
     achievementCtrl.edit180s = function() {
-        console.log('edit180s');
+        var dialog = dialogs.create('/edit180dialog.html', 'Edit180Controller', {}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});
+        dialog.result.then(function() {
+            // refresh controllers internal state for 180s
+        },function() {
+            // do nothing as user did not update 180s
+        });
     },
 
     achievementCtrl.delete180s = function() {

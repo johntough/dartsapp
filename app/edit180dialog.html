@@ -1,0 +1,63 @@
+<div class="modal-header">
+    <h4 class="modal-title">
+    <span class="glyphicon glyphicon-edit">
+    </span> Edit 180s</h4>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal" name="edit180Dialog" novalidate role="form">
+        <div class="form-group">
+            <label for="player" class="col-sm-3 control-label">Player</label>
+            <div class="col-sm-6">
+            <select class="form-control" id="player" ng-change="updateDialog(player.id)" form="edit180Dialog" ng-model="player" ng-options='(player.forename + " " + player.surname) for player in players' required></select>
+        </div>
+        </div>
+    </form>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Number of 180s</th>
+                <th>Date</th>
+                <th>Opponent</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="player180 in player180s | orderBy:'dateFormatted'" ng-include="getTemplate(player180)">
+            </tr>
+        </tbody>
+    </table>
+
+    <script type="text/ng-template" id="player180-display">
+        <td ng-style="{true: {color: 'green'}, false: {color: 'black'}}[player180.onEditQueue]">{{player180.noOf180s}}</td>
+        <td ng-style="{true: {color: 'green'}, false: {color: 'black'}}[player180.onEditQueue]">{{player180.date}}</td>
+        <td ng-style="{true: {color: 'green'}, false: {color: 'black'}}[player180.onEditQueue]">{{player180.player2}}</td>
+        <td ng-show="!player180.onEditQueue">
+            <h4>
+                <span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="Edit Number of 180s" ng-click="edit(player180)"/>
+            </h4>
+        </td>
+        <td ng-show="player180.onEditQueue">
+            <h4>
+                <span class="glyphicon glyphicon-remove" data-toggle="tooltip" data-placement="bottom" title="Undo Changes" ng-click="undo(player180)"/>
+            </h4>
+        </td>
+    </script>
+
+    <script type="text/ng-template" id="player180-edit">
+        <td>
+            <select class="form-control" id="updatedPlayer180s" form="edit180Dialog" ng-model="selected.noOf180s" ng-options="numberOf180s for numberOf180s in validNumberOf180s" required></select>
+        </td>
+        <td>{{selected.date}}</td>
+        <td>{{selected.player2}}</td>
+        <td>
+            <h4>
+                <span class="glyphicon glyphicon-floppy-saved" ng-style="{true: {color: '#333333'}, false: {color: '#D3D3D3'}}[isValidEdit()]" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="saveChanges(selected.id, selected.noOf180s)"></span>
+                <span class="glyphicon glyphicon-floppy-remove" data-toggle="tooltip" data-placement="bottom" title="Cancel Changes" ng-click="cancelChanges()"></span>
+            </h4>
+        </td>
+    </script>
+ </div>
+ <div class="modal-footer">
+     <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+     <button type="button" class="btn btn-primary" ng-click="applyChanges()" ng-disabled="(edit180Dialog.$dirty && edit180Dialog.$invalid) || edit180Dialog.$pristine || isEditQueueEmpty()">Apply Changes</button>
+ </div>
