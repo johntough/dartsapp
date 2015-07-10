@@ -1783,6 +1783,142 @@
     };
   }]);
 
+  app.controller('EditBestLegController', ['$scope', '$http', '$modalInstance', 'data', 'bestLegService', 'dialogs',
+  function($scope, $http, $modalInstance, data, bestLegService, dialogs) {
+
+    var editBestLegCtrl = this;
+    $scope.players = [];
+    $scope.bestlegs = [];
+
+    $scope.validNumberOfDarts = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
+
+    $scope.isValidEdit = function() {
+        var isValid = true;
+
+        if (!Number.isInteger($scope.selected.numberOfDarts)) {
+            return false;
+        }
+
+        for (var bestleg in $scope.bestlegs) {
+            if ($scope.bestlegs.hasOwnProperty(bestleg)) {
+                // find matching id and check the number of darts value has changed
+                if (($scope.bestlegs[bestleg].id === $scope.selected.id) &&
+                   ($scope.bestlegs[bestleg].originalNumberOfDarts === $scope.selected.numberOfDarts)
+                ) {
+                    return false;
+                }
+            }
+        }
+
+        return isValid;
+    },
+
+    $http.get(baseUrl + '/bestlegs/players').success(function(data) {
+        $scope.players = data.players;
+    });
+
+    // gets the template to ng-include for a table row / item
+    $scope.getTemplate = function (bestleg) {
+        if ($scope.selected && bestleg.id === $scope.selected.id) { 
+            return 'bestleg-edit';
+        } else {
+            return 'bestleg-display';
+        }
+    };
+
+    $scope.edit = function (bestleg) {
+        $scope.selected = angular.copy(bestleg);
+    };
+
+    $scope.cancelChanges = function () {
+        $scope.selected = {};
+    };
+
+    $scope.updateDialog = function(playerId) {
+        $http.get(baseUrl + '/bestlegs/player/' + playerId).success(function(data) {
+            $scope.bestlegs = [];
+
+            for (var bestleg in data.bestlegs) {
+                if (data.bestlegs.hasOwnProperty(bestleg)) {
+                    data.bestlegs[bestleg].onEditQueue = false;
+                    data.bestlegs[bestleg].dateFormatted = Date.parse(data.bestlegs[bestleg].date);
+                    // adding additional property to track original number of darts so that model can be updated with new value
+                    data.bestlegs[bestleg].originalNumberOfDarts = data.bestlegs[bestleg].numberOfDarts;
+                    $scope.bestlegs.push(data.bestlegs[bestleg]);
+                }
+            }
+        });
+    },
+
+    $scope.isEditQueueEmpty = function() {
+        var isEditQueueEmpty = true;
+
+        for (var bestleg in $scope.bestlegs) {
+            if ($scope.bestlegs.hasOwnProperty(bestleg)) {
+                if ($scope.bestlegs[bestleg].onEditQueue) {
+                   isEditQueueEmpty = false
+                   break;
+                }
+            }
+        }
+
+        return isEditQueueEmpty;
+    },
+
+    $scope.saveChanges = function(id, numberOfDarts) {
+        if ($scope.isValidEdit()) {
+            for (var bestleg in $scope.bestlegs) {
+                if ($scope.bestlegs.hasOwnProperty(bestleg)) {
+                    if ($scope.bestlegs[bestleg].id === id) {
+                        $scope.bestlegs[bestleg].onEditQueue = true;
+                        $scope.bestlegs[bestleg].numberOfDarts = numberOfDarts;
+                        $scope.selected = {};
+                        break;
+                    }
+                }
+            }
+        }
+    },
+
+    $scope.undo = function(bestleg) {
+        bestleg.onEditQueue = false;
+        bestleg.numberOfDarts = bestleg.originalNumberOfDarts;
+    },
+
+    $scope.cancel = function() {
+      $modalInstance.dismiss('canceled');  
+    },
+
+    $scope.applyChanges = function() {
+        var editQueue = [];
+
+        // build queue
+        for (var bestleg in $scope.bestlegs) {
+            if ($scope.bestlegs.hasOwnProperty(bestleg)) {
+                if ($scope.bestlegs[bestleg].onEditQueue) {
+                    editQueue.push({
+                        id: $scope.bestlegs[bestleg].id,
+                        numberOfDarts: $scope.bestlegs[bestleg].numberOfDarts
+                    });
+                }
+            }
+        }
+
+        for (var item in editQueue) {
+            if (editQueue.hasOwnProperty(item)) {
+                $http.put(baseUrl + '/bestleg/' + editQueue[item].id + '/' + editQueue[item].numberOfDarts).success(function(data) {
+                    // refresh controllers internal state for best legs
+                    $http.get(baseUrl + '/bestlegs/duplicatesremoved').success(function(data) {
+                        bestLegService.setLegs(data.bestlegs);
+                    });
+                });
+            }
+        }
+
+        $modalInstance.close();
+    };
+  }]);
+
   app.controller('Delete180Controller', ['$scope', '$http', '$modalInstance', 'data', 'player180Service', 'dialogs',
   function($scope, $http, $modalInstance, data, player180Service, dialogs) {
 
@@ -2529,7 +2665,12 @@
     },
 
     achievementCtrl.editBestLeg = function() {
-        console.log('editBestLeg');
+        var dialog = dialogs.create('/editbestlegdialog.html', 'EditBestLegController', {}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});
+        dialog.result.then(function() {
+            // refresh controllers internal state for best legs
+        },function() {
+            // do nothing as user did not update best legs
+        });
     },
 
     achievementCtrl.deleteBestLeg = function() {

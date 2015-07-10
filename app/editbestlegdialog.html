@@ -1,0 +1,63 @@
+<div class="modal-header">
+    <h4 class="modal-title">
+    <span class="glyphicon glyphicon-edit">
+    </span> Edit Best Legs</h4>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal" name="editBestLegDialog" novalidate role="form">
+        <div class="form-group">
+            <label for="player" class="col-sm-3 control-label">Player</label>
+            <div class="col-sm-6">
+            <select class="form-control" id="player" ng-change="updateDialog(player.id)" form="editBestLegDialog" ng-model="player" ng-options='(player.forename + " " + player.surname) for player in players' required></select>
+        </div>
+        </div>
+    </form>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Number of Darts</th>
+                <th>Date</th>
+                <th>Opponent</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="bestleg in bestlegs | orderBy:'dateFormatted'" ng-include="getTemplate(bestleg)">
+            </tr>
+        </tbody>
+    </table>
+
+    <script type="text/ng-template" id="bestleg-display">
+        <td ng-style="{true: {color: 'green'}, false: {color: 'black'}}[bestleg.onEditQueue]">{{bestleg.numberOfDarts}}</td>
+        <td ng-style="{true: {color: 'green'}, false: {color: 'black'}}[bestleg.onEditQueue]">{{bestleg.date}}</td>
+        <td ng-style="{true: {color: 'green'}, false: {color: 'black'}}[bestleg.onEditQueue]">{{bestleg.player2}}</td>
+        <td ng-show="!bestleg.onEditQueue">
+            <h4>
+                <span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="Edit Leg" ng-click="edit(bestleg)"/>
+            </h4>
+        </td>
+        <td ng-show="bestleg.onEditQueue">
+            <h4>
+                <span class="glyphicon glyphicon-remove" data-toggle="tooltip" data-placement="bottom" title="Undo Changes" ng-click="undo(bestleg)"/>
+            </h4>
+        </td>
+    </script>
+
+    <script type="text/ng-template" id="bestleg-edit">
+        <td>
+            <select class="form-control" id="upDatedNumberOfDarts" form="editBestLegDialog" ng-model="selected.numberOfDarts" ng-options="numberOfDarts for numberOfDarts in validNumberOfDarts" required></select>
+        </td>
+        <td>{{selected.date}}</td>
+        <td>{{selected.player2}}</td>
+        <td>
+            <h4>
+                <span class="glyphicon glyphicon-floppy-saved" ng-style="{true: {color: '#333333'}, false: {color: '#D3D3D3'}}[isValidEdit()]" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="saveChanges(selected.id, selected.numberOfDarts)"></span>
+                <span class="glyphicon glyphicon-floppy-remove" data-toggle="tooltip" data-placement="bottom" title="Cancel Changes" ng-click="cancelChanges()"></span>
+            </h4>
+        </td>
+    </script>
+ </div>
+ <div class="modal-footer">
+     <button type="button" class="btn btn-default" ng-click="cancel()">Cancel</button>
+     <button type="button" class="btn btn-primary" ng-click="applyChanges()" ng-disabled="(editBestLegDialog.$dirty && editBestLegDialog.$invalid) || editBestLegDialog.$pristine || isEditQueueEmpty()">Apply Changes</button>
+ </div>
