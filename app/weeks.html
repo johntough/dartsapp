@@ -36,7 +36,7 @@
             <input type="text" class="form-control" ng-model="selected.name" size="200"/></td>
         <td>
             <p class="input-group">
-                <input type="text" class="form-control" name="weekdate" id="weekdate" readonly='true' datepicker-popup="dd-MMMM-yyyy" ng-model="selected.date" is-open="weekCtrl.datePickerOpened" ng-required="true" close-text="Close" size="200"/>
+                <input type="text" class="form-control" name="weekdate" id="weekdate" readonly='true' datepicker-popup="EEEE, MMMM d, yyyy" ng-model="selected.date" is-open="weekCtrl.datePickerOpened" ng-required="true" close-text="Close" size="200"/>
                 <span class="input-group-btn">
                     <button type="button" class="btn btn-default" ng-click="weekCtrl.openDatePicker($event)"><i class="glyphicon glyphicon-calendar"></i></button>
                 </span>
