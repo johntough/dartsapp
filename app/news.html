@@ -16,7 +16,7 @@
         <p class="apply-indent">{{newsItem.content}}</p>
         <p class="apply-indent"><i>Posted on: {{newsItem.date}}</i></p>
         <h4 class="apply-indent" ng-show="newsCtrl.showPrivilegedData()">
-            <span class="glyphicon glyphicon-pencil" data-toggle="tooltip" data-placement="bottom" title="Edit News Item" ng-click="newsCtrl.edit(newsItem)"></span>
+            <span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="Edit News Item" ng-click="newsCtrl.edit(newsItem)"></span>
             <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete News Item" ng-click="newsCtrl.deleteRecord(newsItem.id)"></span>
         </h4>
         </br>

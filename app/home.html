@@ -17,7 +17,7 @@
         <h5 class="home-sub-heading"><span class="glyphicon glyphicon-envelope"></span> {{contact.email}}</h5>
         <h5 class="home-sub-heading"><span class="glyphicon glyphicon-phone"></span> {{contact.phone}}</h5>
         <h4 class="home-sub-heading" ng-show="contactCtrl.showPrivilegedData()">
-            <span class="glyphicon glyphicon-pencil" data-toggle="tooltip" data-placement="bottom" title="Edit Contact Details" ng-click="contactCtrl.edit(contact)"></span>
+            <span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="Edit Contact Details" ng-click="contactCtrl.edit(contact)"></span>
             <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete Contact Details" ng-click="contactCtrl.deleteRecord(contact.id)"></span>
         </h4>
     </script>
