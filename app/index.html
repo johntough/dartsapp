@@ -21,8 +21,17 @@
         <script src="resources/js/toast/angular-toastr.js" type="text/javascript" ></script>
         <script src="resources/js/toast/angular-toastr.tpls.js" type="text/javascript" ></script>
         <link rel="stylesheet" type="text/css" href="resources/css/toast/angular-toastr.css" />
+        <!-- font-awesome -->
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
         <!-- favicon -->
         <link rel='shortcut icon' href='resources/images/favicon.ico?v=3' type='image/x-icon'/ >
+        <!-- Facebook Graph API tags -->
+        <meta property="fb:app_id" content="981910948526012" /> 
+        <meta property="og:type" content="article" /> 
+        <meta property="og:url" content="http://nodejs-dartsapp.rhcloud.com" /> 
+        <meta property="og:title" content="Murrayfield Sports Bar" /> 
+        <meta property="og:image" content="http://nodejs-dartsapp.rhcloud.com/resources/images/dartboard.jpg" /> 
+        <meta property="og:description" content="Premier League Darts" />
     </head>
         <!-- Application files -->
         <script src="polyfill.js"></script>
@@ -30,6 +39,23 @@
         <!-- Custom CSS -->
         <link rel="stylesheet" href="resources/css/customstyles.css">
     </head>
+    <script>
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId      : '981910948526012',
+                xfbml      : true,
+                version    : 'v2.4'
+            });
+        };
+
+        (function(d, s, id){
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {return;}
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
 
     <section ng-controller="NavigationController as navigationCtrl" ng-controller="LoginController as loginCtrl">
         <nav class="navbar navbar-default navbar-fixed-top">
@@ -48,6 +74,9 @@
             </li>
             <li ng-class="{ active:navigationCtrl.isSet('news') }">
               <a href ng-click="navigationCtrl.setTab('news')">News</a>
+            </li>
+            <li ng-class="{ active:navigationCtrl.isSet('comments') }">
+              <a href ng-click="navigationCtrl.setTab('comments')"><i class="fa fa-facebook"></i> Comments</a>
             </li>
             <li ng-show="navigationCtrl.showPrivilegedData()" ng-class="{ active:navigationCtrl.isSet('weeks') }">
               <a href ng-click="navigationCtrl.setTab('weeks')">Weeks</a>
@@ -83,6 +112,7 @@
           <!--  Description Tab's Content  -->
           <home-page ng-show="navigationCtrl.isSet('home')"></home-page>
           <news-page ng-show="navigationCtrl.isSet('news')"></news-page>
+          <comments-page ng-show="navigationCtrl.isSet('comments')"></comments-page>
           <weeks-list ng-show="navigationCtrl.isSet('weeks')"></weeks-list>
           <groups-list ng-show="navigationCtrl.isSet('groups')"></groups-list>
           <venues-list ng-show="navigationCtrl.isSet('venues')"></venues-list>
@@ -93,7 +123,7 @@
           <achievements-list ng-show="navigationCtrl.isSet('achievements')"></achievements-list>
           <login-form ng-show="navigationCtrl.isSet('login')"></login-form>
     </section>
-
+   
     <footer class="footer">
       <div class="container">         
             <p class="alignleft">&copy; 2015 John Tough</p>

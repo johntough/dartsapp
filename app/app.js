@@ -3081,4 +3081,11 @@
       templateUrl: 'news.html'
     };
   });
+
+  app.directive('commentsPage', function() {
+    return {
+      restrict: 'E',
+      templateUrl: 'comments.html'
+    };
+  });
 })();
