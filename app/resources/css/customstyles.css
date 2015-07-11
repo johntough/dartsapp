@@ -95,6 +95,7 @@ body {
     background-position: right;
     background-repeat: no-repeat;
     background-size: 800px 561px;
+    min-height: 500px;
     width: 100%;
 }
 
