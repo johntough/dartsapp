@@ -1,8 +1,7 @@
 <div ng-controller="LoginController as loginCtrl">
 
 <form class="form-horizontal" ng-submit="login()" ng-hide="loginCtrl.isAuthorised()">
-    <h2 class="form-signin-heading">Please log in</h2>
-
+    <br>
     <div class="form-group">
         <label for="inputUsername" class="col-sm-3 control-label">Username</label>
         <div class="col-sm-6">
@@ -21,7 +20,9 @@
     <div class="col-sm-6">
         <button class="btn btn-lg btn-primary btn-block" type="submit">Log in</button>
     </div>
+    <br>
 </form>
+<br>
 
 <div ng-show="loginCtrl.isAuthorised()">
     <p>
@@ -31,7 +32,10 @@
     <div class="col-sm-6">
         <button class="btn btn-lg btn-primary btn-block" type="submit">Log out</button>
     </div>
+    <br>
     </form>
+    <br>
 </div>
 
 </div>
+<br>
