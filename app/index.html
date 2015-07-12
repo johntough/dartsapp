@@ -2,6 +2,30 @@
 <html ng-app="dartsApp">
     <head>
         <title>Premier League Darts</title>
+        <!-- favicon -->
+        <link rel='shortcut icon' href='resources/images/favicon.ico?v=3' type='image/x-icon'/ >
+        <!-- Google tags -->
+        <meta name="description" content="Murrayfield Sports Bar Premier League Darts" />
+        <meta name="keywords" content="darts league software" />
+
+        <meta name="author" content="John Tough" />
+        <meta name="copyright" content="Copyright John Tough 2015" />
+        <meta name="application-name" content="Darts League Application" />
+
+        <!-- Facebook tags -->
+        <meta property="fb:app_id" content="981910948526012" /> 
+        <meta property="og:type" content="article" /> 
+        <meta property="og:url" content="http://nodejs-dartsapp.rhcloud.com" /> 
+        <meta property="og:title" content="Murrayfield Sports Bar" /> 
+        <meta property="og:image" content="http://nodejs-dartsapp.rhcloud.com/resources/images/dartboard.jpg" /> 
+        <meta property="og:description" content="Premier League Darts" />
+ 
+        <!-- Twitter tags -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Murrayfield Sports Bar" />
+        <meta name="twitter:description" content="Premier League Darts" />
+        <meta name="twitter:image" content="http://nodejs-dartsapp.rhcloud.com/resources/images/dartboard.jpg" />
+
         <!-- Library files for Angular -->
         <script src="resources/js/angular/angular.min.js" type="text/javascript" ></script>
         <script src="resources/js/angular/angular-animate.min.js" type="text/javascript" ></script>
@@ -23,15 +47,6 @@
         <link rel="stylesheet" type="text/css" href="resources/css/toast/angular-toastr.css" />
         <!-- font-awesome -->
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-        <!-- favicon -->
-        <link rel='shortcut icon' href='resources/images/favicon.ico?v=3' type='image/x-icon'/ >
-        <!-- Facebook Graph API tags -->
-        <meta property="fb:app_id" content="981910948526012" /> 
-        <meta property="og:type" content="article" /> 
-        <meta property="og:url" content="http://nodejs-dartsapp.rhcloud.com" /> 
-        <meta property="og:title" content="Murrayfield Sports Bar" /> 
-        <meta property="og:image" content="http://nodejs-dartsapp.rhcloud.com/resources/images/dartboard.jpg" /> 
-        <meta property="og:description" content="Premier League Darts" />
     </head>
         <!-- Application files -->
         <script src="polyfill.js"></script>
@@ -39,6 +54,7 @@
         <!-- Custom CSS -->
         <link rel="stylesheet" href="resources/css/customstyles.css">
     </head>
+    <!-- Facebook API initialisation -->
     <script>
         window.fbAsyncInit = function() {
             FB.init({
@@ -128,7 +144,7 @@
       <div class="container">         
             <p class="alignleft">&copy; 2015 John Tough</p>
             <p class="alignright">
-                <a href="mailto:john.c.tough@gmail.com" style='color: white;'>john.c.tough@gmail.com</a>
+                <span class="glyphicon glyphicon-envelope"></span><a href="mailto:john.c.tough@gmail.com" style='color: white;'> john.c.tough@gmail.com</a>
             </p>
       </div>
     </footer>
@@ -152,5 +168,23 @@
         $(".navbar-collapse").css({
             maxHeight: $(window).height() - $(".navbar-header").height() + "px" 
         });
+    </script>
+    <script>
+        window.twttr = (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0],
+            t = window.twttr || {};
+            if (d.getElementById(id)) return t;
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "https://platform.twitter.com/widgets.js";
+            fjs.parentNode.insertBefore(js, fjs);
+ 
+            t._e = [];
+            t.ready = function(f) {
+                t._e.push(f);
+            }; 
+ 
+            return t;
+        }(document, "script", "twitter-wjs"));
     </script>
 </html>
