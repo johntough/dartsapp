@@ -53,7 +53,7 @@
         <td ng-show="playerCtrl.showPrivilegedData()">
             <h4>
                 <span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="Edit Player Details" ng-click="playerCtrl.edit(player)" ng-style="{cursor:'pointer'}"></span>
-                <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete Player" ng-click="playerCtrl.deleteRecord(player.id)" ng-style="{cursor:'pointer'}"></span>
+                <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete Player" ng-click="playerCtrl.deleteRecord(player.id, player.forename, player.surname)" ng-style="{cursor:'pointer'}"></span>
             </h4>
         </td>
     </script>

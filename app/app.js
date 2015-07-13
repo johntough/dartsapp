@@ -397,9 +397,10 @@
         }
     };
 
-    playerCtrl.deleteRecord  = function(id) {
+    playerCtrl.deleteRecord  = function(id, forename, surname) {
 
-        var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the player?');
+        var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the following player? <br><br>' + 
+            '<b>' + forename + ' ' + surname +'<br><br> Warning:</b> Deleting the player will remove all associated data including fixtures and results.');
         dialog.result.then(function(btn) {
             $http.delete(baseUrl + '/player/' + id).success(function(data) {
                 // refresh controllers internal state for players
@@ -685,9 +686,10 @@
         }
     },
 
-    weekCtrl.deleteRecord  = function(id) {
+    weekCtrl.deleteRecord  = function(id, name, date) {
 
-        var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the week?');
+        var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the following week? <br><br>' + 
+            '<b>' + name + ', ' + date + '<br><br> Warning:</b> Deleting the week will remove all associated data including fixtures and results.');
         dialog.result.then(function(btn) {
             $http.delete(baseUrl + '/week/' + id).success(function(data) {
                 // refresh controllers internal state for weeks
@@ -773,9 +775,10 @@
         }
     };
 
-    groupCtrl.deleteRecord  = function(id) {
+    groupCtrl.deleteRecord  = function(id, name) {
 
-        var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the group?');
+        var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the following group? <br><br>' + 
+            '<b>' + name + '<br><br> Warning:</b> Deleting the group will remove all associated data including players, fixtures and results.');
         dialog.result.then(function(btn) {
             $http.delete(baseUrl + '/group/' + id).success(function(data) {
                 // refresh controllers internal state for groups
@@ -856,9 +859,11 @@
         }
     };
 
-    venueCtrl.deleteRecord  = function(id) {
+    venueCtrl.deleteRecord  = function(id, name) {
 
-        var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the board?');
+        var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the following board? <br><br>' + 
+            '<b>' + name + '<br><br> Warning:</b> Deleting the board will remove all associated data including fixtures and results.');
+
         dialog.result.then(function(btn) {
             $http.delete(baseUrl + '/venue/' + id).success(function(data) {
                 // refresh controllers internal state for venues
@@ -2430,9 +2435,10 @@
         }
     },
 
-    fixtureCtrl.deleteRecord  = function(id) {
+    fixtureCtrl.deleteRecord  = function(id, weekName, weekDate, playerOne, playerTwo) {
 
-        var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the fixture?');
+        var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the following fixture? <br><br>' + 
+            '<b>' + weekName + ', ' + weekDate + ' - ' + playerOne + ' v ' + playerTwo + '<br><br> Warning:</b> Deleting the fixture will remove all associated data including any result and achievements.');
         dialog.result.then(function(btn) {
             $http.delete(baseUrl + '/fixture/' + id).success(function(data) {
                 // refresh controllers internal state for fixtures
@@ -2686,8 +2692,10 @@
         }
     },
 
-    resultCtrl.deleteRecord = function(id) {
-        var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the result?');
+    resultCtrl.deleteRecord = function(id, weekName, weekDate, playerOne, playerOneLegsWon, playerTwo, playerTwoLegsWon) {
+        var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the following result? <br><br>' + 
+            '<b>' + weekName + ', ' + weekDate + ' - ' + playerOne + ' ( ' + playerOneLegsWon + ' ) v ' + playerTwo + ' ( ' + playerTwoLegsWon + ' )' +
+            '<br><br> Warning:</b> Deleting the result will remove all associated data including any achievements.');
         dialog.result.then(function(btn) {
             $http.delete(baseUrl + '/result/' + id).success(function(data) {
                 // refresh controllers internal state for results
