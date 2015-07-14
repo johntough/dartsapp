@@ -3,6 +3,9 @@
     <div class="col-sm-2"/>
         <button class="btn btn-sm btn-primary btn-block" ng-click="tableCtrl.toggleFilters()">{{tableCtrl.showFilters ? 'Hide Filters' : 'Show Filters'}}</button>
     </div>
+    <h3>
+        <span class="fa fa-print right-align" data-toggle="tooltip" data-placement="bottom" title="Print Tables" ng-click="tableCtrl.print()" ng-style="{cursor:'pointer'}"></span>
+    </h3>
     <form id="addForm" class="form-horizontal">
         <div class="form-group">
         </div>
@@ -20,7 +23,7 @@
         </div>
         </div>
     </form>
-    <div ng-repeat="table in tableCtrl.getTables()">
+    <div id="tablesdiv" ng-repeat="table in tableCtrl.getTables()">
     <h1 class="apply-indent"><small>{{table.groupName}}</small></h1>
         <table class="table">
             <thead>

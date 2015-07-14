@@ -2788,6 +2788,14 @@
     };
     tableCtrl.showFilters = false;
 
+    tableCtrl.print = function() {
+        var divToPrint = document.getElementById('tablesdiv');
+        var newWin = window.open("");
+        newWin.document.write(divToPrint.outerHTML);
+        newWin.print();
+        newWin.close();
+    },
+
     tableCtrl.toggleFilters = function() {
         tableCtrl.showFilters = !tableCtrl.showFilters;
     },
@@ -2821,6 +2829,30 @@
   function($scope, $http, loginService, dialogs, player180Service, bestLegService, highFinishService) {
     var achievementCtrl = this;
     achievementCtrl.tab = 'player180s';
+
+    achievementCtrl.print180s = function() {
+        var divToPrint = document.getElementById('tablesdiv-180');
+        var newWin = window.open("");
+        newWin.document.write(divToPrint.outerHTML);
+        newWin.print();
+        newWin.close();
+    },
+
+    achievementCtrl.printHighFinishes = function() {
+        var divToPrint = document.getElementById('tablesdiv-highfinishes');
+        var newWin = window.open("");
+        newWin.document.write(divToPrint.outerHTML);
+        newWin.print();
+        newWin.close();
+    },
+
+    achievementCtrl.printBestLegs = function() {
+        var divToPrint = document.getElementById('tablesdiv-bestlegs');
+        var newWin = window.open("");
+        newWin.document.write(divToPrint.outerHTML);
+        newWin.print();
+        newWin.close();
+    },
 
     achievementCtrl.showPrivilegedData = function() {
         return loginService.isAuthorised();

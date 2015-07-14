@@ -20,7 +20,10 @@
                 <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete 180s" ng-click="achievementCtrl.delete180s()" ng-style="{cursor:'pointer'}"></span>
             </h4>
         </div>
-        <table class="table">
+        <h3>
+            <span class="fa fa-print right-align" data-toggle="tooltip" data-placement="bottom" title="Print 180 Table" ng-click="achievementCtrl.print180s()" ng-style="{cursor:'pointer'}"></span>
+        </h3>
+        <table id="tablesdiv-180" class="table">
             <thead>
                 <tr>
                     <th>Player</th>
@@ -52,7 +55,10 @@
                 <input type="checkbox" ng-model="achievementCtrl.highfinishcheckbox" ng-change="achievementCtrl.highFinishCheckboxChange(achievementCtrl.highfinishcheckbox)"> Show all recorded high checkouts
             </label>
         </div>
-        <table class="table">
+        <h3>
+            <span class="fa fa-print right-align" data-toggle="tooltip" data-placement="bottom" title="Print High Finishes Table" ng-click="achievementCtrl.printHighFinishes()" ng-style="{cursor:'pointer'}"></span>
+        </h3>
+        <table id="tablesdiv-highfinishes" class="table">
             <thead>
                 <tr>
                     <th>Player</th>
@@ -84,7 +90,10 @@
                 <input type="checkbox" ng-model="achievementCtrl.bestlegcheckbox" ng-change="achievementCtrl.bestLegCheckboxChange(achievementCtrl.bestlegcheckbox)"> Show all recorded best legs
             </label>
         </div>
-        <table class="table">
+        <h3>
+            <span class="fa fa-print right-align" data-toggle="tooltip" data-placement="bottom" title="Print Best Leg Table" ng-click="achievementCtrl.printBestLegs()" ng-style="{cursor:'pointer'}"></span>
+        </h3>
+        <table id="tablesdiv-bestlegs" class="table">
             <thead>
                 <tr>
                     <th>Player</th>

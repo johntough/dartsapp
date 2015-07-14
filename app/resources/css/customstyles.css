@@ -120,3 +120,8 @@ body {
     padding-top: 240px;
     padding-left: 50px;
 }
+
+.right-align {
+    position: absolute;
+    right: 10px;
+}
