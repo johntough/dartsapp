@@ -126,6 +126,12 @@ body {
     right: 10px;
 }
 
+#map-canvas {
+    width: 500px;
+    height: 400px;
+    background-color: #CCC;
+}
+  
 /* styles for printing - hiding element that should not be printed */
 @media print {
     .footer {

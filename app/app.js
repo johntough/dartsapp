@@ -467,6 +467,7 @@
 
   app.controller('InformationController', ['$scope', '$http', 'loginService', 'dialogs', 'toastr', 'toastrConfig', function($scope, $http, loginService, dialogs, toastr, toastrConfig) {
     var informationCtrl = this;
+    informationCtrl.map = undefined;
 
     informationCtrl.ruleItems = [];
     informationCtrl.ruleItemsLength = 0;
@@ -597,6 +598,26 @@
         informationCtrl.setNewsItems(data.newsItems);
         informationCtrl.newsItemsLength = data.count;
     });
+
+    // Google Maps initialisation
+    informationCtrl.initMap = function() {
+
+        var mapOptions = {
+            zoom: 8,
+            center: new google.maps.LatLng(55.937879, -3.241619),
+        };
+
+        informationCtrl.map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+        var marker = new google.maps.Marker({
+            position: new google.maps.LatLng(55.937879, -3.241619),
+            map: informationCtrl.map,
+            title: 'Murrayfield Sports Bar'
+        });
+        informationCtrl.map.setCenter(new google.maps.LatLng(55.937879, -3.241619));
+    },
+
+    google.maps.event.addDomListener(window, 'load', informationCtrl.initMap);
 
     informationCtrl.showAddRuleForm = function() {
         var dialog = dialogs.create('/addruleitemdialog.html', 'AddRuleItemController', {}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});
