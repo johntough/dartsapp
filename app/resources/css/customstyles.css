@@ -125,3 +125,28 @@ body {
     position: absolute;
     right: 10px;
 }
+
+/* styles for printing - hiding element that should not be printed */
+@media print {
+    .footer {
+        display: none;
+    }
+    .col-sm-2.filter-button {
+        display: none;
+    }
+    .nav-tabs {
+        display: none;
+    }
+    .checkbox {
+        display: none;
+    }
+    .fa-print {
+        display: none;
+    }
+    .tooltip {
+        visibility: hidden;
+    }
+    form#filterForm {
+        display: none;
+    }
+}

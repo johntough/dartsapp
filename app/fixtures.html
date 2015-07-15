@@ -1,8 +1,11 @@
 <div ng-controller="FixtureController as fixtureCtrl">
     <p>
-    <div class="col-sm-2"/>
+    <div class="col-sm-2 filter-button"/>
         <button class="btn btn-sm btn-primary btn-block" ng-click="fixtureCtrl.toggleFilters()">{{fixtureCtrl.showFilters ? 'Hide Filters' : 'Show Filters'}}</button>
     </div>
+    <h3>
+        <span class="fa fa-print right-align" data-toggle="tooltip" data-placement="bottom" title="Print Fixtures" ng-click="fixtureCtrl.print()" ng-style="{cursor:'pointer'}"></span>
+    </h3>
     <div class="col-sm-2"/>
         <button class="btn btn-sm btn-primary btn-block" ng-show="fixtureCtrl.showPrivilegedData()" ng-click="fixtureCtrl.showAddForm()">Add Fixture</button>
     </div>
@@ -10,7 +13,7 @@
         <div class="form-group">
         </div>
     </form>
-    <form ng-if="fixtureCtrl.showFilters" id="filterForm" class="form-horizontal fade">
+    <form ng-if="fixtureCtrl.showFilters" id="filterForm" class="form-horizontal fade filter-form">
         <div class="form-group">
         <label for="weekFilter" class="col-sm-3 control-label">Filter fixtures by week</label>
             <div class="col-sm-6">

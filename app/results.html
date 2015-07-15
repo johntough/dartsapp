@@ -1,13 +1,16 @@
 <div ng-controller="ResultController as resultCtrl">
     <p>
-    <div class="col-sm-2"/>
+    <div class="col-sm-2 filter-button"/>
         <button class="btn btn-sm btn-primary btn-block" ng-click="resultCtrl.toggleFilters()">{{resultCtrl.showFilters ? 'Hide Filters' : 'Show Filters'}}</button>
     </div>
+    <h3>
+        <span class="fa fa-print right-align" data-toggle="tooltip" data-placement="bottom" title="Print Results" ng-click="resultCtrl.print()" ng-style="{cursor:'pointer'}"></span>
+    </h3>
     <form id="addForm" class="form-horizontal">
         <div class="form-group">
         </div>
     </form>
-    <form ng-if="resultCtrl.showFilters" id="filterForm" class="form-horizontal fade">
+    <form ng-if="resultCtrl.showFilters" id="filterForm" class="form-horizontal fade filter-form">
         <div class="form-group">    
         <label for="weekFilter" class="col-sm-3 control-label">Filter results by week</label>
             <div class="col-sm-6">

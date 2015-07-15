@@ -356,6 +356,10 @@
     $scope.obj = {groupfilter: undefined};
     playerCtrl.showFilters = false;
 
+    playerCtrl.print = function() {
+        window.print();
+    },
+
     playerCtrl.toggleFilters = function() {
         playerCtrl.showFilters = !playerCtrl.showFilters;
     },
@@ -2394,6 +2398,10 @@
     };
     fixtureCtrl.showFilters = false;
 
+    fixtureCtrl.print = function() {
+        window.print();
+    },
+
     fixtureCtrl.toggleFilters = function() {
         fixtureCtrl.showFilters = !fixtureCtrl.showFilters;
     },
@@ -2623,6 +2631,10 @@
     };
     resultCtrl.showFilters = false;
 
+    resultCtrl.print = function() {
+        window.print();
+    },
+
     resultCtrl.toggleFilters = function() {
         resultCtrl.showFilters = !resultCtrl.showFilters;
     },
@@ -2788,12 +2800,9 @@
     };
     tableCtrl.showFilters = false;
 
+
     tableCtrl.print = function() {
-        var divToPrint = document.getElementById('tablesdiv');
-        var newWin = window.open("");
-        newWin.document.write(divToPrint.outerHTML);
-        newWin.print();
-        newWin.close();
+        window.print();
     },
 
     tableCtrl.toggleFilters = function() {
@@ -2830,28 +2839,8 @@
     var achievementCtrl = this;
     achievementCtrl.tab = 'player180s';
 
-    achievementCtrl.print180s = function() {
-        var divToPrint = document.getElementById('tablesdiv-180');
-        var newWin = window.open("");
-        newWin.document.write(divToPrint.outerHTML);
-        newWin.print();
-        newWin.close();
-    },
-
-    achievementCtrl.printHighFinishes = function() {
-        var divToPrint = document.getElementById('tablesdiv-highfinishes');
-        var newWin = window.open("");
-        newWin.document.write(divToPrint.outerHTML);
-        newWin.print();
-        newWin.close();
-    },
-
-    achievementCtrl.printBestLegs = function() {
-        var divToPrint = document.getElementById('tablesdiv-bestlegs');
-        var newWin = window.open("");
-        newWin.document.write(divToPrint.outerHTML);
-        newWin.print();
-        newWin.close();
+    achievementCtrl.print = function() {
+        window.print();
     },
 
     achievementCtrl.showPrivilegedData = function() {

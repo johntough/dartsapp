@@ -3,6 +3,9 @@
     <div class="col-sm-2"/>
         <button class="btn btn-sm btn-primary btn-block" ng-click="playerCtrl.toggleFilters()">{{playerCtrl.showFilters ? 'Hide Filters' : 'Show Filters'}}</button>
     </div>
+    <h3>
+        <span class="fa fa-print right-align" data-toggle="tooltip" data-placement="bottom" title="Print Players" ng-click="playerCtrl.print()" ng-style="{cursor:'pointer'}"></span>
+    </h3>
     <div class="col-sm-2"/>
         <button class="btn btn-sm btn-primary btn-block" ng-show="playerCtrl.showPrivilegedData()" ng-click="playerCtrl.showAddForm()">Add Player</button>
     </div>
