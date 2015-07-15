@@ -1,0 +1,43 @@
+<div ng-controller="InformationController as informationCtrl">
+    <p>
+    <div class="col-sm-2">
+        <button class="btn btn-sm btn-primary btn-block" ng-show="informationCtrl.showPrivilegedData()" ng-click="informationCtrl.showAddForm()">Add League Rules</button>
+    </div>
+    <table class="table">
+    </table>
+    <h1 class="apply-indent"><small>League Rules</small></h1>
+    <br>
+
+    <div ng-repeat="informationItem in informationCtrl.informationItems | orderBy: 'dateFormatted'" ng-include="informationCtrl.getTemplate(informationItem)">
+
+    </div>
+
+    <script type="text/ng-template" id="information-item-display">
+        <h4 class="apply-indent">{{informationItem.title}}</h4>
+        <p class="apply-indent">{{informationItem.content}}</p>
+        <h4 class="apply-indent" ng-show="informationCtrl.showPrivilegedData()">
+            <span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="Edit League Rules" ng-click="informationCtrl.edit(informationItem)" ng-style="{cursor:'pointer'}"></span>
+            <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete League Rules" ng-click="informationCtrl.deleteRecord(informationItem.id)" ng-style="{cursor:'pointer'}"></span>
+        </h4>
+        </br>
+    </script>
+
+    <script type="text/ng-template" id="information-item-edit">
+    <form id="editForm" class="form-horizontal">
+        <div class="form-group apply-indent">
+            <div class="col-sm-6">
+                <input type="text" class="form-control" ng-model="selected.title" />
+            </div>
+        </div>
+        <div class="form-group apply-indent">
+            <div class="col-sm-6">
+                <textarea type="text" max-length="400" rows="8" cols="50" class="form-control" ng-model="selected.content" required></textarea>
+            </div>
+        </div>
+    </form>
+        <h4 class="apply-indent">
+            <span class="glyphicon glyphicon-floppy-saved" ng-style="{true: {color: '#333333', cursor:'pointer'}, false: {color: '#D3D3D3', cursor:'not-allowed'}}[informationCtrl.isValidEdit()]" data-toggle="tooltip" data-placement="bottom" title="Save Changes" ng-click="informationCtrl.saveChanges(selected.id, selected.title, selected.content)"></span>
+            <span class="glyphicon glyphicon-floppy-remove" data-toggle="tooltip" data-placement="bottom" title="Cancel Changes" ng-style="{cursor:'pointer'}" ng-click="informationCtrl.cancelChanges()"></span>
+        </h4>
+    </script>
+</div>

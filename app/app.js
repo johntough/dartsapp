@@ -561,6 +561,102 @@
     }
   }]);
 
+  app.controller('InformationController', ['$scope', '$http', 'loginService', 'dialogs', 'toastr', 'toastrConfig', function($scope, $http, loginService, dialogs, toastr, toastrConfig) {
+    var informationCtrl = this;
+    informationCtrl.informationItems = [];
+    informationCtrl.informationItemsLength = 0;
+
+    informationCtrl.setInformationItems = function(informationItems) {
+        var formattedInformationItems = [];
+
+        for (var informationItem in informationItems) {
+            if (informationItems.hasOwnProperty(informationItem)) {
+                informationItems[informationItem].dateFormatted = Date.parse(informationItems[informationItem].date);
+                formattedInformationItems.push(informationItems[informationItem]);
+            }
+        }
+        informationCtrl.informationItems = formattedInformationItems;
+    },
+
+    informationCtrl.showPrivilegedData = function() {
+        return loginService.isAuthorised();
+    },
+
+    // gets the template to ng-include for an information item
+    informationCtrl.getTemplate = function (informationItem) {
+        if ($scope.selected && informationItem.id === $scope.selected.id) {
+            return 'information-item-edit';
+        } else {
+            return 'information-item-display';
+        }
+    };
+
+    informationCtrl.isValidEdit = function() {
+        if ($scope.selected.title && $scope.selected.content) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+    informationCtrl.edit = function(informationItem) {
+        $scope.selected = angular.copy(informationItem);
+    },
+
+    informationCtrl.cancelChanges = function () {
+        $scope.selected = {};
+    },
+
+    informationCtrl.saveChanges = function (id, title, content) {
+        if (informationCtrl.isValidEdit()) {
+            $http.put(baseUrl + '/informationItem/' + id + '/' + title + '/' + content).success(function(data) {
+                // refresh controllers internal state for information items
+                $http.get(baseUrl + '/information').success(function(data) {
+                    informationCtrl.setInformationItems(data.informationItems);
+                    informationCtrl.informationItemsLength = data.count;
+                });
+            });
+            informationCtrl.cancelChanges();
+        }
+    },
+
+    $http.get(baseUrl + '/information').success(function(data) {
+        informationCtrl.setInformationItems(data.informationItems);
+        informationCtrl.informationItemsLength = data.count;
+    });
+
+    informationCtrl.showAddForm = function() {
+        var dialog = dialogs.create('/addinformationitemdialog.html', 'AddInformationItemController', {}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});
+        dialog.result.then(function() {
+            // refresh controllers internal state for information items
+            $http.get(baseUrl + '/information').success(function(data) {
+                informationCtrl.setInformationItems(data.informationItems);
+                informationCtrl.informationItemsLength = data.count;
+                toastrConfig.positionClass = 'toast-bottom-right';
+                toastrConfig.timeOut = 2000;
+                toastr.success('Rules added!');
+            });
+        },function() {
+            // do nothing as user did not add an information item
+        });
+    },
+
+    informationCtrl.deleteRecord = function(id) {
+        var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the league rules?');
+        dialog.result.then(function(btn) {
+            $http.delete(baseUrl + '/informationItem/' + id).success(function(data) {
+                // refresh controllers internal state for information items
+                $http.get(baseUrl + '/information').success(function(data) {
+                    informationCtrl.setInformationItems(data.informationItems);
+                    informationCtrl.informationItemsLength = data.count;
+                });
+            });
+        }, function(btn){
+            // do nothing - user chose not to delete the information item
+        });
+    }
+  }]);
+
   app.controller('ContactController', ['$scope', '$http', 'loginService', 'dialogs', 'toastr', 'toastrConfig', function($scope, $http, loginService, dialogs, toastr, toastrConfig) {
     var contactCtrl = this;
     contactCtrl.contacts = [];
@@ -1000,7 +1096,33 @@
     }
   }]);
 
-    app.controller('AddContactDetailsController', ['$scope', '$http', '$modalInstance', 'data', function($scope, $http, $modalInstance, data) {
+  app.controller('AddInformationItemController', ['$scope', '$http', '$modalInstance', 'data', function($scope, $http, $modalInstance, data) {
+    var addInformationItemCtrl = this;
+    $scope.informationItem = {title : '', content: ''};
+
+    $scope.cancel = function() {
+      $modalInstance.dismiss('canceled');  
+    };
+  
+    $scope.save = function() {
+      // converting the date into a readable string
+      addInformationItemCtrl.date = new Date().toLocaleDateString(
+          'en-UK',
+          { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'}
+      );
+      addInformationItemCtrl.addInformationItem($scope.informationItem.title, addInformationItemCtrl.date, $scope.informationItem.content);
+      $modalInstance.close();
+    };
+
+    addInformationItemCtrl.addInformationItem = function(title, date, content) {
+        
+        $http.post(baseUrl + '/informationItem/' + title + '/' + date + '/' + content).success(function(data) {
+            // do nothing
+        });
+    }
+  }]);
+
+  app.controller('AddContactDetailsController', ['$scope', '$http', '$modalInstance', 'data', function($scope, $http, $modalInstance, data) {
     var addContactDetailsCtrl = this;
 
     $scope.cancel = function() {
@@ -3117,6 +3239,13 @@
     return {
       restrict: 'E',
       templateUrl: 'news.html'
+    };
+  });
+
+  app.directive('rulesPage', function() {
+    return {
+      restrict: 'E',
+      templateUrl: 'information.html'
     };
   });
 
