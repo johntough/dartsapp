@@ -465,12 +465,38 @@
     }
   }]);
 
-  app.controller('NewsController', ['$scope', '$http', 'loginService', 'dialogs', 'toastr', 'toastrConfig', function($scope, $http, loginService, dialogs, toastr, toastrConfig) {
-    var newsCtrl = this;
-    newsCtrl.newsItems = [];
-    newsCtrl.newsItemsLength = 0;
+  app.controller('InformationController', ['$scope', '$http', 'loginService', 'dialogs', 'toastr', 'toastrConfig', function($scope, $http, loginService, dialogs, toastr, toastrConfig) {
+    var informationCtrl = this;
 
-    newsCtrl.setNewsItems = function(newsItems) {
+    informationCtrl.ruleItems = [];
+    informationCtrl.ruleItemsLength = 0;
+
+    informationCtrl.newsItems = [];
+    informationCtrl.newsItemsLength = 0;
+
+    informationCtrl.tab = 'news';
+
+    informationCtrl.isSet = function(checkTab) {
+        return informationCtrl.tab === checkTab;
+    },
+
+    informationCtrl.setTab = function(setTab) {
+        informationCtrl.tab = setTab;
+    },
+
+    informationCtrl.setRuleItems = function(ruleItems) {
+        var formattedRuleItems = [];
+
+        for (var ruleItem in ruleItems) {
+            if (ruleItems.hasOwnProperty(ruleItem)) {
+                ruleItems[ruleItem].dateFormatted = Date.parse(ruleItems[ruleItem].date);
+                formattedRuleItems.push(ruleItems[ruleItem]);
+            }
+        }
+        informationCtrl.ruleItems = formattedRuleItems;
+    },
+
+    informationCtrl.setNewsItems = function(newsItems) {
         var formattedNewsItems = [];
 
         for (var newsItem in newsItems) {
@@ -479,63 +505,122 @@
                 formattedNewsItems.push(newsItems[newsItem]);
             }
         }
-        newsCtrl.newsItems = formattedNewsItems;
+        informationCtrl.newsItems = formattedNewsItems;
     },
 
-    newsCtrl.showPrivilegedData = function() {
+    informationCtrl.showPrivilegedData = function() {
         return loginService.isAuthorised();
     },
 
+    // gets the template to ng-include for a rule item
+    informationCtrl.getRuleTemplate = function (ruleItem) {
+        if ($scope.selectedRule && ruleItem.id === $scope.selectedRule.id) {
+            return 'rule-item-edit';
+        } else {
+            return 'rule-item-display';
+        }
+    };
+
     // gets the template to ng-include for a news item
-    newsCtrl.getTemplate = function (newsItem) {
-        if ($scope.selected && newsItem.id === $scope.selected.id) {
+    informationCtrl.getNewsTemplate = function (newsItem) {
+        if ($scope.selectedNewsItem && newsItem.id === $scope.selectedNewsItem.id) {
             return 'news-item-edit';
         } else {
             return 'news-item-display';
         }
     };
 
-    newsCtrl.isValidEdit = function() {
-        if ($scope.selected.title && $scope.selected.content) {
+    informationCtrl.isValidRuleEdit = function() {
+        if ($scope.selectedRule.title && $scope.selectedRule.content) {
             return true;
         } else {
             return false;
         }
     },
 
-    newsCtrl.edit = function(newsItem) {
-        $scope.selected = angular.copy(newsItem);
-    },
-
-    newsCtrl.cancelChanges = function () {
-        $scope.selected = {};
-    },
-
-    newsCtrl.saveChanges = function (id, title, content) {
-        if (newsCtrl.isValidEdit()) {
-            $http.put(baseUrl + '/newsItem/' + id + '/' + title + '/' + content).success(function(data) {
-                // refresh controllers internal state for news items
-                $http.get(baseUrl + '/news').success(function(data) {
-                    newsCtrl.setNewsItems(data.newsItems);
-                    newsCtrl.newsItemsLength = data.count;
-                });
-            });
-            newsCtrl.cancelChanges();
+    informationCtrl.isValidNewsEdit = function() {
+        if ($scope.selectedNewsItem.title && $scope.selectedNewsItem.content) {
+            return true;
+        } else {
+            return false;
         }
     },
 
-    $http.get(baseUrl + '/news').success(function(data) {
-        newsCtrl.setNewsItems(data.newsItems);
-        newsCtrl.newsItemsLength = data.count;
+    informationCtrl.editRule = function(ruleItem) {
+        $scope.selectedRule = angular.copy(ruleItem);
+    },
+
+    informationCtrl.editNewsItem = function(newsItem) {
+        $scope.selectedNewsItem = angular.copy(newsItem);
+    },
+
+    informationCtrl.cancelRuleChanges = function () {
+        $scope.selectedRule = {};
+    },
+
+    informationCtrl.cancelNewsChanges = function () {
+        $scope.selectedNewsItem = {};
+    },
+
+    informationCtrl.saveRuleChanges = function (id, title, content) {
+        if (informationCtrl.isValidRuleEdit()) {
+            $http.put(baseUrl + '/ruleItem/' + id + '/' + title + '/' + content).success(function(data) {
+                // refresh controllers internal state for rules
+                $http.get(baseUrl + '/rules').success(function(data) {
+                    informationCtrl.setRuleItems(data.ruleItems);
+                    informationCtrl.ruleItemsLength = data.count;
+                });
+            });
+            informationCtrl.cancelRuleChanges();
+        }
+    },
+
+    informationCtrl.saveNewsChanges = function (id, title, content) {
+        if (informationCtrl.isValidNewsEdit()) {
+            $http.put(baseUrl + '/newsItem/' + id + '/' + title + '/' + content).success(function(data) {
+                // refresh controllers internal state for news items
+                $http.get(baseUrl + '/news').success(function(data) {
+                    informationCtrl.setNewsItems(data.newsItems);
+                    informationCtrl.newsItemsLength = data.count;
+                });
+            });
+            informationCtrl.cancelNewsChanges();
+        }
+    },
+
+    $http.get(baseUrl + '/rules').success(function(data) {
+        informationCtrl.setRuleItems(data.ruleItems);
+        informationCtrl.ruleItemsLength = data.count;
     });
 
-    newsCtrl.showAddForm = function() {
+    $http.get(baseUrl + '/news').success(function(data) {
+        informationCtrl.setNewsItems(data.newsItems);
+        informationCtrl.newsItemsLength = data.count;
+    });
+
+    informationCtrl.showAddRuleForm = function() {
+        var dialog = dialogs.create('/addruleitemdialog.html', 'AddRuleItemController', {}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});
+        dialog.result.then(function() {
+            // refresh controllers internal state for rules
+            $http.get(baseUrl + '/rules').success(function(data) {
+                informationCtrl.setRuleItems(data.ruleItems);
+                informationCtrl.ruleItemsLength = data.count;
+                toastrConfig.positionClass = 'toast-bottom-right';
+                toastrConfig.timeOut = 2000;
+                toastr.success('Rule added!');
+            });
+        },function() {
+            // do nothing as user did not add any rules
+        });
+    },
+
+    informationCtrl.showAddNewsForm = function() {
         var dialog = dialogs.create('/addnewsitemdialog.html', 'AddNewsItemController', {}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});
         dialog.result.then(function() {
             // refresh controllers internal state for news items
             $http.get(baseUrl + '/news').success(function(data) {
-                newsCtrl.setNewsItems(data.newsItems);
-                newsCtrl.newsItemsLength = data.count;
+                informationCtrl.setNewsItems(data.newsItems);
+                informationCtrl.newsItemsLength = data.count;
                 toastrConfig.positionClass = 'toast-bottom-right';
                 toastrConfig.timeOut = 2000;
                 toastr.success('News item added!');
@@ -545,114 +630,33 @@
         });
     },
 
-    newsCtrl.deleteRecord = function(id) {
-        var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the news item?');
+    informationCtrl.deleteRuleRecord = function(id, title) {
+        var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the following rule? <br><br><b>' + title + '</b>');
+        dialog.result.then(function(btn) {
+            $http.delete(baseUrl + '/ruleItem/' + id).success(function(data) {
+                // refresh controllers internal state for rules
+                $http.get(baseUrl + '/rules').success(function(data) {
+                    informationCtrl.setRuleItems(data.ruleItems);
+                    informationCtrl.ruleItemsLength = data.count;
+                });
+            });
+        }, function(btn){
+            // do nothing - user chose not to delete the rule
+        });
+    },
+
+    informationCtrl.deleteNewsRecord = function(id, title) {
+        var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the following news item? <br><br><b>' + title + '</b>');
         dialog.result.then(function(btn) {
             $http.delete(baseUrl + '/newsItem/' + id).success(function(data) {
                 // refresh controllers internal state for news items
                 $http.get(baseUrl + '/news').success(function(data) {
-                    newsCtrl.setNewsItems(data.newsItems);
-                    newsCtrl.newsItemsLength = data.count;
+                    informationCtrl.setNewsItems(data.newsItems);
+                    informationCtrl.newsItemsLength = data.count;
                 });
             });
         }, function(btn){
             // do nothing - user chose not to delete the news item
-        });
-    }
-  }]);
-
-  app.controller('InformationController', ['$scope', '$http', 'loginService', 'dialogs', 'toastr', 'toastrConfig', function($scope, $http, loginService, dialogs, toastr, toastrConfig) {
-    var informationCtrl = this;
-    informationCtrl.informationItems = [];
-    informationCtrl.informationItemsLength = 0;
-
-    informationCtrl.setInformationItems = function(informationItems) {
-        var formattedInformationItems = [];
-
-        for (var informationItem in informationItems) {
-            if (informationItems.hasOwnProperty(informationItem)) {
-                informationItems[informationItem].dateFormatted = Date.parse(informationItems[informationItem].date);
-                formattedInformationItems.push(informationItems[informationItem]);
-            }
-        }
-        informationCtrl.informationItems = formattedInformationItems;
-    },
-
-    informationCtrl.showPrivilegedData = function() {
-        return loginService.isAuthorised();
-    },
-
-    // gets the template to ng-include for an information item
-    informationCtrl.getTemplate = function (informationItem) {
-        if ($scope.selected && informationItem.id === $scope.selected.id) {
-            return 'information-item-edit';
-        } else {
-            return 'information-item-display';
-        }
-    };
-
-    informationCtrl.isValidEdit = function() {
-        if ($scope.selected.title && $scope.selected.content) {
-            return true;
-        } else {
-            return false;
-        }
-    },
-
-    informationCtrl.edit = function(informationItem) {
-        $scope.selected = angular.copy(informationItem);
-    },
-
-    informationCtrl.cancelChanges = function () {
-        $scope.selected = {};
-    },
-
-    informationCtrl.saveChanges = function (id, title, content) {
-        if (informationCtrl.isValidEdit()) {
-            $http.put(baseUrl + '/informationItem/' + id + '/' + title + '/' + content).success(function(data) {
-                // refresh controllers internal state for information items
-                $http.get(baseUrl + '/information').success(function(data) {
-                    informationCtrl.setInformationItems(data.informationItems);
-                    informationCtrl.informationItemsLength = data.count;
-                });
-            });
-            informationCtrl.cancelChanges();
-        }
-    },
-
-    $http.get(baseUrl + '/information').success(function(data) {
-        informationCtrl.setInformationItems(data.informationItems);
-        informationCtrl.informationItemsLength = data.count;
-    });
-
-    informationCtrl.showAddForm = function() {
-        var dialog = dialogs.create('/addinformationitemdialog.html', 'AddInformationItemController', {}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});
-        dialog.result.then(function() {
-            // refresh controllers internal state for information items
-            $http.get(baseUrl + '/information').success(function(data) {
-                informationCtrl.setInformationItems(data.informationItems);
-                informationCtrl.informationItemsLength = data.count;
-                toastrConfig.positionClass = 'toast-bottom-right';
-                toastrConfig.timeOut = 2000;
-                toastr.success('Rules added!');
-            });
-        },function() {
-            // do nothing as user did not add an information item
-        });
-    },
-
-    informationCtrl.deleteRecord = function(id) {
-        var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the league rules?');
-        dialog.result.then(function(btn) {
-            $http.delete(baseUrl + '/informationItem/' + id).success(function(data) {
-                // refresh controllers internal state for information items
-                $http.get(baseUrl + '/information').success(function(data) {
-                    informationCtrl.setInformationItems(data.informationItems);
-                    informationCtrl.informationItemsLength = data.count;
-                });
-            });
-        }, function(btn){
-            // do nothing - user chose not to delete the information item
         });
     }
   }]);
@@ -1096,9 +1100,9 @@
     }
   }]);
 
-  app.controller('AddInformationItemController', ['$scope', '$http', '$modalInstance', 'data', function($scope, $http, $modalInstance, data) {
-    var addInformationItemCtrl = this;
-    $scope.informationItem = {title : '', content: ''};
+  app.controller('AddRuleItemController', ['$scope', '$http', '$modalInstance', 'data', function($scope, $http, $modalInstance, data) {
+    var addRuleItemCtrl = this;
+    $scope.ruleItem = {title : '', content: ''};
 
     $scope.cancel = function() {
       $modalInstance.dismiss('canceled');  
@@ -1106,17 +1110,17 @@
   
     $scope.save = function() {
       // converting the date into a readable string
-      addInformationItemCtrl.date = new Date().toLocaleDateString(
+      addRuleItemCtrl.date = new Date().toLocaleDateString(
           'en-UK',
           { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'}
       );
-      addInformationItemCtrl.addInformationItem($scope.informationItem.title, addInformationItemCtrl.date, $scope.informationItem.content);
+      addRuleItemCtrl.addRuleItem($scope.ruleItem.title, addRuleItemCtrl.date, $scope.ruleItem.content);
       $modalInstance.close();
     };
 
-    addInformationItemCtrl.addInformationItem = function(title, date, content) {
+    addRuleItemCtrl.addRuleItem = function(title, date, content) {
         
-        $http.post(baseUrl + '/informationItem/' + title + '/' + date + '/' + content).success(function(data) {
+        $http.post(baseUrl + '/ruleItem/' + title + '/' + date + '/' + content).success(function(data) {
             // do nothing
         });
     }
@@ -3234,15 +3238,8 @@
       templateUrl: 'home.html'
     };
   });
- 
-  app.directive('newsPage', function() {
-    return {
-      restrict: 'E',
-      templateUrl: 'news.html'
-    };
-  });
 
-  app.directive('rulesPage', function() {
+  app.directive('informationPage', function() {
     return {
       restrict: 'E',
       templateUrl: 'information.html'

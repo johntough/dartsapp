@@ -88,11 +88,8 @@
             <li ng-class="{ active:navigationCtrl.isSet('home') }">
               <a href ng-click="navigationCtrl.setTab('home')"><span class="glyphicon glyphicon-home"></span> Home</a>
             </li>
-            <li ng-class="{ active:navigationCtrl.isSet('news') }">
-              <a href ng-click="navigationCtrl.setTab('news')">News</a>
-            </li>
-            <li ng-class="{ active:navigationCtrl.isSet('rules') }">
-              <a href ng-click="navigationCtrl.setTab('rules')"><i class="fa fa-info-circle"></i> Rules</a>
+            <li ng-class="{ active:navigationCtrl.isSet('information') }">
+              <a href ng-click="navigationCtrl.setTab('information')"><i class="fa fa-info-circle"></i> Information</a>
             </li>
             <li ng-class="{ active:navigationCtrl.isSet('comments') }">
               <a href ng-click="navigationCtrl.setTab('comments')"><i class="fa fa-facebook"></i> Comments</a>
@@ -130,8 +127,7 @@
         </nav>
           <!--  Description Tab's Content  -->
           <home-page ng-show="navigationCtrl.isSet('home')"></home-page>
-          <news-page ng-show="navigationCtrl.isSet('news')"></news-page>
-          <rules-page ng-show="navigationCtrl.isSet('rules')"></rules-page>
+          <information-page ng-show="navigationCtrl.isSet('information')"></information-page>
           <comments-page ng-show="navigationCtrl.isSet('comments')"></comments-page>
           <weeks-list ng-show="navigationCtrl.isSet('weeks')"></weeks-list>
           <groups-list ng-show="navigationCtrl.isSet('groups')"></groups-list>

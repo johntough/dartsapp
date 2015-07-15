@@ -17,7 +17,7 @@ db.serialize(function() {
     "   content CHAR(400) NOT NULL" +
     ")");
 
-    db.run("CREATE TABLE IF NOT EXISTS information_tbl" +
+    db.run("CREATE TABLE IF NOT EXISTS rule_tbl" +
     "(  id INTEGER PRIMARY KEY NOT NULL," +
     "   title CHAR(50) NOT NULL," +
     "   date CHAR(50) NOT NULL," +
@@ -111,7 +111,7 @@ var restapi = express();
 
 require('./contact')(restapi, db);
 require('./news')(restapi, db);
-require('./information')(restapi, db);
+require('./rule')(restapi, db);
 require('./week')(restapi, db);
 require('./venue')(restapi, db);
 require('./group')(restapi, db);
