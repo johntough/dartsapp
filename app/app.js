@@ -1571,9 +1571,19 @@
                     });
                 }
             }
-            $http.get(baseUrl + '/highfinishes').success(function(data) {
-                highFinishService.setFinishes(data.highfinishes);
-            });
+
+            // using jQuery to find the highfinish checkbox element to determine which endpoint to use to refresh the achievements page
+            var highFinishCheckboxEl = $.find('#highfinishcheckbox')[0];
+
+            if (highFinishCheckboxEl.checked) { 
+                $http.get(baseUrl + '/highfinishes').success(function(data) {
+                    highFinishService.setFinishes(data.highfinishes);
+                });
+            } else {
+                $http.get(baseUrl + '/highfinishes/duplicatesremoved').success(function(data) {
+                    highFinishService.setFinishes(data.highfinishes);
+                });            
+            }
         }
         if (anyPlayer2HighFinishes) {
             var highFinishArray = $scope.player2HighFinishes.split(',');
@@ -1585,9 +1595,18 @@
                     });
                 }
             }
-            $http.get(baseUrl + '/highfinishes').success(function(data) {
-                highFinishService.setFinishes(data.highfinishes);
-            });
+            // using jQuery to find the highfinish checkbox element to determine which endpoint to use to refresh the achievements page
+            var highFinishCheckboxEl = $.find('#highfinishcheckbox')[0];
+
+            if (highFinishCheckboxEl.checked) { 
+                $http.get(baseUrl + '/highfinishes').success(function(data) {
+                    highFinishService.setFinishes(data.highfinishes);
+                });
+            } else {
+                $http.get(baseUrl + '/highfinishes/duplicatesremoved').success(function(data) {
+                    highFinishService.setFinishes(data.highfinishes);
+                });            
+            }
         }
         if (anyPlayer1BestLegs) {
             var bestLegArray = $scope.player1BestLegs.split(',');
@@ -1599,9 +1618,19 @@
                     });
                 }
             }
-            $http.get(baseUrl + '/bestlegs').success(function(data) {
-                bestLegService.setLegs(data.bestlegs);
-            });
+
+            // using jQuery to find the bestlegs checkbox element to determine which endpoint to use to refresh the achievements page
+            var bestLegsCheckboxEl = $.find('#bestlegscheckbox')[0];
+
+            if (bestLegsCheckboxEl.checked) { 
+                $http.get(baseUrl + '/bestlegs').success(function(data) {
+                    bestLegService.setLegs(data.bestlegs);
+                });
+            } else {
+                $http.get(baseUrl + '/bestlegs/duplicatesremoved').success(function(data) {
+                    bestLegService.setLegs(data.bestlegs);
+                });            
+            }
         }
         if (anyPlayer2BestLegs) {
             var bestLegArray = $scope.player2BestLegs.split(',');
@@ -1613,9 +1642,19 @@
                     });
                 }
             }
-            $http.get(baseUrl + '/bestlegs').success(function(data) {
-                bestLegService.setLegs(data.bestlegs);
-            });
+
+            // using jQuery to find the bestlegs checkbox element to determine which endpoint to use to refresh the achievements page
+            var bestLegsCheckboxEl = $.find('#bestlegscheckbox')[0];
+
+            if (bestLegsCheckboxEl.checked) { 
+                $http.get(baseUrl + '/bestlegs').success(function(data) {
+                    bestLegService.setLegs(data.bestlegs);
+                });
+            } else {
+                $http.get(baseUrl + '/bestlegs/duplicatesremoved').success(function(data) {
+                    bestLegService.setLegs(data.bestlegs);
+                });            
+            }
         }
     }
   }]);
