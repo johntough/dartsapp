@@ -82,6 +82,28 @@ module.exports = function(restapi, db) {
         });
     });
 
+    restapi.get('/180s/fixture/:fixtureId', function(request, response) {
+        var fixture_id = request.params.fixtureId;
+
+        var json_obj_response = { player180Ids: [], count: 0};
+
+         db.each("SELECT player_180_tbl.id " +
+         "FROM player_180_tbl " +
+         "WHERE player_180_tbl.fixture_id = " + fixture_id,
+        function(err, row) {
+            var id = '';
+
+            if (row.id) {
+                id = row.id;
+                json_obj_response.player180Ids.push(id);
+            }
+        },
+        function complete(err, found) {
+            json_obj_response.count = json_obj_response.player180Ids.length;
+            response.json(json_obj_response);
+        });
+    });
+
     restapi.post('/180/:number180s/:fixture/:player', function(request, response) {
         var new_number180s = request.params.number180s;
         var new_fixture = request.params.fixture;

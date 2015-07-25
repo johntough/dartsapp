@@ -6,7 +6,7 @@ module.exports = function(restapi, db) {
 
         var json_obj_response = { results: [], count: 0};
 
-         db.each("SELECT result_tbl.id, result_tbl.player_one_legs_won, result_tbl.player_two_legs_won, " +
+         db.each("SELECT result_tbl.id, result_tbl.fixture_id, result_tbl.player_one_legs_won, result_tbl.player_two_legs_won, " +
          "p1.forename AS p1_forename, p1.surname AS p1_surname, " +
          "p2.forename AS p2_forename, p2.surname AS p2_surname, " +
          "week_tbl.name AS week_name, week_tbl.date AS week_date, " +
@@ -18,9 +18,10 @@ module.exports = function(restapi, db) {
          "JOIN player_tbl AS p2 ON p2.id = f.player_two_id " +
          "JOIN group_tbl ON group_tbl.id = p1.group_id",
         function(err, row) {
-            var result = { id: '', weekNumber: '', weekDate: '', group: '', playerOneLegsWon: '', playerTwoLegsWon: '', playerOne: '', playerTwo: ''};
+            var result = { id: '', fixtureId: '', weekNumber: '', weekDate: '', group: '', playerOneLegsWon: '', playerTwoLegsWon: '', playerOne: '', playerTwo: ''};
 
             result.id = row.id;
+            result.fixtureId = row.fixture_id;
             result.playerOneLegsWon = row.player_one_legs_won;
             result.playerTwoLegsWon = row.player_two_legs_won;
             result.weekNumber = row.week_name;
@@ -40,7 +41,7 @@ module.exports = function(restapi, db) {
 
         var json_obj_response = { results: [], count: 0};
 
-         db.each("SELECT result_tbl.id, result_tbl.player_one_legs_won, result_tbl.player_two_legs_won, " +
+         db.each("SELECT result_tbl.id, result_tbl.fixture_id, result_tbl.player_one_legs_won, result_tbl.player_two_legs_won, " +
          "p1.forename AS p1_forename, p1.surname AS p1_surname, " +
          "p2.forename AS p2_forename, p2.surname AS p2_surname, " +
          "week_tbl.name AS week_name, week_tbl.date AS week_date, " +
@@ -53,9 +54,10 @@ module.exports = function(restapi, db) {
          "JOIN group_tbl ON group_tbl.id = p1.group_id " +
          "WHERE f.week_id = " + request.params.week,
         function(err, row) {
-            var result = { id: '', weekNumber: '', weekDate: '', group: '', playerOneLegsWon: '', playerTwoLegsWon: '', playerOne: '', playerTwo: ''};
+            var result = { id: '', fixtureId: '', weekNumber: '', weekDate: '', group: '', playerOneLegsWon: '', playerTwoLegsWon: '', playerOne: '', playerTwo: ''};
 
             result.id = row.id;
+            result.fixtureId = row.fixture_id;
             result.playerOneLegsWon = row.player_one_legs_won;
             result.playerTwoLegsWon = row.player_two_legs_won;
             result.weekNumber = row.week_name;
@@ -75,7 +77,7 @@ module.exports = function(restapi, db) {
 
         var json_obj_response = { results: [], count: 0};
 
-         db.each("SELECT result_tbl.id, result_tbl.player_one_legs_won, result_tbl.player_two_legs_won, " +
+         db.each("SELECT result_tbl.id, result_tbl.fixture_id, result_tbl.player_one_legs_won, result_tbl.player_two_legs_won, " +
          "p1.forename AS p1_forename, p1.surname AS p1_surname, " +
          "p2.forename AS p2_forename, p2.surname AS p2_surname, " +
          "week_tbl.name AS week_name, week_tbl.date AS week_date, " +
@@ -88,9 +90,10 @@ module.exports = function(restapi, db) {
          "JOIN group_tbl ON group_tbl.id = p1.group_id " +
          "WHERE group_tbl.id = " + request.params.group,
         function(err, row) {
-            var result = { id: '', weekNumber: '', weekDate: '', group: '', playerOneLegsWon: '', playerTwoLegsWon: '', playerOne: '', playerTwo: ''};
+            var result = { id: '', fixtureId: '', weekNumber: '', weekDate: '', group: '', playerOneLegsWon: '', playerTwoLegsWon: '', playerOne: '', playerTwo: ''};
 
             result.id = row.id;
+            result.fixtureId = row.fixture_id;
             result.playerOneLegsWon = row.player_one_legs_won;
             result.playerTwoLegsWon = row.player_two_legs_won;
             result.weekNumber = row.week_name;
@@ -110,7 +113,7 @@ module.exports = function(restapi, db) {
 
         var json_obj_response = { results: [], count: 0};
 
-         db.each("SELECT result_tbl.id, result_tbl.player_one_legs_won, result_tbl.player_two_legs_won, " +
+         db.each("SELECT result_tbl.id, result_tbl.fixture_id, result_tbl.player_one_legs_won, result_tbl.player_two_legs_won, " +
          "p1.forename AS p1_forename, p1.surname AS p1_surname, " +
          "p2.forename AS p2_forename, p2.surname AS p2_surname, " +
          "week_tbl.name AS week_name, week_tbl.date AS week_date, " +
@@ -124,9 +127,10 @@ module.exports = function(restapi, db) {
          "WHERE p1.id = " + request.params.player + " OR " +
          "p2.id = " + request.params.player,
         function(err, row) {
-            var result = { id: '', weekNumber: '', weekDate: '', group: '', playerOneLegsWon: '', playerTwoLegsWon: '', playerOne: '', playerTwo: ''};
+            var result = { id: '', fixtureId: '', weekNumber: '', weekDate: '', group: '', playerOneLegsWon: '', playerTwoLegsWon: '', playerOne: '', playerTwo: ''};
 
             result.id = row.id;
+            result.fixtureId = row.fixture_id;
             result.playerOneLegsWon = row.player_one_legs_won;
             result.playerTwoLegsWon = row.player_two_legs_won;
             result.weekNumber = row.week_name;
@@ -146,7 +150,7 @@ module.exports = function(restapi, db) {
 
         var json_obj_response = { results: [], count: 0};
 
-         db.each("SELECT result_tbl.id, result_tbl.player_one_legs_won, result_tbl.player_two_legs_won, " +
+         db.each("SELECT result_tbl.id, result_tbl.fixture_id, result_tbl.player_one_legs_won, result_tbl.player_two_legs_won, " +
          "p1.forename AS p1_forename, p1.surname AS p1_surname, " +
          "p2.forename AS p2_forename, p2.surname AS p2_surname, " +
          "week_tbl.name AS week_name, week_tbl.date AS week_date, " +
@@ -160,9 +164,10 @@ module.exports = function(restapi, db) {
          "WHERE group_tbl.id = " + request.params.group + " " +
          "AND week_tbl.id = " + request.params.week,
         function(err, row) {
-            var result = { id: '', weekNumber: '', weekDate: '', group: '', playerOneLegsWon: '', playerTwoLegsWon: '', playerOne: '', playerTwo: ''};
+            var result = { id: '', fixtureId: '', weekNumber: '', weekDate: '', group: '', playerOneLegsWon: '', playerTwoLegsWon: '', playerOne: '', playerTwo: ''};
 
             result.id = row.id;
+            result.fixtureId = row.fixture_id;
             result.playerOneLegsWon = row.player_one_legs_won;
             result.playerTwoLegsWon = row.player_two_legs_won;
             result.weekNumber = row.week_name;
@@ -182,7 +187,7 @@ module.exports = function(restapi, db) {
 
         var json_obj_response = { results: [], count: 0};
 
-         db.each("SELECT result_tbl.id, result_tbl.player_one_legs_won, result_tbl.player_two_legs_won, " +
+         db.each("SELECT result_tbl.id, result_tbl.fixture_id, result_tbl.player_one_legs_won, result_tbl.player_two_legs_won, " +
          "p1.forename AS p1_forename, p1.surname AS p1_surname, " +
          "p2.forename AS p2_forename, p2.surname AS p2_surname, " +
          "week_tbl.name AS week_name, week_tbl.date AS week_date, " +
@@ -196,9 +201,10 @@ module.exports = function(restapi, db) {
          "WHERE group_tbl.id = " + request.params.group + " " +
          "AND (p1.id = " + request.params.player + " OR p2.id = " + request.params.player + ")",
         function(err, row) {
-            var result = { id: '', weekNumber: '', weekDate: '', group: '', playerOneLegsWon: '', playerTwoLegsWon: '', playerOne: '', playerTwo: ''};
+            var result = { id: '', fixtureId: '', weekNumber: '', weekDate: '', group: '', playerOneLegsWon: '', playerTwoLegsWon: '', playerOne: '', playerTwo: ''};
 
             result.id = row.id;
+            result.fixtureId = row.fixture_id;
             result.playerOneLegsWon = row.player_one_legs_won;
             result.playerTwoLegsWon = row.player_two_legs_won;
             result.weekNumber = row.week_name;
@@ -218,7 +224,7 @@ module.exports = function(restapi, db) {
 
         var json_obj_response = { results: [], count: 0};
 
-         db.each("SELECT result_tbl.id, result_tbl.player_one_legs_won, result_tbl.player_two_legs_won, " +
+         db.each("SELECT result_tbl.id, result_tbl.fixture_id, result_tbl.player_one_legs_won, result_tbl.player_two_legs_won, " +
          "p1.forename AS p1_forename, p1.surname AS p1_surname, " +
          "p2.forename AS p2_forename, p2.surname AS p2_surname, " +
          "week_tbl.name AS week_name, week_tbl.date AS week_date, " +
@@ -232,9 +238,10 @@ module.exports = function(restapi, db) {
          "WHERE week_tbl.id = " + request.params.week + " " +
          "AND (p1.id = " + request.params.player + " OR p2.id = " + request.params.player + ")",
         function(err, row) {
-            var result = { id: '', weekNumber: '', weekDate: '', group: '', playerOneLegsWon: '', playerTwoLegsWon: '', playerOne: '', playerTwo: ''};
+            var result = { id: '', fixtureId: '', weekNumber: '', weekDate: '', group: '', playerOneLegsWon: '', playerTwoLegsWon: '', playerOne: '', playerTwo: ''};
 
             result.id = row.id;
+            result.fixtureId = row.fixture_id;
             result.playerOneLegsWon = row.player_one_legs_won;
             result.playerTwoLegsWon = row.player_two_legs_won;
             result.weekNumber = row.week_name;
@@ -254,7 +261,7 @@ module.exports = function(restapi, db) {
 
         var json_obj_response = { results: [], count: 0};
 
-         db.each("SELECT result_tbl.id, result_tbl.player_one_legs_won, result_tbl.player_two_legs_won, " +
+         db.each("SELECT result_tbl.id, result_tbl.fixture_id, result_tbl.player_one_legs_won, result_tbl.player_two_legs_won, " +
          "p1.forename AS p1_forename, p1.surname AS p1_surname, " +
          "p2.forename AS p2_forename, p2.surname AS p2_surname, " +
          "week_tbl.name AS week_name, week_tbl.date AS week_date, " +
@@ -269,9 +276,10 @@ module.exports = function(restapi, db) {
          "AND week_tbl.id = " + request.params.week + " " +
          "AND (p1.id = " + request.params.player + " OR p2.id = " + request.params.player + ")",
         function(err, row) {
-            var result = { id: '', weekNumber: '', weekDate: '', group: '', playerOneLegsWon: '', playerTwoLegsWon: '', playerOne: '', playerTwo: ''};
+            var result = { id: '', fixtureId: '', weekNumber: '', weekDate: '', group: '', playerOneLegsWon: '', playerTwoLegsWon: '', playerOne: '', playerTwo: ''};
 
             result.id = row.id;
+            result.fixtureId = row.fixture_id;
             result.playerOneLegsWon = row.player_one_legs_won;
             result.playerTwoLegsWon = row.player_two_legs_won;
             result.weekNumber = row.week_name;

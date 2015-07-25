@@ -112,6 +112,28 @@ module.exports = function(restapi, db) {
         });
     });
 
+    restapi.get('/bestlegs/fixture/:fixtureId', function(request, response) {
+        var fixture_id = request.params.fixtureId;
+
+        var json_obj_response = { bestlegIds: [], count: 0};
+
+         db.each("SELECT best_leg_tbl.id " +
+         "FROM best_leg_tbl " +
+         "WHERE best_leg_tbl.fixture_id = " + fixture_id,
+        function(err, row) {
+            var id = '';
+
+            if (row.id) {
+                id = row.id;
+                json_obj_response.bestlegIds.push(id);
+            }
+        },
+        function complete(err, found) {
+            json_obj_response.count = json_obj_response.bestlegIds.length;
+            response.json(json_obj_response);
+        });
+    });
+
     restapi.post('/bestleg/:numberofdarts/:fixture/:player', function(request, response) {
         var new_best_leg = request.params.numberofdarts;
         var new_fixture = request.params.fixture;

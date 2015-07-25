@@ -112,6 +112,28 @@ module.exports = function(restapi, db) {
         });
     });
 
+    restapi.get('/highfinishes/fixture/:fixtureId', function(request, response) {
+        var fixture_id = request.params.fixtureId;
+
+        var json_obj_response = { highfinishIds: [], count: 0};
+
+         db.each("SELECT high_finish_tbl.id " +
+         "FROM high_finish_tbl " +
+         "WHERE high_finish_tbl.fixture_id = " + fixture_id,
+        function(err, row) {
+            var id = '';
+
+            if (row.id) {
+                id = row.id;
+                json_obj_response.highfinishIds.push(id);
+            }
+        },
+        function complete(err, found) {
+            json_obj_response.count = json_obj_response.highfinishIds.length;
+            response.json(json_obj_response);
+        });
+    });
+
     restapi.post('/highfinish/:checkout/:fixture/:player', function(request, response) {
         var new_checkout = request.params.checkout;
         var new_fixture = request.params.fixture;

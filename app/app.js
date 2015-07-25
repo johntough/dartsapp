@@ -434,7 +434,7 @@
                 } else {
                     $http.get(baseUrl + '/highfinishes/duplicatesremoved').success(function(data) {
                         highFinishService.setFinishes(data.highfinishes);
-                    });            
+                    });
                 }
                 // using jQuery to find the bestleg checkbox element to determine which endpoint to use to refresh the achievements page
                 var bestLegCheckboxEl = $.find('#bestlegscheckbox')[0];
@@ -446,7 +446,7 @@
                 } else {
                     $http.get(baseUrl + '/bestlegs/duplicatesremoved').success(function(data) {
                         bestLegService.setLegs(data.bestlegs);
-                    });            
+                    });
                 }
             });
         }, function(btn){
@@ -2843,8 +2843,8 @@
     }
   }]);
 
-  app.controller('ResultController', ['$scope', '$http', 'loginService', 'dialogs', 'resultService', 'weekService', 'groupService', 'playerService',
-  function($scope, $http, loginService, dialogs, resultService, weekService, groupService, playerService) {
+  app.controller('ResultController', ['$scope', '$http', 'loginService', 'dialogs', 'resultService', 'player180Service', 'bestLegService', 'highFinishService', 'weekService', 'groupService', 'playerService',
+  function($scope, $http, loginService, dialogs, resultService, player180Service, bestLegService, highFinishService, weekService, groupService, playerService) {
     var resultCtrl = this;
 
     $scope.obj = {
@@ -2927,7 +2927,7 @@
         }
     },
 
-    resultCtrl.deleteRecord = function(id, weekName, weekDate, playerOne, playerOneLegsWon, playerTwo, playerTwoLegsWon) {
+    resultCtrl.deleteRecord = function(id, fixtureId, weekName, weekDate, playerOne, playerOneLegsWon, playerTwo, playerTwoLegsWon) {
         var dialog = dialogs.confirm('Please Confirm', 'Are you sure you want to delete the following result? <br><br>' + 
             '<b>' + weekName + ', ' + weekDate + ' - ' + playerOne + ' ( ' + playerOneLegsWon + ' ) v ' + playerTwo + ' ( ' + playerTwoLegsWon + ' )' +
             '<br><br> Warning:</b> Deleting the result will remove all associated data including any achievements.');
@@ -2936,6 +2936,73 @@
                 // refresh controllers internal state for results
                 $http.get(baseUrl + '/results/').success(function(data) {
                     resultService.setResults(data.results, false);
+                });
+
+                // get all 180s related to the deleted result/fixture
+                $http.get(baseUrl + '/180s/fixture/' + fixtureId).success(function(data) {
+                    // loop through and delete all 180s related to the deleted result/fixture
+                    for (var player180Id in data.player180Ids) {
+                        if (data.player180Ids.hasOwnProperty(player180Id)) {
+                            var currentId = data.player180Ids[player180Id]
+
+                            $http.delete(baseUrl + '/180/' + currentId).success(function(data) {
+                                // refresh player180Service
+                                $http.get(baseUrl + '/180s').success(function(data) {
+                                    player180Service.set180s(data.player180s);
+                                });
+                            });
+                        }
+                    }
+                });
+
+                // get all highfinishes related to the deleted result/fixture
+                $http.get(baseUrl + '/highfinishes/fixture/' + fixtureId).success(function(data) {
+                    // loop through and delete all highfinishes related to the deleted result/fixture
+                    for (var highFinishId in data.highfinishIds) {
+                        if (data.highfinishIds.hasOwnProperty(highFinishId)) {
+                            var currentId = data.highfinishIds[highFinishId]
+
+                            $http.delete(baseUrl + '/highfinish/' + currentId).success(function(data) {
+                                // using jQuery to find the highfinish checkbox element to determine which endpoint to use to refresh the achievements page
+                                var highFinishCheckboxEl = $.find('#highfinishcheckbox')[0];
+
+                                if (highFinishCheckboxEl.checked) { 
+                                    $http.get(baseUrl + '/highfinishes').success(function(data) {
+                                        highFinishService.setFinishes(data.highfinishes);
+                                    });
+                                } else {
+                                    $http.get(baseUrl + '/highfinishes/duplicatesremoved').success(function(data) {
+                                        highFinishService.setFinishes(data.highfinishes);
+                                    });
+                                }
+                            });
+                        }
+                    }
+                });
+
+                // get all bestlegs related to the deleted result/fixture
+                $http.get(baseUrl + '/bestlegs/fixture/' + fixtureId).success(function(data) {
+                    // loop through and delete all bestlegs related to the deleted result/fixture
+                    for (var bestLegId in data.bestlegIds) {
+                        if (data.bestlegIds.hasOwnProperty(bestLegId)) {
+                            var currentId = data.bestlegIds[bestLegId]
+
+                            $http.delete(baseUrl + '/bestleg/' + currentId).success(function(data) {
+                                // using jQuery to find the bestleg checkbox element to determine which endpoint to use to refresh the achievements page
+                                var bestLegCheckboxEl = $.find('#bestlegscheckbox')[0];
+
+                                if (bestLegCheckboxEl.checked) { 
+                                    $http.get(baseUrl + '/bestlegs').success(function(data) {
+                                        bestLegService.setLegs(data.bestlegs);
+                                    });
+                                } else {
+                                    $http.get(baseUrl + '/bestlegs/duplicatesremoved').success(function(data) {
+                                        bestLegService.setLegs(data.bestlegs);
+                                    });
+                                }
+                            });
+                        }
+                    }
                 });
             });
         }, function(btn){
