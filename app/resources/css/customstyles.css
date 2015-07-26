@@ -149,6 +149,9 @@ body {
     .fa-print {
         display: none;
     }
+    .admin-controls {
+        display: none;
+    }
     .tooltip {
         visibility: hidden;
     }

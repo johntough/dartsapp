@@ -57,7 +57,7 @@
                 <th>Player 1 Legs</th>
                 <th>Player 2</th>
                 <th>Player 2 Legs</th>
-                <th ng-show="resultCtrl.showPrivilegedData()"></th>
+                <th class="admin-controls" ng-show="resultCtrl.showPrivilegedData()"></th>
             </tr>
         </thead>
         <tbody>
@@ -74,7 +74,7 @@
         <td ng-class="resultCtrl.getClass('1', result)">{{result.playerOneLegsWon}}</td>
         <td ng-class="resultCtrl.getClass('2', result)">{{result.playerTwo}}</td>
         <td ng-class="resultCtrl.getClass('2', result)">{{result.playerTwoLegsWon}}</td>
-        <td ng-show="resultCtrl.showPrivilegedData()">
+        <td class="admin-controls" ng-show="resultCtrl.showPrivilegedData()">
             <h4>
                 <span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="Edit Result" ng-click="resultCtrl.edit(result)" ng-style="{cursor:'pointer'}"></span>
                 <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete Result" ng-click="resultCtrl.deleteRecord(result.id, result.fixtureId, result.weekNumber, result.weekDate, result.playerOne, result.playerOneLegsWon, result.playerTwo, result.playerTwoLegsWon)" ng-style="{cursor:'pointer'}"></span>

@@ -63,7 +63,7 @@
                 <th>Marker 1</th>
                 <th>Marker 2</th>
                 <th></th>
-                <th></th>
+                <th class="admin-controls"></th>
             </tr>
         </thead>
         <tbody>
@@ -84,11 +84,11 @@
         <td>{{fixture.markerTwo}}</td>
         <td>
             <h4>
-                <span class="glyphicon glyphicon-play-circle" ng-style="{cursor:'pointer'}" ng-show="fixtureCtrl.showPrivilegedData() && !fixture.complete" ng-click="fixtureCtrl.completeFixture(fixture)" data-toggle="tooltip" data-placement="bottom" title="Record Result"></span>
+                <span class="glyphicon glyphicon-play-circle admin-controls" ng-style="{cursor:'pointer'}" ng-show="fixtureCtrl.showPrivilegedData() && !fixture.complete" ng-click="fixtureCtrl.completeFixture(fixture)" data-toggle="tooltip" data-placement="bottom" title="Record Result"></span>
                 <span class="glyphicon glyphicon-ok" ng-show="fixture.complete" data-toggle="tooltip" data-placement="bottom" title="Result Recorded" style="color:green"></span>
             </h4>
         </td>
-        <td ng-show="fixtureCtrl.showPrivilegedData()">
+        <td class="admin-controls" ng-show="fixtureCtrl.showPrivilegedData()">
             <h4>
                 <span class="glyphicon glyphicon-edit" ng-hide="fixture.complete" data-toggle="tooltip" data-placement="bottom" title="Edit Fixture" ng-click="fixtureCtrl.edit(fixture)" ng-style="{cursor:'pointer'}"></span>
                 <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete Fixture" ng-click="fixtureCtrl.deleteRecord(fixture.id, fixture.weekNumber, fixture.weekDate, fixture.playerOne, fixture.playerTwo)" ng-style="{cursor:'pointer'}"></span>

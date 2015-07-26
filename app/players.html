@@ -38,7 +38,7 @@
                 <th>Group</th>
                 <th ng-show="playerCtrl.showPrivilegedData()">Email Address</th>
                 <th ng-show="playerCtrl.showPrivilegedData()">Phone Number</th>
-                <th ng-show="playerCtrl.showPrivilegedData()"></th>
+                <th class="admin-controls" ng-show="playerCtrl.showPrivilegedData()"></th>
             </tr>
         </thead>
         <tbody>
@@ -53,7 +53,7 @@
         <td>{{player.group}}</td>
         <td ng-show="playerCtrl.showPrivilegedData()">{{player.emailAddress}}</td>
         <td ng-show="playerCtrl.showPrivilegedData()">{{player.phoneNumber}}</td>
-        <td ng-show="playerCtrl.showPrivilegedData()">
+        <td class="admin-controls" ng-show="playerCtrl.showPrivilegedData()">
             <h4>
                 <span class="glyphicon glyphicon-edit" data-toggle="tooltip" data-placement="bottom" title="Edit Player Details" ng-click="playerCtrl.edit(player)" ng-style="{cursor:'pointer'}"></span>
                 <span class="glyphicon glyphicon-trash" data-toggle="tooltip" data-placement="bottom" title="Delete Player" ng-click="playerCtrl.deleteRecord(player.id, player.forename, player.surname)" ng-style="{cursor:'pointer'}"></span>

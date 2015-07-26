@@ -12,7 +12,7 @@
     </ul>
 
     <div ng-show="achievementCtrl.isSet('player180s')">
-        <div ng-show="achievementCtrl.showPrivilegedData()">
+        <div class="admin-controls" ng-show="achievementCtrl.showPrivilegedData()">
             <h3 class="apply-indent"><font color="#777777">Modify 180s</font></h3>
             <h4 class="apply-indent">
                 <span class="glyphicon glyphicon-plus" data-toggle="tooltip" data-placement="bottom" title="Add 180s" ng-click="achievementCtrl.add180s()" ng-style="{cursor:'pointer'}"></span>
@@ -41,7 +41,7 @@
     </div>
 
     <div ng-show="achievementCtrl.isSet('highfinishes')">
-        <div ng-show="achievementCtrl.showPrivilegedData()">
+        <div class="admin-controls" ng-show="achievementCtrl.showPrivilegedData()">
             <h3 class="apply-indent"><font color="#777777">Modify High Checkouts</font></h3>
             <h4 class="apply-indent">
                 <span class="glyphicon glyphicon-plus" data-toggle="tooltip" data-placement="bottom" title="Add High Finish" ng-click="achievementCtrl.addHighFinish()" ng-style="{cursor:'pointer'}"></span>
@@ -76,7 +76,7 @@
     </div>
 
     <div ng-show="achievementCtrl.isSet('bestlegs')">
-        <div ng-show="achievementCtrl.showPrivilegedData()">
+        <div class="admin-controls" ng-show="achievementCtrl.showPrivilegedData()">
             <h3 class="apply-indent"><font color="#777777">Modify Best Legs</font></h3>
             <h4 class="apply-indent">
                 <span class="glyphicon glyphicon-plus" data-toggle="tooltip" data-placement="bottom" title="Add Best Leg" ng-click="achievementCtrl.addBestLeg()" ng-style="{cursor:'pointer'}"></span>
