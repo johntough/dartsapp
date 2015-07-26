@@ -816,7 +816,8 @@
     }
   }]);
   
-  app.controller('WeekController', ['$scope', '$http', 'loginService', 'weekService', 'dialogs', 'toastr', 'toastrConfig', function($scope, $http, loginService, weekService, dialogs, toastr, toastrConfig) {
+  app.controller('WeekController', ['$scope', '$http', 'loginService', 'weekService', 'fixtureService', 'resultService', 'player180Service', 'highFinishService', 'bestLegService', 'dialogs', 'toastr', 'toastrConfig', 
+  function($scope, $http, loginService, weekService, fixtureService, resultService, player180Service, highFinishService, bestLegService, dialogs, toastr, toastrConfig) {
     var weekCtrl = this;
     var isDuplicateWeekAttempt = false;
 
@@ -858,6 +859,43 @@
                 $http.get(baseUrl + '/weeks').success(function(data) {
                     weekService.setWeeks(data.weeks);
                 });
+
+                // refresh fixture service
+                $http.get(baseUrl + '/fixtures').success(function(data) {
+                    fixtureService.setFixtures(data.fixtures);
+                });
+                // refresh results service
+                $http.get(baseUrl + '/results').success(function(data) {
+                    resultService.setResults(data.results);
+                });
+                // refresh achievement services
+                $http.get(baseUrl + '/180s').success(function(data) {
+                    player180Service.set180s(data.player180s);
+                });
+                // using jQuery to find the highfinish checkbox element to determine which endpoint to use to refresh the achievements page
+                var highFinishCheckboxEl = $.find('#highfinishcheckbox')[0];
+
+                if (highFinishCheckboxEl.checked) { 
+                    $http.get(baseUrl + '/highfinishes').success(function(data) {
+                        highFinishService.setFinishes(data.highfinishes);
+                    });
+                } else {
+                    $http.get(baseUrl + '/highfinishes/duplicatesremoved').success(function(data) {
+                        highFinishService.setFinishes(data.highfinishes);
+                    });
+                }
+                // using jQuery to find the bestleg checkbox element to determine which endpoint to use to refresh the achievements page
+                var bestLegCheckboxEl = $.find('#bestlegscheckbox')[0];
+
+                if (bestLegCheckboxEl.checked) { 
+                    $http.get(baseUrl + '/bestlegs').success(function(data) {
+                        bestLegService.setLegs(data.bestlegs);
+                    });
+                } else {
+                    $http.get(baseUrl + '/bestlegs/duplicatesremoved').success(function(data) {
+                        bestLegService.setLegs(data.bestlegs);
+                    });
+                }
             });
         }, function(btn){
             // do nothing - user chose not to delete the week
