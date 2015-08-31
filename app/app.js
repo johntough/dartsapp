@@ -5,7 +5,7 @@
       'http://' + document.location.hostname :
       'http://' + document.location.hostname + ':' + document.location.port;
 
-  app.service('loginService', ['dialogs', function(dialogs) {
+  app.service('loginService', ['dialogs', '$http', function(dialogs, $http) {
       var loginservice = this;
       var isAuthorised = false;
       var invalidAttempt = false;
@@ -19,13 +19,22 @@
       },
 
       loginservice.login = function(username, password) {
-          if (username === 'admin' && password === 'admin') {
+          /*if (username === 'admin' && password === 'admin') {
               isAuthorised = true;                
               invalidAttempt = false;
           } else {
               invalidAttempt = true;
               dialogs.error('Error', 'Login attempt unsuccessful.');
-          }
+          }*/
+          $http.get(baseUrl + '/logoncheck/' + username + '/' + password).success(function(data) {
+              if (data.success) {
+                  isAuthorised = true;                
+                  invalidAttempt = false;
+              } else {
+                  invalidAttempt = true;
+                  dialogs.error('Error', 'Login attempt unsuccessful.');
+              }
+          });
       };
 
       loginservice.logout = function() {        

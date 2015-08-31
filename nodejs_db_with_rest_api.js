@@ -3,6 +3,21 @@ var db = new sqlite3.Database('data/db01');
 
 db.serialize(function() {
 
+    db.run("CREATE TABLE IF NOT EXISTS logon_tbl" +
+    "(  id INTEGER PRIMARY KEY NOT NULL," +
+    "   username CHAR(50) NOT NULL," +
+    "   password CHAR(50) NOT NULL" +
+    ")");
+
+    var new_username = 'admin';
+    var new_password = 'admin';
+
+    db.run("INSERT INTO logon_tbl (username, password) VALUES (?, ?)", new_username, new_password, function(err, row) {
+        if (err) {
+            console.log(err);
+        }
+    });
+
     db.run("CREATE TABLE IF NOT EXISTS contacts_tbl" +
     "(  id INTEGER PRIMARY KEY NOT NULL," +
     "   name CHAR(50) NOT NULL," +
@@ -121,6 +136,7 @@ require('./result')(restapi, db);
 require('./180')(restapi, db);
 require('./highfinish')(restapi, db);
 require('./bestleg')(restapi, db);
+require('./logon')(restapi, db);
 
 restapi.use(express.static(__dirname + '/app'));
 
