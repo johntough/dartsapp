@@ -9,8 +9,9 @@ db.serialize(function() {
     "   password CHAR(50) NOT NULL" +
     ")");
 
-    var new_username = 'admin';
-    var new_password = 'admin';
+    // hardcoding of username should be removed
+    var new_username = 'andyhfc1875@hotmail.co.uk';
+    var new_password = 'THEDOC';
 
     db.run("INSERT INTO logon_tbl (username, password) VALUES (?, ?)", new_username, new_password, function(err, row) {
         if (err) {

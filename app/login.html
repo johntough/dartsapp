@@ -26,13 +26,22 @@
 
 <div ng-show="loginCtrl.isAuthorised()">
     <p>
+    <form class="form-signin">
+        <div class="col-sm-3"/>
+        </div>
+        <div class="col-sm-6">
+            <button class="btn btn-lg btn-primary btn-block" ng-click="loginCtrl.showChangePasswordDialog()">Change Password</button>
+        </div>
+        <br>
+    </form>
+
     <form class="form-signin" ng-submit="logout()">
-    <div class="col-sm-3"/>
-    </div>
-    <div class="col-sm-6">
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Log out</button>
-    </div>
-    <br>
+        <div class="col-sm-3"/>
+        </div>
+        <div class="col-sm-6">
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Log out</button>
+        </div>
+        <br>
     </form>
     <br>
 </div>

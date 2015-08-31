@@ -19,20 +19,13 @@
       },
 
       loginservice.login = function(username, password) {
-          /*if (username === 'admin' && password === 'admin') {
-              isAuthorised = true;                
-              invalidAttempt = false;
-          } else {
-              invalidAttempt = true;
-              dialogs.error('Error', 'Login attempt unsuccessful.');
-          }*/
           $http.get(baseUrl + '/logoncheck/' + username + '/' + password).success(function(data) {
               if (data.success) {
                   isAuthorised = true;                
                   invalidAttempt = false;
               } else {
                   invalidAttempt = true;
-                  dialogs.error('Error', 'Login attempt unsuccessful.');
+                  dialogs.error('Error', 'Login attempt unsuccessful. Username or password incorrect.');
               }
           });
       };
@@ -1257,6 +1250,48 @@
             });
         }
     }
+  }]);
+
+  app.controller('ChangePasswordController', ['$scope', '$http', '$modalInstance', 'data', 'dialogs', 'toastr', 'toastrConfig',
+  function($scope, $http, $modalInstance, data, dialogs, toastr, toastrConfig) {
+    var changePasswordCtrl = this;
+    $scope.originalPassword1 = '';
+    $scope.originalPassword2 = '';
+    $scope.newPassword = '';
+
+    $scope.cancel = function() {
+      $modalInstance.dismiss('canceled');  
+    };
+  
+    $scope.save = function() {
+        changePasswordCtrl.updatePassword($scope.currentPassword1, $scope.currentPassword2, $scope.newPassword);
+    };
+
+    changePasswordCtrl.updatePassword = function(currentPassword1, currentPassword2, newPassword) {
+        var validationSuccess = false;
+
+        if (currentPassword1 === currentPassword2) {
+          $http.get(baseUrl + '/logoncheck/andyhfc1875@hotmail.co.uk/' + currentPassword1).success(function(data) {
+              if (data.success) {
+                    validationSuccess = true;
+                }
+
+                if (validationSuccess) {
+                    // hardcoding of username should be removed
+                    $http.put(baseUrl + '/logon/andyhfc1875@hotmail.co.uk/' + newPassword).success(function(data) {
+                        toastrConfig.positionClass = 'toast-bottom-right';
+                        toastrConfig.timeOut = 2000;
+                        toastr.success('Password updated!');
+                        $modalInstance.close();
+                    });
+                } else {
+                    dialogs.error('Oops...', 'Current password is incorrect.');
+                }
+          });
+        } else {
+            dialogs.error('Oops...', 'Current passwords do not match.');
+        }
+    };
   }]);
 
   app.controller('AddNewsItemController', ['$scope', '$http', '$modalInstance', 'data', function($scope, $http, $modalInstance, data) {
@@ -3475,7 +3510,7 @@
     });
   }]);
 
-  app.controller('LoginController', ['$scope', 'loginService', function($scope, loginService) {
+  app.controller('LoginController', ['$scope', 'loginService', 'dialogs', function($scope, loginService, dialogs) {
     var loginCtrl = this;
     
     loginCtrl.isAuthorised = function() {
@@ -3490,6 +3525,15 @@
 
     $scope.logout = function() {
         loginService.logout();
+    },
+
+    loginCtrl.showChangePasswordDialog = function() {
+        var dialog = dialogs.create('/changepassworddialog.html', 'ChangePasswordController', {}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});
+        dialog.result.then(function() {
+
+        },function() {
+            // do nothing as user did not change password
+        });
     }
   }]);
   
