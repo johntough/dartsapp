@@ -40,14 +40,14 @@
             </thead>
             <tbody>
                 <tr ng-repeat="player in table.players | orderBy:['-points', '-legsWon', 'legsLost']">
-                    <td ng-class="{ success: $index < 4 }">{{player.player}}</td>
-                    <td ng-class="{ success: $index < 4 }">{{player.played}}</td>
-                    <td ng-class="{ success: $index < 4 }">{{player.won}}</td>
-                    <td ng-class="{ success: $index < 4 }">{{player.drawn}}</td>
-                    <td ng-class="{ success: $index < 4 }">{{player.lost}}</td>
-                    <td ng-class="{ success: $index < 4 }">{{player.legsWon}}</td>
-                    <td ng-class="{ success: $index < 4 }">{{player.legsLost}}</td>
-                    <td ng-class="{ success: $index < 4 }">{{player.points}}</td>
+                    <td ng-class="{ success: $index < 8 }">{{player.player}}</td>
+                    <td ng-class="{ success: $index < 8 }">{{player.played}}</td>
+                    <td ng-class="{ success: $index < 8 }">{{player.won}}</td>
+                    <td ng-class="{ success: $index < 8 }">{{player.drawn}}</td>
+                    <td ng-class="{ success: $index < 8 }">{{player.lost}}</td>
+                    <td ng-class="{ success: $index < 8 }">{{player.legsWon}}</td>
+                    <td ng-class="{ success: $index < 8 }">{{player.legsLost}}</td>
+                    <td ng-class="{ success: $index < 8 }">{{player.points}}</td>
                 </tr>
             </tbody>
         </table>
