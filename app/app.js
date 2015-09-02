@@ -508,6 +508,35 @@
     var informationCtrl = this;
     informationCtrl.map = undefined;
 
+    informationCtrl.GetMap = function () {
+        var mapOptions = {
+            credentials: "AkDMRqo7Xf53HjXoPhuRDWtuYIC6j9CQ1xiCjZleh2kQkD_v_V8aKTZfsHMJs-M-",
+            center: new Microsoft.Maps.Location(55.937879, -3.241619),
+            mapTypeId: Microsoft.Maps.MapTypeId.road,
+            zoom: 13,
+            showScalebar: true
+        }
+
+        informationCtrl.map = new Microsoft.Maps.Map(
+            document.getElementById("map-canvas"),
+            mapOptions
+        );
+
+        // Define the pushpin location
+        var loc = new Microsoft.Maps.Location(55.937879, -3.241619);
+
+        var pushpinOptions = {
+            typeName: 'mypinclass',
+            text: 'Murrayfield Sports Bar',
+            visible: true,
+            width: 200
+        };
+
+        // Add a pin to the map
+        var pin = new Microsoft.Maps.Pushpin(loc, pushpinOptions);
+        informationCtrl.map.entities.push(pin);
+    },
+
     informationCtrl.ruleItems = [];
     informationCtrl.ruleItemsLength = 0;
 
@@ -521,6 +550,9 @@
     },
 
     informationCtrl.setTab = function(setTab) {
+        if ((setTab === 'location') && !informationCtrl.map) {
+            informationCtrl.GetMap();
+        }
         informationCtrl.tab = setTab;
     },
 
@@ -637,26 +669,6 @@
         informationCtrl.setNewsItems(data.newsItems);
         informationCtrl.newsItemsLength = data.count;
     });
-
-    // Google Maps initialisation
-    informationCtrl.initMap = function() {
-
-        var mapOptions = {
-            zoom: 8,
-            center: new google.maps.LatLng(55.937879, -3.241619),
-        };
-
-        informationCtrl.map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-
-        var marker = new google.maps.Marker({
-            position: new google.maps.LatLng(55.937879, -3.241619),
-            map: informationCtrl.map,
-            title: 'Murrayfield Sports Bar'
-        });
-        informationCtrl.map.setCenter(new google.maps.LatLng(55.937879, -3.241619));
-    },
-
-    google.maps.event.addDomListener(window, 'load', informationCtrl.initMap);
 
     informationCtrl.showAddRuleForm = function() {
         var dialog = dialogs.create('/addruleitemdialog.html', 'AddRuleItemController', {}, {size:'lg', keyboard: true, backdrop: true, windowClass: 'my-class'});

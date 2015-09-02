@@ -125,12 +125,6 @@ body {
     position: absolute;
     right: 10px;
 }
-
-#map-canvas {
-    width: 500px;
-    height: 400px;
-    background-color: #CCC;
-}
   
 /* styles for printing - hiding element that should not be printed */
 @media print {
@@ -158,4 +152,15 @@ body {
     form#filterForm {
         display: none;
     }
+}
+
+.MicrosoftMap {
+    width: 600px;
+    height: 400px;
+    left: 20px !important;
+    top: 160px !important;
+}
+
+.mypinclass div {
+    color: black !important;
 }
