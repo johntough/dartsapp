@@ -509,9 +509,12 @@
     informationCtrl.map = undefined;
 
     informationCtrl.GetMap = function () {
+
+        var loc = new Microsoft.Maps.Location(55.937879, -3.241619);
+
         var mapOptions = {
             credentials: "AkDMRqo7Xf53HjXoPhuRDWtuYIC6j9CQ1xiCjZleh2kQkD_v_V8aKTZfsHMJs-M-",
-            center: new Microsoft.Maps.Location(55.937879, -3.241619),
+            center: loc,
             mapTypeId: Microsoft.Maps.MapTypeId.road,
             zoom: 13,
             showScalebar: true
@@ -522,14 +525,12 @@
             mapOptions
         );
 
-        // Define the pushpin location
-        var loc = new Microsoft.Maps.Location(55.937879, -3.241619);
-
         var pushpinOptions = {
             typeName: 'mypinclass',
             text: 'Murrayfield Sports Bar',
             visible: true,
-            width: 200
+            width: 200,
+            anchor: new Microsoft.Maps.Point(12, 36)
         };
 
         // Add a pin to the map
