@@ -515,7 +515,7 @@
         var mapOptions = {
             credentials: "AkDMRqo7Xf53HjXoPhuRDWtuYIC6j9CQ1xiCjZleh2kQkD_v_V8aKTZfsHMJs-M-",
             center: loc,
-            mapTypeId: Microsoft.Maps.MapTypeId.road,
+            mapTypeId: Microsoft.Maps.MapTypeId.auto,
             zoom: 13,
             showScalebar: true
         }
