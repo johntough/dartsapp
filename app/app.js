@@ -507,36 +507,30 @@
   app.controller('InformationController', ['$scope', '$http', 'loginService', 'dialogs', 'toastr', 'toastrConfig', function($scope, $http, loginService, dialogs, toastr, toastrConfig) {
     var informationCtrl = this;
     informationCtrl.map = undefined;
+    informationCtrl.mapTabOpened = false;
 
-    informationCtrl.GetMap = function () {
+    // Google Maps initialisation
+    informationCtrl.initMap  = function () {
+        if (informationCtrl.mapTabOpened && !informationCtrl.map) {
 
-        var loc = new Microsoft.Maps.Location(55.937879, -3.241619);
+            var mapOptions = {
+                zoom: 12,
+                center: new google.maps.LatLng(55.937879, -3.241619),
+            };
 
-        var mapOptions = {
-            credentials: "AkDMRqo7Xf53HjXoPhuRDWtuYIC6j9CQ1xiCjZleh2kQkD_v_V8aKTZfsHMJs-M-",
-            center: loc,
-            mapTypeId: Microsoft.Maps.MapTypeId.auto,
-            zoom: 13,
-            showScalebar: true
+            informationCtrl.map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+            var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(55.937879, -3.241619),
+                map: informationCtrl.map,
+                title: 'Murrayfield Sports Bar'
+            });
+
+            informationCtrl.map.setCenter(new google.maps.LatLng(55.937879, -3.241619));
         }
-
-        informationCtrl.map = new Microsoft.Maps.Map(
-            document.getElementById("map-canvas"),
-            mapOptions
-        );
-
-        var pushpinOptions = {
-            typeName: 'mypinclass',
-            text: 'Murrayfield Sports Bar',
-            visible: true,
-            width: 200,
-            anchor: new Microsoft.Maps.Point(12, 36)
-        };
-
-        // Add a pin to the map
-        var pin = new Microsoft.Maps.Pushpin(loc, pushpinOptions);
-        informationCtrl.map.entities.push(pin);
     },
+
+    google.maps.event.addDomListener(window, 'click', informationCtrl.initMap);
 
     informationCtrl.ruleItems = [];
     informationCtrl.ruleItemsLength = 0;
@@ -551,8 +545,8 @@
     },
 
     informationCtrl.setTab = function(setTab) {
-        if ((setTab === 'location') && !informationCtrl.map) {
-            informationCtrl.GetMap();
+        if (setTab === 'location') {
+            informationCtrl.mapTabOpened = true;
         }
         informationCtrl.tab = setTab;
     },

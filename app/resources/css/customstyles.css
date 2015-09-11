@@ -154,13 +154,7 @@ body {
     }
 }
 
-.MicrosoftMap {
-    width: 600px;
-    height: 400px;
-    left: 20px !important;
-    top: 160px !important;
-}
-
-.mypinclass div {
-    color: black !important;
+#map-canvas {
+    width: 700px;
+    height: 500px;
 }
