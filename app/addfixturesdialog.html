@@ -50,14 +50,14 @@
         <div class="form-group">
             <label for="marker1" class="col-sm-3 control-label">Marker 1</label>
             <div class="col-sm-6">
-                <select class="form-control" id="marker1" form="addFixtureDialog" ng-model="fixture.marker1" ng-options='(player.forename + " " + player.surname) for player in players' required></select>
+                <select class="form-control" id="marker1" form="addFixtureDialog" ng-model="fixture.marker1" ng-options='(marker.forename + " " + marker.surname) for marker in getMarkers()' required></select>
             </div>
         </div>
 
         <div class="form-group">
             <label for="marker2" class="col-sm-3 control-label">Marker 2</label>
             <div class="col-sm-6">
-                <select class="form-control" id="marker" form="addFixtureDialog" ng-model="fixture.marker2" ng-options='(player.forename + " " + player.surname) for player in players' required></select>
+                <select class="form-control" id="marker" form="addFixtureDialog" ng-model="fixture.marker2" ng-options='(marker.forename + " " + marker.surname) for marker in getMarkers()' required></select>
             </div>
         </div>
     </form>

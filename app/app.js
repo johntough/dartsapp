@@ -1486,8 +1486,17 @@
     $scope.players = [];
     $scope.fixture = {week: '', group: '', orderofplay: '', playerone: '', playertwo: '', marker1: '', markertwo: ''};
 
+    // refresh player service
+    $http.get(baseUrl + '/players').success(function(data) {
+        playerService.setPlayers(data.players);
+    });
+
     $scope.getGroups = function() {
         return groupService.getGroups();
+    },
+
+    $scope.getMarkers = function() {
+        return playerService.getPlayers();
     },
 
     $scope.getWeeks = function() {
@@ -2949,11 +2958,20 @@
                     else if ($scope.selected.playerTwoId === $scope.selected.players[player].id) {
                         $scope.selected.player2 = $scope.selected.players[player];
                     }
-                    else if ($scope.selected.markerOneId === $scope.selected.players[player].id) {
-                        $scope.selected.marker1 = $scope.selected.players[player];
+                }
+            }
+        });
+
+        $http.get(baseUrl + '/players/').success(function(data) {
+            $scope.selected.markers = data.players;
+
+            for (var marker in $scope.selected.markers) {
+                if ($scope.selected.markers.hasOwnProperty(marker)) {
+                    if ($scope.selected.markerOneId === $scope.selected.markers[marker].id) {
+                        $scope.selected.marker1 = $scope.selected.markers[marker];
                     }
-                    else if ($scope.selected.markerTwoId === $scope.selected.players[player].id) {
-                        $scope.selected.marker2 = $scope.selected.players[player];
+                    else if ($scope.selected.markerTwoId === $scope.selected.markers[marker].id) {
+                        $scope.selected.marker2 = $scope.selected.markers[marker];
                     }
                 }
             }
